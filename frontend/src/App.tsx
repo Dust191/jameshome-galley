@@ -22,7 +22,9 @@ export default function App() {
         {isError && <p style={{ color: '#b00020' }}>后端未就绪，请确认 `make dev` 已启动</p>}
         {data && (
           <p>
-            status=<code>{data.status}</code>　version=<code>{data.version}</code>
+            status=<code>{data.status}</code>
+            {' · '}
+            version=<code>{data.version}</code>
           </p>
         )}
       </section>

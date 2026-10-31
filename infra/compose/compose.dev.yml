@@ -11,7 +11,9 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - galley-db-data:/var/lib/postgresql/data
+      # PostgreSQL 18 起官方镜像要求挂载到 /var/lib/postgresql（数据落在其下子目录），
+      # 沿用 17 及以前的 /var/lib/postgresql/data 会直接启动失败。
+      - galley-db-data:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${GALLEY_DB_USERNAME:-galley} -d galley"]
       interval: 5s

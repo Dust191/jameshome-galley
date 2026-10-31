@@ -14,7 +14,7 @@
 
 ## 快速开始
 
-前置：JDK 25、Docker、Node 22 与 pnpm。Maven 由 Wrapper 提供，无需预装。
+前置：JDK 25、Docker、Node 22 与 pnpm 9（`frontend/package.json` 的 `packageManager` 已锁定版本；pnpm 10 起默认拦截依赖的安装脚本，会导致 `pnpm install` 失败）。Maven 由 Wrapper 提供，无需预装。
 
 ```bash
 git clone <repo-url> && cd jameshome-galley

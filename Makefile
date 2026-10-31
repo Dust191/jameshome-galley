@@ -47,12 +47,21 @@ up:
 down:
 	$(COMPOSE) down
 
-# 容器相关操作在开发机不可用时使用：同步后再到虚拟机上执行
+# 容器相关操作在本机不可用时使用：先同步，再到虚拟机上执行。
+# 有 rsync 用 rsync；没有则退回 tar 管道（Windows 的 Git Bash 默认不带 rsync）。
 sync:
-	rsync -az --delete \
-		--exclude '.git/' --exclude 'node_modules/' --exclude 'target/' \
-		--exclude '.env' --exclude '.workbuddy/' --exclude 'dist/' \
-		./ $(VM_HOST):$(VM_PATH)/
+	@if command -v rsync >/dev/null 2>&1; then \
+		rsync -az --delete \
+			--exclude '.git/' --exclude 'node_modules/' --exclude 'target/' \
+			--exclude '.env' --exclude '.workbuddy/' --exclude 'dist/' \
+			./ $(VM_HOST):$(VM_PATH)/; \
+		echo "rsync 同步完成：$(VM_HOST):$(VM_PATH)"; \
+	else \
+		tar --exclude=.git --exclude=node_modules --exclude=target \
+			--exclude=.env --exclude=.workbuddy --exclude=dist -czf - . \
+		| ssh $(VM_HOST) 'rm -rf $(VM_PATH) && mkdir -p $(VM_PATH) && tar xzf - -C $(VM_PATH)'; \
+		echo "tar 管道同步完成：$(VM_HOST):$(VM_PATH)"; \
+	fi
 
 commit-lint:
 	@bash scripts/check-signoff.sh
