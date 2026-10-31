@@ -1,0 +1,19 @@
+# 默认
+*                                   @Dust191
+
+# 领域（单人期全部指向 Owner，扩编时只改 handle、不改结构）
+/backend/src/main/java/**/modules/material/   @Dust191
+/backend/src/main/java/**/modules/stock/      @Dust191
+/backend/src/main/java/**/modules/stats/      @Dust191
+/backend/src/main/java/**/modules/identity/   @Dust191
+/frontend/src/features/                       @Dust191
+
+# 高风险区
+/backend/src/main/resources/db/migration/     @Dust191
+/infra/                                       @Dust191
+/.github/workflows/                           @Dust191
+/contracts/                                   @Dust191
+/docs/00-glossary.md                          @Dust191
+/docs/07-iteration/                           @Dust191
+/LICENSE                                      @Dust191
+/GOVERNANCE.md                                @Dust191

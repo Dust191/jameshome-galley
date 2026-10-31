@@ -1,0 +1,41 @@
+version: 2
+
+updates:
+  # 后端：Maven 依赖集中由父 POM 管理，Dependabot 只在父 POM 改版本
+  - package-ecosystem: maven
+    directory: /backend
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Asia/Shanghai
+    open-pull-requests-limit: 5
+    groups:
+      spring:
+        patterns: ["org.springframework*"]
+      mybatis:
+        patterns: ["com.baomidou*"]
+      test:
+        patterns: ["org.junit*", "org.assertj*", "com.tngtech.archunit*"]
+
+  # 前端
+  - package-ecosystem: npm
+    directory: /frontend
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Asia/Shanghai
+    open-pull-requests-limit: 5
+    groups:
+      react:
+        patterns: ["react*", "@types/react*"]
+      tooling:
+        patterns: ["vite", "typescript", "eslint*", "prettier"]
+
+  # 流水线自身
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 3

@@ -1,0 +1,30 @@
+# 反向代理骨架。S5 阶段补全域名与备案信息。
+# 职责：TLS 自动签发、安全响应头、/api 与 /actuator 转发、静态资源托管。
+
+{
+  email {$ACME_EMAIL}
+}
+
+:443 {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		X-Frame-Options "DENY"
+		-Server
+	}
+
+	handle /api/* {
+		reverse_proxy api:8080
+	}
+
+	handle /actuator/* {
+		reverse_proxy api:8080
+	}
+
+	handle {
+		reverse_proxy web:80
+	}
+}

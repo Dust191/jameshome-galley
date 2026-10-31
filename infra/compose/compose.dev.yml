@@ -1,0 +1,22 @@
+# 开发环境：只起数据库，后端与前端在本机前台运行（便于热重载与调试）
+services:
+  db:
+    image: postgres:18.3
+    container_name: galley-db
+    environment:
+      POSTGRES_DB: galley
+      POSTGRES_USER: ${GALLEY_DB_USERNAME:-galley}
+      POSTGRES_PASSWORD: ${GALLEY_DB_PASSWORD:-galley}
+      TZ: Asia/Shanghai
+    ports:
+      - "5432:5432"
+    volumes:
+      - galley-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${GALLEY_DB_USERNAME:-galley} -d galley"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+volumes:
+  galley-db-data:
