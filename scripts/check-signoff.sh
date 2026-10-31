@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# 提交署名校验：Signed-off-by 必须存在且与提交者一致；Assisted-by 若存在，必须命中 CONTRIBUTORS.md 登记表。
-# 用法：scripts/check-signoff.sh [git 范围，默认 HEAD~20..HEAD 或全部]
+# 提交署名校验：Signed-off-by 必须存在且与提交者一致；
+# Assisted-by 若存在，不得为占位词，且必须命中 CONTRIBUTORS.md 登记表。
+# 用法：scripts/check-signoff.sh [git 范围]，默认为最近 20 个提交
 set -uo pipefail
 cd "$(dirname "$0")/.." || exit 1
 
@@ -16,35 +17,38 @@ blacklist='^(unknown|n/?a|ai|assistant|placeholder)$'
 rc=0
 total=0
 
-while IFS='|' read -r sha author email subject body; do
-    [ -z "$sha" ] && continue
+for sha in $(git rev-list "$range" 2>/dev/null); do
     total=$((total + 1))
     short=$(echo "$sha" | cut -c1-7)
+    author=$(git show -s --format='%an' "$sha")
+    email=$(git show -s --format='%ae' "$sha")
+    subject=$(git show -s --format='%s' "$sha")
+    body=$(git show -s --format='%b' "$sha")
 
-    signed=$(echo "$body" | grep -iE '^Signed-off-by: ' | head -1)
+    signed=$(printf '%s\n' "$body" | grep -iE '^Signed-off-by: ' | head -1 || true)
     if [ -z "$signed" ]; then
-        echo "✗ $short 缺少 Signed-off-by：$subject"
+        echo "[FAIL] $short 缺少 Signed-off-by: $subject"
         rc=1
     else
-        name=$(echo "$signed" | sed -E 's/^Signed-off-by: (.*) <.*>/\1/')
-        mail=$(echo "$signed" | sed -E 's/^Signed-off-by: .* <(.*)>/\1/')
+        name=$(printf '%s' "$signed" | sed -E 's/^[Ss]igned-off-by: (.*) <.*>/\1/')
+        mail=$(printf '%s' "$signed" | sed -E 's/^[Ss]igned-off-by: .* <(.*)>/\1/')
         if [ "$name" != "$author" ] || [ "$mail" != "$email" ]; then
-            echo "✗ $short Signed-off-by 与作者不一致：$name <$mail> vs $author <$email>"
+            echo "[FAIL] $short Signed-off-by 与作者不一致: $name <$mail> vs $author <$email>"
             rc=1
         fi
     fi
 
-    assisted=$(echo "$body" | grep -iE '^Assisted-by: ' | head -1 | sed -E 's/^Assisted-by: //')
+    assisted=$(printf '%s\n' "$body" | grep -iE '^Assisted-by: ' | head -1 | sed -E 's/^[Aa]ssisted-by: //' || true)
     if [ -n "$assisted" ]; then
-        if echo "$assisted" | grep -qiE "$blacklist"; then
-            echo "✗ $short Assisted-by 使用了占位词：$assisted"
+        if printf '%s' "$assisted" | grep -qiE "$blacklist"; then
+            echo "[FAIL] $short Assisted-by 使用了占位词: $assisted"
             rc=1
         elif ! grep -qF "$assisted" "$contrib"; then
-            echo "✗ $short Assisted-by 未在 $contrib 登记：$assisted"
+            echo "[FAIL] $short Assisted-by 未在 $contrib 登记: $assisted"
             rc=1
         fi
     fi
-done < <(git log --format='%H|%an|%ae|%s|%b' "$range" 2>/dev/null)
+done
 
 if [ "$total" -eq 0 ]; then
     echo "范围内没有提交，跳过。"
