@@ -25,7 +25,7 @@ const REQUIRED = [
 ]
 const STATUS = new Set(['draft', 'in_review', 'accepted', 'rejected', 'approved'])
 // 不在仓库内的文档，related 允许引用但不校验文件存在
-const EXTERNAL_IDS = new Set(['GOV-000'])
+const EXTERNAL_IDS = new Set(['GOV-000', 'CONTRIBUTING', 'GOVERNANCE', 'SECURITY'])
 
 const errors = []
 const warns = []

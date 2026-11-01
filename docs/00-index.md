@@ -33,6 +33,15 @@ related: [GLOSSARY-001, PRD-001]
 | DES-004 | `docs/02-design/metrics.md` | 统计指标口径 | in_review | @Dust191 | 2026-11-01 | S2 |
 | DES-002 | `docs/02-design/api.md` | 接口契约 | in_review | @Dust191 | 2026-11-01 | S2 |
 | DES-003 | `docs/02-design/ui-spec.md` | 界面规范 | in_review | @Dust191 | 2026-11-01 | S2 |
+| DEV-001 | `docs/03-dev/setup.md` | 本地搭建 | in_review | @Dust191 | 2026-11-01 | S2 |
+| DEV-002 | `docs/03-dev/conventions.md` | 编码约定 | in_review | @Dust191 | 2026-11-01 | S2 |
+| DEV-003 | `docs/03-dev/testing.md` | 测试策略 | in_review | @Dust191 | 2026-11-01 | S2 |
+| DEV-004 | `docs/03-dev/tech-debt.md` | 技术债台账 | in_review | @Dust191 | 2026-11-01 | S2 |
+| OPS-001 | `docs/04-ops/deploy.md` | 部署 | in_review | @Dust191 | 2026-11-01 | S2 |
+| RUN-001 | `docs/04-ops/runbook.md` | 运行手册 | in_review | @Dust191 | 2026-11-01 | S2 |
+| RUN-002 | `docs/04-ops/backup-restore.md` | 备份与恢复 | in_review | @Dust191 | 2026-11-01 | S2 |
+| GOV-001 | `docs/05-governance/governance.md` | 治理模型 | in_review | @Dust191 | 2026-11-01 | S2 |
+| GOV-002 | `docs/05-governance/release.md` | 发布流程 | in_review | @Dust191 | 2026-11-01 | S2 |
 | ITER-20261031-01 | `docs/07-iteration/ITER-20261031-01.md` | 首轮迭代记录（立项前置决策） | approved | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-02 | `docs/07-iteration/ITER-20261031-02.md` | S0 文档体系建立 | approved | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-03 | `docs/07-iteration/ITER-20261031-03.md` | S1 项目骨架搭建 | approved | @Dust191 | 2026-10-31 | S1 |
@@ -44,6 +53,7 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261101-06 | `docs/07-iteration/ITER-20261101-06.md` | 采纳 Q-1~Q-3 并补登记两个词条 | in_review | @Dust191 | 2026-11-01 | S2 |
 | ITER-20261101-07 | `docs/07-iteration/ITER-20261101-07.md` | 编写 DES-004 指标口径 | in_review | @Dust191 | 2026-11-01 | S2 |
 | ITER-20261101-08 | `docs/07-iteration/ITER-20261101-08.md` | 回写指标裁定并编写接口与界面规范 | in_review | @Dust191 | 2026-11-01 | S2 |
+| ITER-20261101-09 | `docs/07-iteration/ITER-20261101-09.md` | 补齐 DEV/OPS/RUN/GOV 九份文档 | in_review | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.9） | @Dust191 | 2026-11-01 | 全局 |
 
 ## 2. 编号占用
@@ -57,17 +67,30 @@ related: [GLOSSARY-001, PRD-001]
 | NFR | 非功能 | 001 | 002 |
 | DES | 设计（模型/接口/UI/指标） | — | 001 |
 | ADR | 架构决策 | 0001 ~ 0004 | 0005 |
-| DEV | 开发规范（文档编号） | — | 001 |
+| DEV | 开发规范（文档编号） | 001 ~ 004 | 005 |
 | DVT | 偏离登记（条目编号） | 01 ~ 03 | 04 |
-| OPS / RUN | 运维与运行手册 | — | 001 |
-| GOV | 治理 | 000（工程规范） | 001 |
+| OPS / RUN | 运维与运行手册 | 001、001 ~ 002 | 002 / 003 |
+| GOV | 治理 | 000（工程规范）、001、002 | 003 |
 | RFC | 重大变更提案 | — | 0001 |
 | ITER | 迭代记录 | 20261031-01、20261031-02 | — |
 | MTG | 会议纪要 | — | — |
 
-## 3. 待建立的强制文档（S2 补齐）
+## 3. 强制文档齐备情况
 
-S2 阶段门要求 19 份强制文档齐备。当前缺：`DEV-001` 本地搭建、`DEV-002` 编码约定、`DEV-003` 测试策略、`DEV-004` 技术债台账、`OPS-001` 部署、`RUN-001` 运行手册、`RUN-002` 备份恢复、`GOV-001` 治理、`GOV-002` 发布流程，以及索引与 glossary 之外的模板集（`_template.md` 系列）。
+S2 阶段门要求 19 份强制文档齐备，已于 2026-11-01 全部建立：
+
+| 类别 | 编号 | 数量 |
+|---|---|---|
+| 顶层治理 | INDEX-001、GLOSSARY-001 | 2 |
+| 产品 | PRD-001、SCOPE-001、NFR-001 | 3 |
+| 设计 | DES-001 ~ DES-004 | 4 |
+| 开发 | DEV-001 ~ DEV-004 | 4 |
+| 运维 | OPS-001、RUN-001、RUN-002 | 3 |
+| 治理 | GOV-001、GOV-002 | 2 |
+| 迭代 | ITER-* | 按轮次递增 |
+| 合计（不含 ITER） | — | 18 + ITER 类 |
+
+模板集见 §6。`docs/idea.md` 为可选项，当前未建立，不参与阶段门。
 
 ## 4. 已知位置问题
 
