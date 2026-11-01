@@ -55,7 +55,9 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261101-08 | `docs/07-iteration/ITER-20261101-08.md` | 回写指标裁定并编写接口与界面规范 | in_review | @Dust191 | 2026-11-01 | S2 |
 | ITER-20261101-09 | `docs/07-iteration/ITER-20261101-09.md` | 补齐 DEV/OPS/RUN/GOV 九份文档 | in_review | @Dust191 | 2026-11-01 | S2 |
 | ITER-20261101-10 | `docs/07-iteration/ITER-20261101-10.md` | S2 安全收尾与禁用写法问题分析 | in_review | @Dust191 | 2026-11-01 | S2 |
-| GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.9） | @Dust191 | 2026-11-01 | 全局 |
+| ITER-20261101-11 | `docs/07-iteration/ITER-20261101-11.md` | 起草 RFC-0001 禁用写法拆分 | in_review | @Dust191 | 2026-11-01 | S2 |
+| RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | in_review | @Dust191 | 2026-11-01 | S2 |
+| GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.10） | @Dust191 | 2026-11-01 | 全局 |
 
 ## 2. 编号占用
 
@@ -72,7 +74,7 @@ related: [GLOSSARY-001, PRD-001]
 | DVT | 偏离登记（条目编号） | 01 ~ 03 | 04 |
 | OPS / RUN | 运维与运行手册 | 001、001 ~ 002 | 002 / 003 |
 | GOV | 治理 | 000（工程规范）、001、002 | 003 |
-| RFC | 重大变更提案 | — | 0001 |
+| RFC | 重大变更提案 | 0001 | 0002 |
 | ITER | 迭代记录 | 20261031-01、20261031-02 | — |
 | MTG | 会议纪要 | — | — |
 
