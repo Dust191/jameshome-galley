@@ -29,6 +29,7 @@ related: [GLOSSARY-001, PRD-001]
 | ADR-0002 | `docs/02-design/adr/ADR-0002-repo-layout.md` | 仓库目录结构与构建入口 | approved | @Dust191 | 2026-10-31 | S0 |
 | ADR-0003 | `docs/02-design/adr/ADR-0003-code-style-tool.md` | 代码规范工具只上 Spotless | approved | @Dust191 | 2026-10-31 | S0 |
 | ADR-0004 | `docs/02-design/adr/ADR-0004-jdk-pin-granularity.md` | JDK 版本锁定粒度 | approved | @Dust191 | 2026-11-01 | S1 |
+| DES-001 | `docs/02-design/domain-model.md` | 领域模型 | in_review | @Dust191 | 2026-11-01 | S2 |
 | ITER-20261031-01 | `docs/07-iteration/ITER-20261031-01.md` | 首轮迭代记录（立项前置决策） | approved | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-02 | `docs/07-iteration/ITER-20261031-02.md` | S0 文档体系建立 | approved | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-03 | `docs/07-iteration/ITER-20261031-03.md` | S1 项目骨架搭建 | approved | @Dust191 | 2026-10-31 | S1 |
@@ -36,6 +37,7 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261101-02 | `docs/07-iteration/ITER-20261101-02.md` | `status` 与「状态」口径统一 | approved | @Dust191 | 2026-11-01 | S1 |
 | ITER-20261101-03 | `docs/07-iteration/ITER-20261101-03.md` | GLOSSARY-001 改动失控与修正 | approved | @Dust191 | 2026-11-01 | S1 |
 | ITER-20261101-04 | `docs/07-iteration/ITER-20261101-04.md` | 补充人机协作约定并同步派生表述 | in_review | @Dust191 | 2026-11-01 | S1 |
+| ITER-20261101-05 | `docs/07-iteration/ITER-20261101-05.md` | S2 启动：模板集、文档校验与领域模型 | in_review | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.9） | @Dust191 | 2026-11-01 | 全局 |
 
 ## 2. 编号占用
@@ -59,7 +61,7 @@ related: [GLOSSARY-001, PRD-001]
 
 ## 3. 待建立的强制文档（S2 补齐）
 
-S2 阶段门要求 19 份强制文档齐备。当前缺：`DES-001` 领域模型、`DES-002` 接口、`DES-003` UI 规范、`DES-004` 指标口径、`DEV-001` 本地搭建、`DEV-002` 编码约定、`DEV-003` 测试策略、`DEV-004` 技术债台账、`OPS-001` 部署、`RUN-001` 运行手册、`RUN-002` 备份恢复、`GOV-001` 治理、`GOV-002` 发布流程，以及索引与 glossary 之外的模板集（`_template.md` 系列）。
+S2 阶段门要求 19 份强制文档齐备。当前缺：`DES-002` 接口、`DES-003` UI 规范、`DES-004` 指标口径、`DEV-001` 本地搭建、`DEV-002` 编码约定、`DEV-003` 测试策略、`DEV-004` 技术债台账、`OPS-001` 部署、`RUN-001` 运行手册、`RUN-002` 备份恢复、`GOV-001` 治理、`GOV-002` 发布流程，以及索引与 glossary 之外的模板集（`_template.md` 系列）。
 
 ## 4. 已知位置问题
 
@@ -83,3 +85,15 @@ S2 阶段门要求 19 份强制文档齐备。当前缺：`DES-001` 领域模型
 - 引用其它文档 front-matter 的字段时写 `status`，并用反引号包裹。
 - 指代文档正文首段的内容时写「状态」。
 - 不得用「文档状态」指称正文内容，也不得用 `status` 指称决策结果。
+
+## 6. 模板集
+
+新建文档一律复制对应模板，不得从旧文档复制后改标题。模板自身不参与 CI 校验（`_templates/` 已在 `check-docs.mjs` 中排除）。
+
+| 模板 | 用于 | 额外要求 |
+|---|---|---|
+| `_templates/_template-doc.md` | 产品类、治理类等通用文档 | 开头三行内说明"回答什么问题" |
+| `_templates/_template-design.md` | DES-001 ~ DES-004 | 每条结论须可追溯到 PRD 故事或 glossary 词条 |
+| `_templates/_template-dev.md` | DEV-001 ~ DEV-004 | 步骤须可照做，含预期输出 |
+| `_templates/_template-ops.md` | OPS-001、RUN-001、RUN-002 | 面向"凌晨三点被叫醒的人"，不可逆操作须写回滚 |
+| `_templates/_template-adr.md` | ADR-0005 起 | 状态栏与 front-matter 的 `status` 分开写 |

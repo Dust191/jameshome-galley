@@ -65,3 +65,5 @@ jobs:
         run: bash scripts/check-env-example.sh
       - name: 提交署名校验
         run: bash scripts/check-signoff.sh "${{ github.event.pull_request.base.sha || 'HEAD~1' }}..HEAD"
+      - name: 文档结构校验
+        run: node scripts/check-docs.mjs

@@ -36,6 +36,7 @@ test:
 lint:
 	cd backend && $(MVN) -q spotless:check
 	cd frontend && pnpm exec prettier --check .
+	node scripts/check-docs.mjs
 
 build:
 	cd backend && $(MVN) -q -DskipTests package
