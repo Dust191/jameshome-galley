@@ -1,7 +1,7 @@
 ---
 title: JDK 版本锁定粒度
 doc_id: ADR-0004
-status: draft
+status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-01
