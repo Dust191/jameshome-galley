@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // 文档 CI 校验（GOV-000 §4.4.5）。零依赖，只做结构检查，不判断内容好坏。
 // 校验项：front-matter 字段齐全、status 取值合法、doc_id 唯一、related 目标存在、
-//        iter 指向的迭代记录存在、索引已登记、禁用写法反查、表格内空行。
+//        iter 指向的迭代记录存在、索引已登记、用词反查（禁用写法失败 / 易混提示告警）、表格内空行。
 // 用法：node scripts/check-docs.mjs [--fix-hint]
 
 import { readdirSync, readFileSync, statSync } from 'node:fs'
@@ -131,34 +131,28 @@ for (const d of docs) {
   }
 }
 
-// 禁用写法反查（仅扫描正文，跳过代码块）
+// 用词反查（RFC-0001）：禁用写法 → 失败；易混提示 → 告警。
+// 词条表列序：中文 | 英文 | 定义 | 域 | 禁用写法 | 易混提示 | 状态 | 引入版本 | 示例
 const glossary = readFileSync(join(DOCS, '00-glossary.md'), 'utf8')
 const banned = []
-for (const line of glossary.split('\n')) {
-  if (!line.startsWith('| ')) continue
-  const cells = line.split('|').map((c) => c.trim())
-  if (cells.length < 9) continue
-  if (cells[6] === '中文词条' || cells[6].startsWith('-')) continue
-  if (!/^(active|proposed|deprecated)$/.test(cells[6])) continue
-  const status = cells[6]
-  if (status === 'deprecated') continue
-  for (const w of cells[5].split(/[、,，]/)) {
-    const t = w.trim()
-    if (t.length < 2) continue
-    if (t.includes('（')) continue // 括号里是说明，不是词本身
-    banned.push(t)
-  }
-}
-
-// 已登记词条（含 proposed）：命中禁用写法时，若该片段落在已登记词条内部，不算违规。
-// 例：禁用写法「迭代」不应误伤名词「迭代记录」；禁用写法「用户」不应误伤「用户故事」。
+const mixed = []
 const terms = []
+
+const splitWords = (cell) =>
+  cell
+    .split(/[、,，]/)
+    .map((w) => w.trim())
+    .filter((w) => w.length >= 2 && !w.includes('（'))
+
 for (const line of glossary.split('\n')) {
   if (!line.startsWith('| ')) continue
   const cells = line.split('|').map((c) => c.trim())
-  if (cells.length < 9) continue
-  if (!/^(active|proposed|deprecated)$/.test(cells[6])) continue
+  if (cells.length < 10) continue
+  if (!/^(active|proposed|deprecated)$/.test(cells[7])) continue
   if (cells[1].length >= 2) terms.push(cells[1])
+  if (cells[7] === 'deprecated') continue
+  banned.push(...splitWords(cells[5]))
+  mixed.push(...splitWords(cells[6]))
 }
 terms.sort((a, b) => b.length - a.length)
 
@@ -172,8 +166,16 @@ for (const d of docs) {
   }
   let body = d.body.replace(/```[\s\S]*?```/g, '')
   for (const t of terms) body = body.split(t).join('□'.repeat(t.length))
-  const hits = banned.filter((w) => body.includes(w))
-  if (hits.length) warns.push(`${d.rel}: 出现禁用写法 ${[...new Set(hits)].join('、')}`)
+  const hitBanned = banned.filter((w) => body.includes(w))
+  const hitMixed = mixed.filter((w) => body.includes(w))
+  // RFC-0001 R-3：ITER 为历史记录（只增不改），命中禁用写法降为告警
+  const isIter = d.rel.startsWith('docs/07-iteration/')
+  if (hitBanned.length) {
+    const msg = `${d.rel}: 出现禁用写法 ${[...new Set(hitBanned)].join('、')}`
+    if (isIter) warns.push(`${msg}（历史记录，仅提示）`)
+    else errors.push(msg)
+  }
+  if (hitMixed.length) warns.push(`${d.rel}: 疑用近义词 ${[...new Set(hitMixed)].join('、')}`)
 }
 
 const mode = process.argv.includes('--warn-only') ? 'warn' : 'strict'
@@ -184,7 +186,7 @@ for (const e of errors) console.log(`[FAIL] ${e}`)
 
 if (errors.length === 0) {
   console.log(
-    `文档校验通过：${docs.length} 份，doc_id 唯一，front-matter 齐全，索引与 related 一致；禁用写法告警 ${warns.length} 条。`,
+    `文档校验通过：${docs.length} 份，doc_id 唯一，front-matter 齐全，索引与 related 一致；禁用写法零命中，易混提示告警 ${warns.length} 条。`,
   )
   process.exit(0)
 }

@@ -56,8 +56,9 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261101-09 | `docs/07-iteration/ITER-20261101-09.md` | 补齐 DEV/OPS/RUN/GOV 九份文档 | in_review | @Dust191 | 2026-11-01 | S2 |
 | ITER-20261101-10 | `docs/07-iteration/ITER-20261101-10.md` | S2 安全收尾与禁用写法问题分析 | in_review | @Dust191 | 2026-11-01 | S2 |
 | ITER-20261101-11 | `docs/07-iteration/ITER-20261101-11.md` | 起草 RFC-0001 禁用写法拆分 | in_review | @Dust191 | 2026-11-01 | S2 |
-| RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | in_review | @Dust191 | 2026-11-01 | S2 |
-| GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.10） | @Dust191 | 2026-11-01 | 全局 |
+| ITER-20261101-12 | `docs/07-iteration/ITER-20261101-12.md` | 实施 RFC-0001 并核对全部 ITER 遗留项 | in_review | @Dust191 | 2026-11-01 | S2 |
+| RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | accepted | @Dust191 | 2026-11-01 | S2 |
+| GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.11） | @Dust191 | 2026-11-01 | 全局 |
 
 ## 2. 编号占用
 
@@ -124,7 +125,7 @@ S2 阶段门要求 19 份强制文档齐备，已于 2026-11-01 全部建立：
 
 | 模板 | 用于 | 额外要求 |
 |---|---|---|
-| `_templates/_template-doc.md` | 产品类、治理类等通用文档 | 开头三行内说明"回答什么问题" |
+| `_templates/_template-doc.md` | 产品、治理等通用文档 | 开头三行内说明"回答什么问题" |
 | `_templates/_template-design.md` | DES-001 ~ DES-004 | 每条结论须可追溯到 PRD 故事或 glossary 词条 |
 | `_templates/_template-dev.md` | DEV-001 ~ DEV-004 | 步骤须可照做，含预期输出 |
 | `_templates/_template-ops.md` | OPS-001、RUN-001、RUN-002 | 面向"凌晨三点被叫醒的人"，不可逆操作须写回滚 |
