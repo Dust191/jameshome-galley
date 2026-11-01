@@ -20,7 +20,7 @@ related: [GLOSSARY-001, PRD-001]
 
 | doc_id | 路径 | 标题 | 状态 | owner | 更新 | 阶段 |
 |---|---|---|---|---|---|---|
-| GLOSSARY-001 | `docs/00-glossary.md` | 总名词解释 | approved | @Dust191 | 2026-10-31 | S0 |
+| GLOSSARY-001 | `docs/00-glossary.md` | 总名词解释（44 条，其中 10 条待确认） | approved | @Dust191 | 2026-11-01 | S0 |
 | INDEX-001 | `docs/00-index.md` | 文档索引 | approved | @Dust191 | 2026-10-31 | S0 |
 | PRD-001 | `docs/01-product/PRD-001.md` | 产品需求文档 | approved | @Dust191 | 2026-10-31 | S0 |
 | SCOPE-001 | `docs/01-product/scope.md` | 范围冻结表 | approved | @Dust191 | 2026-10-31 | S0 |
@@ -28,10 +28,12 @@ related: [GLOSSARY-001, PRD-001]
 | ADR-0001 | `docs/02-design/adr/ADR-0001-tech-stack.md` | 技术栈选型 | approved | @Dust191 | 2026-10-31 | S0 |
 | ADR-0002 | `docs/02-design/adr/ADR-0002-repo-layout.md` | 仓库目录结构与构建入口 | approved | @Dust191 | 2026-10-31 | S0 |
 | ADR-0003 | `docs/02-design/adr/ADR-0003-code-style-tool.md` | 代码规范工具只上 Spotless | approved | @Dust191 | 2026-10-31 | S0 |
+| ADR-0004 | `docs/02-design/adr/ADR-0004-jdk-pin-granularity.md` | JDK 版本锁定粒度 | draft | @Dust191 | 2026-11-01 | S1 |
 | ITER-20261031-01 | `docs/07-iteration/ITER-20261031-01.md` | 首轮迭代记录（立项前置决策） | review | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-02 | `docs/07-iteration/ITER-20261031-02.md` | S0 文档体系建立 | review | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-03 | `docs/07-iteration/ITER-20261031-03.md` | S1 项目骨架搭建 | review | @Dust191 | 2026-10-31 | S1 |
-| GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.6） | @Dust191 | 2026-10-31 | 全局 |
+| ITER-20261101-01 | `docs/07-iteration/ITER-20261101-01.md` | JDK 锁定粒度与词条补登记 | review | @Dust191 | 2026-11-01 | S1 |
+| GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.8） | @Dust191 | 2026-11-01 | 全局 |
 
 ## 2. 编号占用
 
@@ -43,8 +45,9 @@ related: [GLOSSARY-001, PRD-001]
 | SCOPE | 范围 | 001 | 002 |
 | NFR | 非功能 | 001 | 002 |
 | DES | 设计（模型/接口/UI/指标） | — | 001 |
-| ADR | 架构决策 | 0001 ~ 0003 | 0004 |
-| DEV | 开发规范 | — | 001 |
+| ADR | 架构决策 | 0001 ~ 0004 | 0005 |
+| DEV | 开发规范（文档编号） | — | 001 |
+| DVT | 偏离登记（条目编号） | 01 ~ 03 | 04 |
 | OPS / RUN | 运维与运行手册 | — | 001 |
 | GOV | 治理 | 000（工程规范） | 001 |
 | RFC | 重大变更提案 | — | 0001 |
