@@ -31,6 +31,8 @@ related: [GLOSSARY-001, PRD-001]
 | ADR-0004 | `docs/02-design/adr/ADR-0004-jdk-pin-granularity.md` | JDK 版本锁定粒度 | approved | @Dust191 | 2026-11-01 | S1 |
 | DES-001 | `docs/02-design/domain-model.md` | 领域模型 | in_review | @Dust191 | 2026-11-01 | S2 |
 | DES-004 | `docs/02-design/metrics.md` | 统计指标口径 | in_review | @Dust191 | 2026-11-01 | S2 |
+| DES-002 | `docs/02-design/api.md` | 接口契约 | in_review | @Dust191 | 2026-11-01 | S2 |
+| DES-003 | `docs/02-design/ui-spec.md` | 界面规范 | in_review | @Dust191 | 2026-11-01 | S2 |
 | ITER-20261031-01 | `docs/07-iteration/ITER-20261031-01.md` | 首轮迭代记录（立项前置决策） | approved | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-02 | `docs/07-iteration/ITER-20261031-02.md` | S0 文档体系建立 | approved | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-03 | `docs/07-iteration/ITER-20261031-03.md` | S1 项目骨架搭建 | approved | @Dust191 | 2026-10-31 | S1 |
@@ -41,6 +43,7 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261101-05 | `docs/07-iteration/ITER-20261101-05.md` | S2 启动：模板集、文档校验与领域模型 | in_review | @Dust191 | 2026-11-01 | S2 |
 | ITER-20261101-06 | `docs/07-iteration/ITER-20261101-06.md` | 采纳 Q-1~Q-3 并补登记两个词条 | in_review | @Dust191 | 2026-11-01 | S2 |
 | ITER-20261101-07 | `docs/07-iteration/ITER-20261101-07.md` | 编写 DES-004 指标口径 | in_review | @Dust191 | 2026-11-01 | S2 |
+| ITER-20261101-08 | `docs/07-iteration/ITER-20261101-08.md` | 回写指标裁定并编写接口与界面规范 | in_review | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.9） | @Dust191 | 2026-11-01 | 全局 |
 
 ## 2. 编号占用
@@ -64,7 +67,7 @@ related: [GLOSSARY-001, PRD-001]
 
 ## 3. 待建立的强制文档（S2 补齐）
 
-S2 阶段门要求 19 份强制文档齐备。当前缺：`DES-002` 接口、`DES-003` UI 规范、`DEV-001` 本地搭建、`DEV-002` 编码约定、`DEV-003` 测试策略、`DEV-004` 技术债台账、`OPS-001` 部署、`RUN-001` 运行手册、`RUN-002` 备份恢复、`GOV-001` 治理、`GOV-002` 发布流程，以及索引与 glossary 之外的模板集（`_template.md` 系列）。
+S2 阶段门要求 19 份强制文档齐备。当前缺：`DEV-001` 本地搭建、`DEV-002` 编码约定、`DEV-003` 测试策略、`DEV-004` 技术债台账、`OPS-001` 部署、`RUN-001` 运行手册、`RUN-002` 备份恢复、`GOV-001` 治理、`GOV-002` 发布流程，以及索引与 glossary 之外的模板集（`_template.md` 系列）。
 
 ## 4. 已知位置问题
 
