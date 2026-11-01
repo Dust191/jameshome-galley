@@ -150,9 +150,22 @@ for (const line of glossary.split('\n')) {
   }
 }
 
+// 已登记词条（含 proposed）：命中禁用写法时，若该片段落在已登记词条内部，不算违规。
+// 例：禁用写法「迭代」不应误伤名词「迭代记录」；禁用写法「用户」不应误伤「用户故事」。
+const terms = []
+for (const line of glossary.split('\n')) {
+  if (!line.startsWith('| ')) continue
+  const cells = line.split('|').map((c) => c.trim())
+  if (cells.length < 9) continue
+  if (!/^(active|proposed|deprecated)$/.test(cells[6])) continue
+  if (cells[1].length >= 2) terms.push(cells[1])
+}
+terms.sort((a, b) => b.length - a.length)
+
 for (const d of docs) {
   if (d.rel.endsWith('00-glossary.md')) continue // glossary 自身要写禁用写法
-  const body = d.body.replace(/```[\s\S]*?```/g, '')
+  let body = d.body.replace(/```[\s\S]*?```/g, '')
+  for (const t of terms) body = body.split(t).join('□'.repeat(t.length))
   const hits = banned.filter((w) => body.includes(w))
   if (hits.length) warns.push(`${d.rel}: 出现禁用写法 ${[...new Set(hits)].join('、')}`)
 }

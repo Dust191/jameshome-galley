@@ -20,7 +20,7 @@ related: [GLOSSARY-001, PRD-001]
 
 | doc_id | 路径 | 标题 | `status` | owner | 更新 | 阶段 |
 |---|---|---|---|---|---|---|
-| GLOSSARY-001 | `docs/00-glossary.md` | 总名词解释（46 条，全部 active） | approved | @Dust191 | 2026-11-01 | S0 |
+| GLOSSARY-001 | `docs/00-glossary.md` | 总名词解释（48 条：46 active / 2 proposed） | approved | @Dust191 | 2026-11-01 | S0 |
 | INDEX-001 | `docs/00-index.md` | 文档索引 | approved | @Dust191 | 2026-10-31 | S0 |
 | PRD-001 | `docs/01-product/PRD-001.md` | 产品需求文档 | approved | @Dust191 | 2026-10-31 | S0 |
 | SCOPE-001 | `docs/01-product/scope.md` | 范围冻结表 | approved | @Dust191 | 2026-10-31 | S0 |
@@ -38,6 +38,7 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261101-03 | `docs/07-iteration/ITER-20261101-03.md` | GLOSSARY-001 改动失控与修正 | approved | @Dust191 | 2026-11-01 | S1 |
 | ITER-20261101-04 | `docs/07-iteration/ITER-20261101-04.md` | 补充人机协作约定并同步派生表述 | in_review | @Dust191 | 2026-11-01 | S1 |
 | ITER-20261101-05 | `docs/07-iteration/ITER-20261101-05.md` | S2 启动：模板集、文档校验与领域模型 | in_review | @Dust191 | 2026-11-01 | S2 |
+| ITER-20261101-06 | `docs/07-iteration/ITER-20261101-06.md` | 采纳 Q-1~Q-3 并补登记两个词条 | in_review | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.9） | @Dust191 | 2026-11-01 | 全局 |
 
 ## 2. 编号占用
