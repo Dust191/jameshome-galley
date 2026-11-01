@@ -20,7 +20,9 @@ related: [GLOSSARY-001, PRD-001]
 
 | doc_id | 路径 | 标题 | `status` | owner | 更新 | 阶段 |
 |---|---|---|---|---|---|---|
-| GLOSSARY-001 | `docs/00-glossary.md` | 总名词解释（46 条，全部 active） | approved | @Dust191 | 2026-11-01 | S0 |
+
+| GLOSSARY-001 | `docs/00-glossary.md` | 总名词解释（46 条：44 active / 2 proposed） | approved | @Dust191 | 2026-11-01 | S0 |
+
 | INDEX-001 | `docs/00-index.md` | 文档索引 | approved | @Dust191 | 2026-10-31 | S0 |
 | PRD-001 | `docs/01-product/PRD-001.md` | 产品需求文档 | approved | @Dust191 | 2026-10-31 | S0 |
 | SCOPE-001 | `docs/01-product/scope.md` | 范围冻结表 | approved | @Dust191 | 2026-10-31 | S0 |
@@ -34,6 +36,9 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261031-03 | `docs/07-iteration/ITER-20261031-03.md` | S1 项目骨架搭建 | in_review | @Dust191 | 2026-10-31 | S1 |
 | ITER-20261101-01 | `docs/07-iteration/ITER-20261101-01.md` | JDK 锁定粒度与词条补登记 | in_review | @Dust191 | 2026-11-01 | S1 |
 | ITER-20261101-02 | `docs/07-iteration/ITER-20261101-02.md` | `status` 与「状态」口径统一 | in_review | @Dust191 | 2026-11-01 | S1 |
+
+| ITER-20261101-03 | `docs/07-iteration/ITER-20261101-03.md` | GLOSSARY-001 改动失控与修正 | in_review | @Dust191 | 2026-11-01 | S1 |
+
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.9） | @Dust191 | 2026-11-01 | 全局 |
 
 ## 2. 编号占用
