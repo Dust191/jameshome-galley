@@ -1,7 +1,7 @@
 ---
 title: 统计指标口径
 doc_id: DES-004
-status: in_review
+status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-01

@@ -162,8 +162,14 @@ for (const line of glossary.split('\n')) {
 }
 terms.sort((a, b) => b.length - a.length)
 
+const optOut = []
 for (const d of docs) {
   if (d.rel.endsWith('00-glossary.md')) continue // glossary 自身要写禁用写法
+  // 显式豁免：正文需逐条引用禁用写法做分析时使用，须在豁免标记旁写明理由
+  if (d.body.includes('term-check: off')) {
+    optOut.push(d.rel)
+    continue
+  }
   let body = d.body.replace(/```[\s\S]*?```/g, '')
   for (const t of terms) body = body.split(t).join('□'.repeat(t.length))
   const hits = banned.filter((w) => body.includes(w))
@@ -172,6 +178,7 @@ for (const d of docs) {
 
 const mode = process.argv.includes('--warn-only') ? 'warn' : 'strict'
 
+for (const f of optOut) console.log(`[INFO] ${f}: 已声明 term-check: off，跳过用词反查`)
 for (const w of warns) console.log(`[WARN] ${w}`)
 for (const e of errors) console.log(`[FAIL] ${e}`)
 

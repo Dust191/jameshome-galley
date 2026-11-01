@@ -1,7 +1,7 @@
 ---
 title: 本地搭建
 doc_id: DEV-001
-status: in_review
+status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-01

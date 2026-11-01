@@ -1,7 +1,7 @@
 ---
 title: 界面规范
 doc_id: DES-003
-status: in_review
+status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-01

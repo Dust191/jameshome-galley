@@ -1,7 +1,7 @@
 ---
 title: 接口契约
 doc_id: DES-002
-status: in_review
+status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-01

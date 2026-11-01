@@ -1,7 +1,7 @@
 ---
 title: 技术债台账
 doc_id: DEV-004
-status: in_review
+status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-01

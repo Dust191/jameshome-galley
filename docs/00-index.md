@@ -29,19 +29,19 @@ related: [GLOSSARY-001, PRD-001]
 | ADR-0002 | `docs/02-design/adr/ADR-0002-repo-layout.md` | 仓库目录结构与构建入口 | approved | @Dust191 | 2026-10-31 | S0 |
 | ADR-0003 | `docs/02-design/adr/ADR-0003-code-style-tool.md` | 代码规范工具只上 Spotless | approved | @Dust191 | 2026-10-31 | S0 |
 | ADR-0004 | `docs/02-design/adr/ADR-0004-jdk-pin-granularity.md` | JDK 版本锁定粒度 | approved | @Dust191 | 2026-11-01 | S1 |
-| DES-001 | `docs/02-design/domain-model.md` | 领域模型 | in_review | @Dust191 | 2026-11-01 | S2 |
-| DES-004 | `docs/02-design/metrics.md` | 统计指标口径 | in_review | @Dust191 | 2026-11-01 | S2 |
-| DES-002 | `docs/02-design/api.md` | 接口契约 | in_review | @Dust191 | 2026-11-01 | S2 |
-| DES-003 | `docs/02-design/ui-spec.md` | 界面规范 | in_review | @Dust191 | 2026-11-01 | S2 |
-| DEV-001 | `docs/03-dev/setup.md` | 本地搭建 | in_review | @Dust191 | 2026-11-01 | S2 |
-| DEV-002 | `docs/03-dev/conventions.md` | 编码约定 | in_review | @Dust191 | 2026-11-01 | S2 |
-| DEV-003 | `docs/03-dev/testing.md` | 测试策略 | in_review | @Dust191 | 2026-11-01 | S2 |
-| DEV-004 | `docs/03-dev/tech-debt.md` | 技术债台账 | in_review | @Dust191 | 2026-11-01 | S2 |
-| OPS-001 | `docs/04-ops/deploy.md` | 部署 | in_review | @Dust191 | 2026-11-01 | S2 |
-| RUN-001 | `docs/04-ops/runbook.md` | 运行手册 | in_review | @Dust191 | 2026-11-01 | S2 |
-| RUN-002 | `docs/04-ops/backup-restore.md` | 备份与恢复 | in_review | @Dust191 | 2026-11-01 | S2 |
-| GOV-001 | `docs/05-governance/governance.md` | 治理模型 | in_review | @Dust191 | 2026-11-01 | S2 |
-| GOV-002 | `docs/05-governance/release.md` | 发布流程 | in_review | @Dust191 | 2026-11-01 | S2 |
+| DES-001 | `docs/02-design/domain-model.md` | 领域模型 | approved | @Dust191 | 2026-11-01 | S2 |
+| DES-004 | `docs/02-design/metrics.md` | 统计指标口径 | approved | @Dust191 | 2026-11-01 | S2 |
+| DES-002 | `docs/02-design/api.md` | 接口契约 | approved | @Dust191 | 2026-11-01 | S2 |
+| DES-003 | `docs/02-design/ui-spec.md` | 界面规范 | approved | @Dust191 | 2026-11-01 | S2 |
+| DEV-001 | `docs/03-dev/setup.md` | 本地搭建 | approved | @Dust191 | 2026-11-01 | S2 |
+| DEV-002 | `docs/03-dev/conventions.md` | 编码约定 | approved | @Dust191 | 2026-11-01 | S2 |
+| DEV-003 | `docs/03-dev/testing.md` | 测试策略 | approved | @Dust191 | 2026-11-01 | S2 |
+| DEV-004 | `docs/03-dev/tech-debt.md` | 技术债台账 | approved | @Dust191 | 2026-11-01 | S2 |
+| OPS-001 | `docs/04-ops/deploy.md` | 部署（S5 定稿，不参与 S2 审定） | in_review | @Dust191 | 2026-11-01 | S5 |
+| RUN-001 | `docs/04-ops/runbook.md` | 运行手册 | approved | @Dust191 | 2026-11-01 | S2 |
+| RUN-002 | `docs/04-ops/backup-restore.md` | 备份与恢复（S5 定稿，不参与 S2 审定） | in_review | @Dust191 | 2026-11-01 | S5 |
+| GOV-001 | `docs/05-governance/governance.md` | 治理模型 | approved | @Dust191 | 2026-11-01 | S2 |
+| GOV-002 | `docs/05-governance/release.md` | 发布流程 | approved | @Dust191 | 2026-11-01 | S2 |
 | ITER-20261031-01 | `docs/07-iteration/ITER-20261031-01.md` | 首轮迭代记录（立项前置决策） | approved | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-02 | `docs/07-iteration/ITER-20261031-02.md` | S0 文档体系建立 | approved | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-03 | `docs/07-iteration/ITER-20261031-03.md` | S1 项目骨架搭建 | approved | @Dust191 | 2026-10-31 | S1 |
@@ -54,6 +54,7 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261101-07 | `docs/07-iteration/ITER-20261101-07.md` | 编写 DES-004 指标口径 | in_review | @Dust191 | 2026-11-01 | S2 |
 | ITER-20261101-08 | `docs/07-iteration/ITER-20261101-08.md` | 回写指标裁定并编写接口与界面规范 | in_review | @Dust191 | 2026-11-01 | S2 |
 | ITER-20261101-09 | `docs/07-iteration/ITER-20261101-09.md` | 补齐 DEV/OPS/RUN/GOV 九份文档 | in_review | @Dust191 | 2026-11-01 | S2 |
+| ITER-20261101-10 | `docs/07-iteration/ITER-20261101-10.md` | S2 安全收尾与禁用写法问题分析 | in_review | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.9） | @Dust191 | 2026-11-01 | 全局 |
 
 ## 2. 编号占用

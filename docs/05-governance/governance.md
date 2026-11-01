@@ -1,7 +1,7 @@
 ---
 title: 治理模型
 doc_id: GOV-001
-status: in_review
+status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-01
