@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: jameshome-galley API
-  version: 0.0.1
+  version: 0.0.2
   description: |
     团体厨房库存远程查看系统的接口契约。
     本文件由后端 springdoc 生成后固化提交，CI 校验实现与文件的差异；手工改动须与实现同步。
@@ -27,4 +27,4 @@ paths:
                     example: ok
                   version:
                     type: string
-                    example: 0.0.1
+                    example: 0.0.2

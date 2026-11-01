@@ -48,16 +48,16 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261101-01 | `docs/07-iteration/ITER-20261101-01.md` | JDK 锁定粒度与词条补登记 | approved | @Dust191 | 2026-11-01 | S1 |
 | ITER-20261101-02 | `docs/07-iteration/ITER-20261101-02.md` | `status` 与「状态」口径统一 | approved | @Dust191 | 2026-11-01 | S1 |
 | ITER-20261101-03 | `docs/07-iteration/ITER-20261101-03.md` | GLOSSARY-001 改动失控与修正 | approved | @Dust191 | 2026-11-01 | S1 |
-| ITER-20261101-04 | `docs/07-iteration/ITER-20261101-04.md` | 补充人机协作约定并同步派生表述 | in_review | @Dust191 | 2026-11-01 | S1 |
-| ITER-20261101-05 | `docs/07-iteration/ITER-20261101-05.md` | S2 启动：模板集、文档校验与领域模型 | in_review | @Dust191 | 2026-11-01 | S2 |
-| ITER-20261101-06 | `docs/07-iteration/ITER-20261101-06.md` | 采纳 Q-1~Q-3 并补登记两个词条 | in_review | @Dust191 | 2026-11-01 | S2 |
-| ITER-20261101-07 | `docs/07-iteration/ITER-20261101-07.md` | 编写 DES-004 指标口径 | in_review | @Dust191 | 2026-11-01 | S2 |
-| ITER-20261101-08 | `docs/07-iteration/ITER-20261101-08.md` | 回写指标裁定并编写接口与界面规范 | in_review | @Dust191 | 2026-11-01 | S2 |
-| ITER-20261101-09 | `docs/07-iteration/ITER-20261101-09.md` | 补齐 DEV/OPS/RUN/GOV 九份文档 | in_review | @Dust191 | 2026-11-01 | S2 |
-| ITER-20261101-10 | `docs/07-iteration/ITER-20261101-10.md` | S2 安全收尾与禁用写法问题分析 | in_review | @Dust191 | 2026-11-01 | S2 |
-| ITER-20261101-11 | `docs/07-iteration/ITER-20261101-11.md` | 起草 RFC-0001 禁用写法拆分 | in_review | @Dust191 | 2026-11-01 | S2 |
+| ITER-20261101-04 | `docs/07-iteration/ITER-20261101-04.md` | 补充人机协作约定并同步派生表述 | approved | @Dust191 | 2026-11-01 | S1 |
+| ITER-20261101-05 | `docs/07-iteration/ITER-20261101-05.md` | S2 启动：模板集、文档校验与领域模型 | approved | @Dust191 | 2026-11-01 | S2 |
+| ITER-20261101-06 | `docs/07-iteration/ITER-20261101-06.md` | 采纳 Q-1~Q-3 并补登记两个词条 | approved | @Dust191 | 2026-11-01 | S2 |
+| ITER-20261101-07 | `docs/07-iteration/ITER-20261101-07.md` | 编写 DES-004 指标口径 | approved | @Dust191 | 2026-11-01 | S2 |
+| ITER-20261101-08 | `docs/07-iteration/ITER-20261101-08.md` | 回写指标裁定并编写接口与界面规范 | approved | @Dust191 | 2026-11-01 | S2 |
+| ITER-20261101-09 | `docs/07-iteration/ITER-20261101-09.md` | 补齐 DEV/OPS/RUN/GOV 九份文档 | approved | @Dust191 | 2026-11-01 | S2 |
+| ITER-20261101-10 | `docs/07-iteration/ITER-20261101-10.md` | S2 安全收尾与禁用写法问题分析 | approved | @Dust191 | 2026-11-01 | S2 |
+| ITER-20261101-11 | `docs/07-iteration/ITER-20261101-11.md` | 起草 RFC-0001 禁用写法拆分 | approved | @Dust191 | 2026-11-01 | S2 |
 | ITER-20261101-12 | `docs/07-iteration/ITER-20261101-12.md` | 实施 RFC-0001 并核对全部 ITER 遗留项 | in_review | @Dust191 | 2026-11-01 | S2 |
-| RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | accepted | @Dust191 | 2026-11-01 | S2 |
+| RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.11） | @Dust191 | 2026-11-01 | 全局 |
 
 ## 2. 编号占用
