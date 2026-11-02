@@ -29,7 +29,7 @@ related: [GLOSSARY-001, PRD-001]
 | ADR-0002 | `docs/02-design/adr/ADR-0002-repo-layout.md` | 仓库目录结构与构建入口 | approved | @Dust191 | 2026-10-31 | S0 |
 | ADR-0003 | `docs/02-design/adr/ADR-0003-code-style-tool.md` | 代码规范工具只上 Spotless | approved | @Dust191 | 2026-10-31 | S0 |
 | ADR-0004 | `docs/02-design/adr/ADR-0004-jdk-pin-granularity.md` | JDK 版本锁定粒度 | approved | @Dust191 | 2026-11-01 | S1 |
-| ADR-0005 | `docs/02-design/adr/ADR-0005-object-storage.md` | 对象存储采用可替换实现 | in_review | @Dust191 | 2026-11-02 | S3 |
+| ADR-0005 | `docs/02-design/adr/ADR-0005-object-storage.md` | 对象存储采用可替换实现 | approved | @Dust191 | 2026-11-02 | S3 |
 | DES-001 | `docs/02-design/domain-model.md` | 领域模型 | approved | @Dust191 | 2026-11-01 | S2 |
 | DES-004 | `docs/02-design/metrics.md` | 统计指标口径 | approved | @Dust191 | 2026-11-01 | S2 |
 | DES-002 | `docs/02-design/api.md` | 接口契约 | approved | @Dust191 | 2026-11-01 | S2 |
@@ -57,14 +57,15 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261101-09 | `docs/07-iteration/ITER-20261101-09.md` | 补齐 DEV/OPS/RUN/GOV 九份文档 | approved | @Dust191 | 2026-11-01 | S2 |
 | ITER-20261101-10 | `docs/07-iteration/ITER-20261101-10.md` | S2 安全收尾与禁用写法问题分析 | approved | @Dust191 | 2026-11-01 | S2 |
 | ITER-20261101-11 | `docs/07-iteration/ITER-20261101-11.md` | 起草 RFC-0001 禁用写法拆分 | approved | @Dust191 | 2026-11-01 | S2 |
-| ITER-20261101-12 | `docs/07-iteration/ITER-20261101-12.md` | 实施 RFC-0001 并核对全部 ITER 遗留项 | in_review | @Dust191 | 2026-11-01 | S2 |
-| ITER-20261102-01 | `docs/07-iteration/ITER-20261102-01.md` | S3 开工：迁移验证与存储落点 | in_review | @Dust191 | 2026-11-02 | S3 |
-| ITER-20261102-02 | `docs/07-iteration/ITER-20261102-02.md` | T2 通用层与认证 | in_review | @Dust191 | 2026-11-02 | S3 |
-| ITER-20261102-03 | `docs/07-iteration/ITER-20261102-03.md` | 引导管理员与主数据字典 | in_review | @Dust191 | 2026-11-02 | S3 |
-| ITER-20261102-04 | `docs/07-iteration/ITER-20261102-04.md` | 物料主数据与图片上传，首次端到端联调 | in_review | @Dust191 | 2026-11-02 | S3 |
-| ITER-20261102-05 | `docs/07-iteration/ITER-20261102-05.md` | 出入库登记、红冲与结存 | in_review | @Dust191 | 2026-11-02 | S3 |
-| ITER-20261102-06 | `docs/07-iteration/ITER-20261102-06.md` | 九项统计指标 | in_review | @Dust191 | 2026-11-02 | S3 |
-| ITER-20261102-07 | `docs/07-iteration/ITER-20261102-07.md` | 物料 CSV 导出 | in_review | @Dust191 | 2026-11-02 | S3 |
+| ITER-20261101-12 | `docs/07-iteration/ITER-20261101-12.md` | 实施 RFC-0001 并核对全部 ITER 遗留项 | approved | @Dust191 | 2026-11-01 | S2 |
+| ITER-20261102-01 | `docs/07-iteration/ITER-20261102-01.md` | S3 开工：迁移验证与存储落点 | approved | @Dust191 | 2026-11-02 | S3 |
+| ITER-20261102-02 | `docs/07-iteration/ITER-20261102-02.md` | T2 通用层与认证 | approved | @Dust191 | 2026-11-02 | S3 |
+| ITER-20261102-03 | `docs/07-iteration/ITER-20261102-03.md` | 引导管理员与主数据字典 | approved | @Dust191 | 2026-11-02 | S3 |
+| ITER-20261102-04 | `docs/07-iteration/ITER-20261102-04.md` | 物料主数据与图片上传，首次端到端联调 | approved | @Dust191 | 2026-11-02 | S3 |
+| ITER-20261102-05 | `docs/07-iteration/ITER-20261102-05.md` | 出入库登记、红冲与结存 | approved | @Dust191 | 2026-11-02 | S3 |
+| ITER-20261102-06 | `docs/07-iteration/ITER-20261102-06.md` | 九项统计指标 | approved | @Dust191 | 2026-11-02 | S3 |
+| ITER-20261102-07 | `docs/07-iteration/ITER-20261102-07.md` | 物料 CSV 导出 | approved | @Dust191 | 2026-11-02 | S3 |
+| ITER-20261102-08 | `docs/07-iteration/ITER-20261102-08.md` | 物料导入与流水导出 | in_review | @Dust191 | 2026-11-02 | S3 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 

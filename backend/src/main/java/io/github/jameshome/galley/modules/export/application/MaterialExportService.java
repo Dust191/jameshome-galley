@@ -4,8 +4,13 @@ import io.github.jameshome.galley.common.error.BusinessException;
 import io.github.jameshome.galley.common.error.ErrorCode;
 import io.github.jameshome.galley.modules.material.infrastructure.MaterialListRow;
 import io.github.jameshome.galley.modules.material.infrastructure.MaterialMapper;
+import io.github.jameshome.galley.modules.stock.infrastructure.MovementListRow;
+import io.github.jameshome.galley.modules.stock.infrastructure.StockMovementMapper;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -32,10 +37,21 @@ public class MaterialExportService {
         "自编码", "物料名", "分类", "单位", "规格", "安全库存", "保质期(天)", "当前结存", "状态", "备注"
     };
 
-    private final MaterialMapper materialMapper;
+    private static final String[] MOVEMENT_HEADER = {
+        "发生时间", "物料", "单位", "类型", "数量", "操作人", "备注", "是否已冲正"
+    };
 
-    public MaterialExportService(MaterialMapper materialMapper) {
+    /** 导出给人看的时间，用上海时区的 {@code yyyy-MM-dd HH:mm:ss}，Excel 可直接识别。 */
+    private static final DateTimeFormatter TIME_FORMAT =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of("Asia/Shanghai"));
+
+    private final MaterialMapper materialMapper;
+    private final StockMovementMapper movementMapper;
+
+    public MaterialExportService(
+            MaterialMapper materialMapper, StockMovementMapper movementMapper) {
         this.materialMapper = materialMapper;
+        this.movementMapper = movementMapper;
     }
 
     /** 受当前筛选约束，不受分页限制（DES-002 §4.6）。 */
@@ -75,11 +91,7 @@ public class MaterialExportService {
                     });
         }
 
-        byte[] body = sb.toString().getBytes(StandardCharsets.UTF_8);
-        byte[] result = new byte[UTF8_BOM.length + body.length];
-        System.arraycopy(UTF8_BOM, 0, result, 0, UTF8_BOM.length);
-        System.arraycopy(body, 0, result, UTF8_BOM.length, body.length);
-        return result;
+        return withBom(sb.toString());
     }
 
     private static void appendRow(StringBuilder sb, String[] cells) {
@@ -130,6 +142,60 @@ public class MaterialExportService {
         } catch (IllegalArgumentException ex) {
             throw new BusinessException(
                     ErrorCode.VALIDATION_FAILED, "categoryId 格式不正确", "categoryId");
+        }
+    }
+
+    /** 流水导出；同样受筛选约束、同样带 BOM。 */
+    public byte[] exportMovements(String materialId, String type, String from, String to) {
+        List<MovementListRow> rows =
+                movementMapper.search(
+                        parseUuid(materialId),
+                        blankToNull(type),
+                        parseInstant(from),
+                        parseInstant(to),
+                        MAX_ROWS + 1,
+                        0);
+
+        if (rows.size() > MAX_ROWS) {
+            throw new BusinessException(
+                    ErrorCode.EXPORT_TOO_LARGE, "导出结果超过 " + MAX_ROWS + " 行，请缩小时间范围");
+        }
+
+        StringBuilder sb = new StringBuilder(rows.size() * 80);
+        appendRow(sb, MOVEMENT_HEADER);
+        for (MovementListRow row : rows) {
+            appendRow(
+                    sb,
+                    new String[] {
+                        row.getOccurredAt() == null ? "" : TIME_FORMAT.format(row.getOccurredAt()),
+                        nullToEmpty(row.getMaterialName()),
+                        nullToEmpty(row.getUnitName()),
+                        nullToEmpty(row.getType()),
+                        decimal(row.getQuantity()),
+                        nullToEmpty(row.getOperatorName()),
+                        nullToEmpty(row.getNote()),
+                        Boolean.TRUE.equals(row.getReversed()) ? "是" : "否"
+                    });
+        }
+        return withBom(sb.toString());
+    }
+
+    private static byte[] withBom(String text) {
+        byte[] body = text.getBytes(StandardCharsets.UTF_8);
+        byte[] result = new byte[UTF8_BOM.length + body.length];
+        System.arraycopy(UTF8_BOM, 0, result, 0, UTF8_BOM.length);
+        System.arraycopy(body, 0, result, UTF8_BOM.length, body.length);
+        return result;
+    }
+
+    private static java.time.Instant parseInstant(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        try {
+            return Instant.parse(value.trim());
+        } catch (java.time.format.DateTimeParseException ex) {
+            throw new BusinessException(ErrorCode.VALIDATION_FAILED, "时间格式应为 ISO 8601", "time");
         }
     }
 }

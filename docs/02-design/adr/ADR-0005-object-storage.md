@@ -1,7 +1,7 @@
 ---
 title: 对象存储采用可替换实现：开发用 MinIO，生产用 OSS
 doc_id: ADR-0005
-status: in_review
+status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-02
@@ -15,7 +15,7 @@ related: [DES-001, OPS-001, ADR-0001]
 
 这份文档回答一个问题：**物料图片存哪、怎么做到换存储不改业务代码。**
 
-- **状态**：accepted（开发者 2026-11-02 裁定）
+- **状态**：accepted
 - **取代 / 被取代**：无
 
 ## 1. 背景
