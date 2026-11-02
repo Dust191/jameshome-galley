@@ -34,7 +34,7 @@ flowchart LR
 | galley 后端 | 容器，JRE 25 | 单实例；健康检查 `/actuator/health/readiness` |
 | 前端 | 静态文件 | 由 Caddy 直接托管 `dist/` |
 | PostgreSQL | 容器 + 数据卷 | 每日备份，见 `RUN-002` |
-| OSS | 阿里云对象存储 | 物料图片；后端只存 key，不存公网 URL |
+| OSS | 阿里云对象存储 | 物料图片；后端只存 key，不存公网 URL（开发环境用 MinIO，见 `ADR-0005`） |
 
 **待确认项**（S5 定稿前不阻塞开发）：ECS 实例规格、域名与证书来源、OSS bucket 地域。
 

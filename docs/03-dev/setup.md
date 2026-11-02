@@ -51,6 +51,22 @@ ssh <vm> 'cd ~/jameshome-galley && make dev'
 
 双向修改时以工作区为主副本，VM 只当执行环境，不在 VM 上提交。
 
+## 3.5 对象存储（MinIO）
+
+物料图片走对象存储，开发环境用虚拟机内的 MinIO（`ADR-0005`）：
+
+```bash
+docker run -d --name galley-minio -p 9000:9000 -p 9001:9001 \
+  -e MINIO_ROOT_USER=$GALLEY_S3_ACCESS_KEY \
+  -e MINIO_ROOT_PASSWORD=$GALLEY_S3_SECRET_KEY \
+  -v ~/minio-data:/data minio/minio server /data --console-address ":9001"
+mc alias set galley http://127.0.0.1:9000 $GALLEY_S3_ACCESS_KEY $GALLEY_S3_SECRET_KEY
+mc mb --ignore-existing galley/galley-material
+```
+
+预期：控制台 `http://<vm>:9001` 可登录，`mc ls galley` 列出 `galley-material/`。
+凭据写在 `.env`（已被 `.gitignore` 排除），不入仓库。
+
 ## 4. 常见问题
 
 | 现象 | 原因 | 处置 |
@@ -62,6 +78,7 @@ ssh <vm> 'cd ~/jameshome-galley && make dev'
 | `mvnw` 报 Spotless 格式化失败 | 代码不符合 google-java-format AOSP | `./mvnw spotless:apply` |
 | Docker Hub 拉取卡住 | 网络受限 | 配代理：`ssh -N -R 7891:127.0.0.1:7890 <vm>`，再给 dockerd 配 `HTTP_PROXY=http://127.0.0.1:7891` |
 | 前端 5173 打不开但后端正常 | 前端未启动或端口被占 | `cd frontend && pnpm dev --host 127.0.0.1` |
+| `docker pull minio/minio` 报 403 | 虚拟机默认镜像源对 MinIO 拒绝 | 改用华为镜像站同一镜像，见 `ADR-0005`；根治是清掉 `daemon.json` 里失效的 `registry-mirrors` |
 
 ## 5. 验证清单
 
