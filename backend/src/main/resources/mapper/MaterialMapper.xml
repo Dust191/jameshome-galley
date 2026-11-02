@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.jameshome.galley.modules.material.infrastructure.MaterialMapper">
+
+  <!--
+    结存取 stock_balance 的物化值，LEFT JOIN 保证没有结存行的新物料也能出现（视为 0）。
+    ${orderBy} 由 Service 从白名单拼出，绝不接受前端原样传入。
+  -->
+  <sql id="baseSelect">
+    SELECT m.id, m.code, m.name,
+           m.category_id, c.name AS category_name,
+           m.unit_id, u.name AS unit_name,
+           m.spec, m.safety_stock, m.shelf_life_days, m.note,
+           m.image_url, m.status, m.version,
+           coalesce(b.quantity, 0) AS current_stock
+    FROM material m
+    JOIN material_category c ON c.id = m.category_id
+    JOIN unit u ON u.id = m.unit_id
+    LEFT JOIN stock_balance b ON b.material_id = m.id
+    WHERE m.deleted_at IS NULL
+  </sql>
+
+  <sql id="filters">
+    <if test="keyword != null and keyword != ''">
+      AND (m.name ILIKE '%' || #{keyword} || '%' OR m.code ILIKE '%' || #{keyword} || '%')
+    </if>
+    <if test="categoryId != null">
+      AND m.category_id = #{categoryId}
+    </if>
+    <choose>
+      <when test="status == 'all'"></when>
+      <when test="status != null and status != ''">AND m.status = #{status}</when>
+      <otherwise>AND m.status = 'active'</otherwise>
+    </choose>
+    <if test="stockState == 'low'">
+      AND coalesce(b.quantity, 0) > 0 AND coalesce(b.quantity, 0) &lt; m.safety_stock
+    </if>
+    <if test="stockState == 'zero'">
+      AND coalesce(b.quantity, 0) = 0
+    </if>
+    <if test="stockState == 'stale'">
+      AND coalesce(b.quantity, 0) > 0
+      AND NOT EXISTS (
+        SELECT 1 FROM stock_movement sm
+        WHERE sm.material_id = m.id AND sm.type = 'OUT' AND sm.reversed = false
+          AND sm.occurred_at > now() - interval '90 days'
+      )
+    </if>
+  </sql>
+
+  <select id="search" resultType="io.github.jameshome.galley.modules.material.infrastructure.MaterialListRow">
+    <include refid="baseSelect"/>
+    <include refid="filters"/>
+    ORDER BY ${orderBy}
+    LIMIT #{limit} OFFSET #{offset}
+  </select>
+
+  <select id="countSearch" resultType="long">
+    SELECT count(*)
+    FROM material m
+    JOIN material_category c ON c.id = m.category_id
+    JOIN unit u ON u.id = m.unit_id
+    LEFT JOIN stock_balance b ON b.material_id = m.id
+    WHERE m.deleted_at IS NULL
+    <include refid="filters"/>
+  </select>
+
+  <select id="findRowById" resultType="io.github.jameshome.galley.modules.material.infrastructure.MaterialListRow">
+    <include refid="baseSelect"/>
+    AND m.id = #{id}
+  </select>
+
+  <select id="countMovements" resultType="long">
+    SELECT count(*) FROM stock_movement WHERE material_id = #{id}
+  </select>
+
+</mapper>

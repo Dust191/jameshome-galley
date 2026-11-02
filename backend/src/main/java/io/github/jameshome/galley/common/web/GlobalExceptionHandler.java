@@ -7,11 +7,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import tools.jackson.databind.exc.InvalidFormatException;
 
 /**
  * 把异常统一转成 {@code {code, message, field, traceId}}。
@@ -37,6 +41,38 @@ public class GlobalExceptionHandler {
         String message = first == null ? "参数校验失败" : first.getDefaultMessage();
         return ResponseEntity.status(ErrorCode.VALIDATION_FAILED.status())
                 .body(error(ErrorCode.VALIDATION_FAILED.name(), message, field));
+    }
+
+    /**
+     * 请求体无法解析：JSON 语法错、枚举值不在取值集合内、数字格式不对等。
+     *
+     * <p>这类错误本质是调用方传错，必须返回 400 而不是 500——否则前端会当成服务端故障去重试。 字段名尽量从 Jackson 的路径里取，取不到就给通用提示。
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiError> onUnreadable(HttpMessageNotReadableException ex) {
+        String field = null;
+        String message = "请求体格式不正确";
+        if (ex.getCause() instanceof InvalidFormatException ife) {
+            if (!ife.getPath().isEmpty()) {
+                field = ife.getPath().get(ife.getPath().size() - 1).getPropertyName();
+            }
+            if (ife.getTargetType() != null && ife.getTargetType().isEnum()) {
+                message = "取值不在允许范围内";
+            }
+        }
+        return ResponseEntity.status(ErrorCode.VALIDATION_FAILED.status())
+                .body(error(ErrorCode.VALIDATION_FAILED.name(), message, field));
+    }
+
+    /** 路径或查询参数类型不对，例如 {@code ?categoryId=abc}。 */
+    @ExceptionHandler({
+        MethodArgumentTypeMismatchException.class,
+        MissingServletRequestParameterException.class
+    })
+    public ResponseEntity<ApiError> onBadParameter(Exception ex) {
+        String field = ex instanceof MethodArgumentTypeMismatchException m ? m.getName() : null;
+        return ResponseEntity.status(ErrorCode.VALIDATION_FAILED.status())
+                .body(error(ErrorCode.VALIDATION_FAILED.name(), "参数格式不正确", field));
     }
 
     @ExceptionHandler(AccessDeniedException.class)

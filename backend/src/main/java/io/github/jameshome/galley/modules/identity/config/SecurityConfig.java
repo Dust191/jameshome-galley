@@ -8,6 +8,7 @@ import java.io.IOException;
 import org.slf4j.MDC;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
@@ -90,13 +91,27 @@ public class SecurityConfig {
                                         .requestMatchers(
                                                 "/api/v1/users/**", "/api/v1/invite-codes/**")
                                         .hasRole("ADMIN")
-                                        .requestMatchers("/api/v1/units/**")
-                                        .hasRole("ADMIN")
-                                        .requestMatchers("/api/v1/categories/**")
-                                        .hasAnyRole("ADMIN", "EDITOR")
+                                        // 读接口对所有已登录角色开放：viewer 的职责就是"能看不能改"
+                                        // （DES-002 §5、UAT-10）。先列 GET，再列写方法，顺序不能反。
                                         .requestMatchers(
+                                                HttpMethod.GET,
+                                                "/api/v1/categories/**",
+                                                "/api/v1/units/**",
                                                 "/api/v1/materials/**",
                                                 "/api/v1/movements/**",
+                                                "/api/v1/stats/**")
+                                        .authenticated()
+                                        // 单位只有 admin 能改（DES-002 §4.3）
+                                        .requestMatchers("/api/v1/units/**")
+                                        .hasRole("ADMIN")
+                                        // 删除物料是 admin 独有
+                                        .requestMatchers(HttpMethod.DELETE, "/api/v1/materials/**")
+                                        .hasRole("ADMIN")
+                                        .requestMatchers(
+                                                "/api/v1/categories/**",
+                                                "/api/v1/materials/**",
+                                                "/api/v1/movements/**",
+                                                "/api/v1/files/**",
                                                 "/api/v1/imports/**")
                                         .hasAnyRole("ADMIN", "EDITOR")
                                         .anyRequest()

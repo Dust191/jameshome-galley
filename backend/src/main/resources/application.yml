@@ -5,6 +5,11 @@ server:
 spring:
   application:
     name: jameshome-galley
+  jackson:
+    mapper:
+      # 对外枚举取值一律小写（admin / active / inactive），与 DES-002 的示例一致。
+      # Jackson 默认按常量名精确匹配，会把 "inactive" 判为非法值并抛 500。
+      accept-case-insensitive-enums: true
   datasource:
     url: ${GALLEY_DB_URL:jdbc:postgresql://localhost:5432/galley}
     username: ${GALLEY_DB_USERNAME:galley}
@@ -53,6 +58,7 @@ galley:
     secret-key: ${GALLEY_S3_SECRET_KEY:galley123}
     bucket: ${GALLEY_S3_BUCKET:galley-material}
     public-base: ${GALLEY_S3_PUBLIC_BASE:http://127.0.0.1:9000/galley-material}
+    max-image-bytes: ${GALLEY_S3_MAX_IMAGE_BYTES:5242880}
 
 logging:
   level:

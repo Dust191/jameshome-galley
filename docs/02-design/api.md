@@ -54,9 +54,12 @@ related: [DES-001, DES-004, PRD-001]
 | 403 | 权限不足、CSRF 失败、须改密 | `PERMISSION_DENIED` / `CSRF_INVALID` / `PASSWORD_CHANGE_REQUIRED` |
 | 404 | 资源不存在 | `NOT_FOUND` |
 | 409 | 乐观锁冲突、唯一键冲突 | `VERSION_CONFLICT` / `DUPLICATE_KEY` |
-| 422 | 业务规则拒绝 | `MOVEMENT_IMMUTABLE`、`MOVEMENT_ALREADY_REVERSED`、`INVITE_CODE_INVALID`、`UNIT_IN_USE`、`CATEGORY_IN_USE`、`EXPORT_TOO_LARGE` |
+| 413 | 上传文件超过上限 | `UPLOAD_TOO_LARGE`（默认 5 MB，见 `GALLEY_S3_MAX_IMAGE_BYTES`） |
+| 415 | 上传类型不支持 | `UNSUPPORTED_MEDIA_TYPE`（只收 JPEG / PNG / WebP） |
+| 422 | 业务规则拒绝 | `MOVEMENT_IMMUTABLE`、`MOVEMENT_ALREADY_REVERSED`、`INVITE_CODE_INVALID`、`UNIT_IN_USE`、`CATEGORY_IN_USE`、`MATERIAL_HAS_MOVEMENTS`、`INVALID_STATUS_TRANSITION`、`EXPORT_TOO_LARGE` |
 | 429 | 注册或登录限流 | `RATE_LIMITED`（响应头 `Retry-After`） |
 | 500 | 未预期异常 | `INTERNAL_ERROR` |
+| 502 | 对象存储不可用 | `STORAGE_FAILED`（MinIO / OSS 连接失败或写入被拒） |
 
 > **没有"库存不足"错误码**：`DES-001` §4.1 已裁定允许负结存，出库不因结存不足而被拒。
 >
@@ -97,7 +100,8 @@ related: [DES-001, DES-004, PRD-001]
 | GET | `/materials/{id}` | 详情，含当前结存 | 已登录 |
 | POST | `/materials` | 建档 | admin、editor |
 | PATCH | `/materials/{id}` | 局部更新 | admin、editor |
-| DELETE | `/materials/{id}` | 软删；有流水则 422 | admin |
+| DELETE | `/materials/{id}` | 软删；有流水则 422（`MATERIAL_HAS_MOVEMENTS`） | admin |
+| POST | `/files` | `multipart/form-data` 上传图片，返回 `{key, url}`；`key` 存物料，`url` 仅供预览 | admin、editor |
 
 ### 4.4 流水与结存
 
@@ -173,3 +177,4 @@ related: [DES-001, DES-004, PRD-001]
 |---|---|---|
 | 2026-11-01 | 初版建立 | ITER-20261101-08 |
 | 2026-11-02 | 删除 `INVITE_CODE_DISABLED`：与 D-18「三种无效码同一表现」冲突，统一用 `INVITE_CODE_INVALID` | ITER-20261102-03 |
+| 2026-11-02 | 补 `POST /files` 端点（UAT-1 要求「新建物料含图片」，原文缺上传入口）；错误码补 5 个：`UPLOAD_TOO_LARGE`、`UNSUPPORTED_MEDIA_TYPE`、`STORAGE_FAILED`、`MATERIAL_HAS_MOVEMENTS`、`INVALID_STATUS_TRANSITION` | ITER-20261102-04 |

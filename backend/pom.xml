@@ -80,13 +80,24 @@
       <artifactId>postgresql</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <!--
+      Spring Boot 4 起自动配置按技术拆分为独立模块：只有 flyway-core 时迁移不会执行，
+      且不会报错——表现为表不存在。starter 负责引入 spring-boot-flyway 自动配置。
+    -->
     <dependency>
-      <groupId>org.flywaydb</groupId>
-      <artifactId>flyway-core</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-flyway</artifactId>
     </dependency>
     <dependency>
       <groupId>org.flywaydb</groupId>
       <artifactId>flyway-database-postgresql</artifactId>
+    </dependency>
+
+    <!-- 对象存储：开发用 MinIO，生产切 OSS 时只换 ObjectStorage 实现（ADR-0005） -->
+    <dependency>
+      <groupId>io.minio</groupId>
+      <artifactId>minio</artifactId>
+      <version>8.5.17</version>
     </dependency>
 
     <dependency>
