@@ -54,11 +54,13 @@ related: [DES-001, DES-004, PRD-001]
 | 403 | 权限不足、CSRF 失败、须改密 | `PERMISSION_DENIED` / `CSRF_INVALID` / `PASSWORD_CHANGE_REQUIRED` |
 | 404 | 资源不存在 | `NOT_FOUND` |
 | 409 | 乐观锁冲突、唯一键冲突 | `VERSION_CONFLICT` / `DUPLICATE_KEY` |
-| 422 | 业务规则拒绝 | `MOVEMENT_IMMUTABLE`、`MOVEMENT_ALREADY_REVERSED`、`INVITE_CODE_INVALID`、`INVITE_CODE_DISABLED`、`UNIT_IN_USE`、`CATEGORY_IN_USE`、`EXPORT_TOO_LARGE` |
+| 422 | 业务规则拒绝 | `MOVEMENT_IMMUTABLE`、`MOVEMENT_ALREADY_REVERSED`、`INVITE_CODE_INVALID`、`UNIT_IN_USE`、`CATEGORY_IN_USE`、`EXPORT_TOO_LARGE` |
 | 429 | 注册或登录限流 | `RATE_LIMITED`（响应头 `Retry-After`） |
 | 500 | 未预期异常 | `INTERNAL_ERROR` |
 
 > **没有"库存不足"错误码**：`DES-001` §4.1 已裁定允许负结存，出库不因结存不足而被拒。
+>
+> **没有"邀请码已禁用"错误码**：D-18 要求三种无效码对外同一表现，不存在/已用/已禁用一律返回 `INVITE_CODE_INVALID`，避免被用来探测码的状态。
 
 ## 4. 资源与端点
 
@@ -170,3 +172,4 @@ related: [DES-001, DES-004, PRD-001]
 | 日期 | 变更 | 依据 |
 |---|---|---|
 | 2026-11-01 | 初版建立 | ITER-20261101-08 |
+| 2026-11-02 | 删除 `INVITE_CODE_DISABLED`：与 D-18「三种无效码同一表现」冲突，统一用 `INVITE_CODE_INVALID` | ITER-20261102-03 |
