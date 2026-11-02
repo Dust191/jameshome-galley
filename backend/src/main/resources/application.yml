@@ -16,6 +16,12 @@ spring:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: false
+  session:
+    store-type: jdbc
+    timeout: 30m
+    jdbc:
+      initialize-schema: never
+      table-name: SPRING_SESSION
 
 mybatis-plus:
   mapper-locations: classpath*:mapper/**/*.xml

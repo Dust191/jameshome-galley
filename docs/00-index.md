@@ -59,6 +59,7 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261101-11 | `docs/07-iteration/ITER-20261101-11.md` | 起草 RFC-0001 禁用写法拆分 | approved | @Dust191 | 2026-11-01 | S2 |
 | ITER-20261101-12 | `docs/07-iteration/ITER-20261101-12.md` | 实施 RFC-0001 并核对全部 ITER 遗留项 | in_review | @Dust191 | 2026-11-01 | S2 |
 | ITER-20261102-01 | `docs/07-iteration/ITER-20261102-01.md` | S3 开工：迁移验证与存储落点 | in_review | @Dust191 | 2026-11-02 | S3 |
+| ITER-20261102-02 | `docs/07-iteration/ITER-20261102-02.md` | T2 通用层与认证 | in_review | @Dust191 | 2026-11-02 | S3 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
