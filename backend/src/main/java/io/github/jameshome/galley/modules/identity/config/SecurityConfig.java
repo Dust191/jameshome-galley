@@ -100,7 +100,8 @@ public class SecurityConfig {
                                                 "/api/v1/materials/**",
                                                 "/api/v1/movements/**",
                                                 "/api/v1/balances/**",
-                                                "/api/v1/stats/**")
+                                                "/api/v1/stats/**",
+                                                "/api/v1/exports/**")
                                         .authenticated()
                                         // 单位只有 admin 能改（DES-002 §4.3）
                                         .requestMatchers("/api/v1/units/**")

@@ -64,6 +64,7 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261102-04 | `docs/07-iteration/ITER-20261102-04.md` | 物料主数据与图片上传，首次端到端联调 | in_review | @Dust191 | 2026-11-02 | S3 |
 | ITER-20261102-05 | `docs/07-iteration/ITER-20261102-05.md` | 出入库登记、红冲与结存 | in_review | @Dust191 | 2026-11-02 | S3 |
 | ITER-20261102-06 | `docs/07-iteration/ITER-20261102-06.md` | 九项统计指标 | in_review | @Dust191 | 2026-11-02 | S3 |
+| ITER-20261102-07 | `docs/07-iteration/ITER-20261102-07.md` | 物料 CSV 导出 | in_review | @Dust191 | 2026-11-02 | S3 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
