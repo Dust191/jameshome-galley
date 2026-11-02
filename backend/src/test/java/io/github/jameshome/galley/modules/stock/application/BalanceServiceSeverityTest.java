@@ -66,14 +66,14 @@ class BalanceServiceSeverityTest {
     @DisplayName("白名单外一律回落到默认排序，不进 SQL")
     void rejectsInjection(String malicious) {
         String orderBy = BalanceService.orderBy(malicious);
-        assertThat(orderBy).contains("CASE WHEN b.quantity");
+        assertThat(orderBy).contains("CASE WHEN coalesce(b.quantity");
     }
 
     @Test
     @DisplayName("默认排序即 M-9 的顺序：严重度降序 → 结存升序 → 名称升序")
     void defaultOrderMatchesM9() {
         assertThat(BalanceService.orderBy(null))
-                .startsWith("(CASE WHEN b.quantity")
-                .contains("DESC, b.quantity ASC, m.name ASC");
+                .startsWith("(CASE WHEN coalesce(b.quantity")
+                .contains("DESC, coalesce(b.quantity, 0) ASC, m.name ASC");
     }
 }

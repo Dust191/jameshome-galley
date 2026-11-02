@@ -20,18 +20,19 @@ public class BalanceService {
      * <p>写成 SQL 而非 Java，是因为排序要在数据库完成：分页后再算严重度会导致跨页顺序错乱。
      */
     private static final String SEVERITY_SQL =
-            "(CASE WHEN b.quantity < 0 THEN 3 WHEN b.quantity = 0 THEN 2"
-                    + " WHEN b.quantity < m.safety_stock THEN 1 ELSE 0 END)";
+            "(CASE WHEN coalesce(b.quantity, 0) < 0 THEN 3 WHEN coalesce(b.quantity, 0) = 0 THEN 2"
+                    + " WHEN coalesce(b.quantity, 0) < m.safety_stock THEN 1 ELSE 0 END)";
 
     private static final Map<String, String> SORT_COLUMNS =
             Map.of(
                     "name", "m.name",
-                    "quantity", "b.quantity",
+                    "quantity", "coalesce(b.quantity, 0)",
                     "lastMovementAt", "b.last_movement_at",
                     "severity", SEVERITY_SQL);
 
     /** 默认与 M-9 的排序一致：严重度降序 → 结存升序 → 名称升序。 */
-    private static final String DEFAULT_ORDER = SEVERITY_SQL + " DESC, b.quantity ASC, m.name ASC";
+    private static final String DEFAULT_ORDER =
+            SEVERITY_SQL + " DESC, coalesce(b.quantity, 0) ASC, m.name ASC";
 
     private final StockBalanceMapper mapper;
 
