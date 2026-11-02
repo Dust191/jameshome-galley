@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.jameshome.galley.modules.stock.infrastructure.StockMovementMapper">
+
+  <!-- 操作人用 LEFT JOIN：账号被删后流水仍要能显示，只是操作人显示为空 -->
+  <sql id="baseSelect">
+    SELECT sm.id, sm.material_id, m.name AS material_name, u.name AS unit_name,
+           sm.type, sm.quantity, sm.occurred_at,
+           au.display_name AS operator_name,
+           sm.note, sm.reversed, sm.reversal_of
+    FROM stock_movement sm
+    JOIN material m ON m.id = sm.material_id
+    JOIN unit u ON u.id = m.unit_id
+    LEFT JOIN app_user au ON au.id = sm.operator_id
+    WHERE 1 = 1
+  </sql>
+
+  <sql id="filters">
+    <if test="materialId != null">AND sm.material_id = #{materialId}</if>
+    <if test="type != null and type != ''">AND sm.type = #{type}</if>
+    <if test="from != null">AND sm.occurred_at &gt;= #{from}</if>
+    <if test="to != null">AND sm.occurred_at &lt; #{to}</if>
+  </sql>
+
+  <select id="findRowById" resultType="io.github.jameshome.galley.modules.stock.infrastructure.MovementListRow">
+    <include refid="baseSelect"/>
+    AND sm.id = #{id}
+  </select>
+
+  <select id="search" resultType="io.github.jameshome.galley.modules.stock.infrastructure.MovementListRow">
+    <include refid="baseSelect"/>
+    <include refid="filters"/>
+    ORDER BY sm.occurred_at DESC, sm.id DESC
+    LIMIT #{limit} OFFSET #{offset}
+  </select>
+
+  <select id="countSearch" resultType="long">
+    SELECT count(*)
+    FROM stock_movement sm
+    WHERE 1 = 1
+    <include refid="filters"/>
+  </select>
+
+</mapper>

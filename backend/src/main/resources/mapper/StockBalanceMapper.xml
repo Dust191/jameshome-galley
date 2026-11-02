@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.jameshome.galley.modules.stock.infrastructure.StockBalanceMapper">
+
+  <!--
+    结存列表只列未软删、未归档的物料：归档是终态，不应该再出现在任何"当前库存"视图里。
+    ${orderBy} 由 Service 从白名单拼出。
+  -->
+  <sql id="baseSelect">
+    SELECT b.material_id, m.name AS material_name, m.code, m.spec,
+           c.name AS category_name, u.name AS unit_name,
+           b.quantity, m.safety_stock, b.last_movement_at
+    FROM stock_balance b
+    JOIN material m ON m.id = b.material_id
+    JOIN unit u ON u.id = m.unit_id
+    JOIN material_category c ON c.id = m.category_id
+    WHERE m.deleted_at IS NULL AND m.status &lt;&gt; 'archived'
+  </sql>
+
+  <sql id="filters">
+    <if test="keyword != null and keyword != ''">
+      AND (m.name ILIKE '%' || #{keyword} || '%' OR m.code ILIKE '%' || #{keyword} || '%')
+    </if>
+    <if test="categoryId != null">AND m.category_id = #{categoryId}</if>
+    <if test="stockState == 'negative'">AND b.quantity &lt; 0</if>
+    <if test="stockState == 'zero'">AND b.quantity = 0</if>
+    <if test="stockState == 'low'">
+      AND b.quantity &gt; 0 AND b.quantity &lt; m.safety_stock
+    </if>
+    <if test="stockState == 'stale'">
+      AND b.quantity &gt; 0
+      AND NOT EXISTS (
+        SELECT 1 FROM stock_movement sm
+        WHERE sm.material_id = b.material_id AND sm.type = 'OUT' AND sm.reversed = false
+          AND sm.occurred_at &gt; now() - interval '90 days'
+      )
+    </if>
+  </sql>
+
+  <select id="search" resultType="io.github.jameshome.galley.modules.stock.infrastructure.BalanceListRow">
+    <include refid="baseSelect"/>
+    <include refid="filters"/>
+    ORDER BY ${orderBy}
+    LIMIT #{limit} OFFSET #{offset}
+  </select>
+
+  <select id="countSearch" resultType="long">
+    SELECT count(*)
+    FROM stock_balance b
+    JOIN material m ON m.id = b.material_id
+    JOIN unit u ON u.id = m.unit_id
+    JOIN material_category c ON c.id = m.category_id
+    WHERE m.deleted_at IS NULL AND m.status &lt;&gt; 'archived'
+    <include refid="filters"/>
+  </select>
+
+</mapper>
