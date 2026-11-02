@@ -24,14 +24,14 @@ public final class IdentityDtos {
             @NotBlank(message = "账号名不能为空")
                     @Pattern(regexp = "^[a-z0-9_]{3,32}$", message = "账号名只能用小写字母、数字与下划线，3~32 位")
                     String username,
-            @NotBlank(message = "口令不能为空") @Size(min = 8, max = 64, message = "口令长度 8~64 位")
+            @NotBlank(message = "密码不能为空") @Size(min = 8, max = 64, message = "密码长度 8~64 位")
                     String password,
-            @NotBlank(message = "显示名不能为空") @Size(max = 50, message = "显示名不超过 50 字")
-                    String displayName) {}
+            // 显示名可省略：未填时由服务端以账号名代替，注册表单因此只需两栏
+            @Size(max = 50, message = "显示名不超过 50 字") String displayName) {}
 
     public record ChangePasswordRequest(
-            @NotBlank(message = "原口令不能为空") String oldPassword,
-            @NotBlank(message = "新口令不能为空") @Size(min = 8, max = 64, message = "口令长度 8~64 位")
+            @NotBlank(message = "原密码不能为空") String oldPassword,
+            @NotBlank(message = "新密码不能为空") @Size(min = 8, max = 64, message = "密码长度 8~64 位")
                     String newPassword) {}
 
     public record UpdateUserRequest(String displayName, Role role, UserStatus status) {}

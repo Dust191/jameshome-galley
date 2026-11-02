@@ -128,7 +128,9 @@ public class AuthService {
         AppUserDO row = new AppUserDO();
         row.setId(UuidV7.generate());
         row.setUsername(username);
-        row.setDisplayName(displayName);
+        // 显示名未填时以账号名代替：注册表单只收账号名与密码两栏
+        row.setDisplayName(
+                displayName == null || displayName.isBlank() ? username : displayName.trim());
         row.setPasswordHash(passwordEncoder.encode(rawPassword));
         row.setRole(Role.VIEWER.dbValue());
         row.setStatus(UserStatus.ACTIVE.dbValue());

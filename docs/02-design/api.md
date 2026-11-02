@@ -73,7 +73,7 @@ related: [DES-001, DES-004, PRD-001]
 |---|---|---|---|
 | POST | `/auth/login` | 账号名 + 口令；连续失败 5 次锁定 15 分钟 | 匿名 |
 | POST | `/auth/logout` | 销毁会话 | 已登录 |
-| POST | `/auth/register` | 凭邀请码注册，角色固定 `viewer` | 匿名（限流） |
+| POST | `/auth/register` | 凭邀请码注册，角色固定 `viewer`；显示名可省略（自动用账号名） | 匿名（限流） |
 | PATCH | `/auth/password` | 改密；`must_change_password` 为真时唯一可用端点 | 已登录 |
 | GET | `/auth/me` | 当前账号与权限 | 已登录 |
 
@@ -84,6 +84,7 @@ related: [DES-001, DES-004, PRD-001]
 | GET | `/users` | 列表，支持 `?role=&status=` | admin |
 | PATCH | `/users/{id}` | 改角色、显示名、启用/禁用 | admin |
 | POST | `/users/{id}/reset-password` | 重置为临时口令，置 `must_change_password` | admin |
+| POST | `/invite-codes/validate` | 注册前校验码是否可用，只回 `{valid}`，不区分无效原因（D-18） | 匿名 |
 | GET | `/invite-codes` | 列表，支持 `?status=` | admin |
 | POST | `/invite-codes` | 生成 8 位码 | admin |
 | PATCH | `/invite-codes/{id}` | 仅支持 `{"status":"disabled"}` | admin |
@@ -178,3 +179,4 @@ related: [DES-001, DES-004, PRD-001]
 | 2026-11-01 | 初版建立 | ITER-20261101-08 |
 | 2026-11-02 | 删除 `INVITE_CODE_DISABLED`：与 D-18「三种无效码同一表现」冲突，统一用 `INVITE_CODE_INVALID` | ITER-20261102-03 |
 | 2026-11-02 | 补 `POST /files` 端点（UAT-1 要求「新建物料含图片」，原文缺上传入口）；错误码补 5 个：`UPLOAD_TOO_LARGE`、`UNSUPPORTED_MEDIA_TYPE`、`STORAGE_FAILED`、`MATERIAL_HAS_MOVEMENTS`、`INVALID_STATUS_TRANSITION` | ITER-20261102-04 |
+| 2026-11-02 | 注册显示名改为可省略；新增 `POST /invite-codes/validate` 供注册前校验（T6 返工） | ITER-20261102-09 |

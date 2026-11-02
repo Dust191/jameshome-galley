@@ -81,12 +81,15 @@ public class SecurityConfig {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(
                         auth ->
-                                auth.requestMatchers("/actuator/health/**", "/actuator/info")
+                                auth.requestMatchers(
+                                                "/healthz", "/actuator/health/**", "/actuator/info")
                                         .permitAll()
                                         .requestMatchers(
                                                 "/api/v1/auth/login",
                                                 "/api/v1/auth/register",
-                                                "/api/v1/auth/csrf")
+                                                "/api/v1/auth/csrf",
+                                                // 受邀者未登录就要校验邀请码
+                                                "/api/v1/invite-codes/validate")
                                         .permitAll()
                                         .requestMatchers(
                                                 "/api/v1/users/**", "/api/v1/invite-codes/**")

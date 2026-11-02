@@ -1,19 +1,30 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// 开发期把 /api 与健康检查转发到后端，前端不直连数据库、不硬编码后端地址
+// 后端端口可被环境变量改写：本机开发常用 `--server.port=18080` 避开被占用的 8080。
+const apiTarget = process.env.GALLEY_API_TARGET ?? 'http://localhost:8080'
+
 export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
     proxy: {
-      '/api': { target: 'http://localhost:8080', changeOrigin: true },
-      '/healthz': { target: 'http://localhost:8080', changeOrigin: true },
-      '/actuator': { target: 'http://localhost:8080', changeOrigin: true },
+      '/api': { target: apiTarget, changeOrigin: true },
+      '/healthz': { target: apiTarget, changeOrigin: true },
+      '/actuator': { target: apiTarget, changeOrigin: true },
     },
   },
   build: {
     outDir: 'dist',
     sourcemap: false,
+    // antd 与 React 体积大，拆 vendor：业务代码改动后浏览器只需重新下载小包
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          antd: ['antd', '@ant-design/icons'],
+        },
+      },
+    },
   },
 })

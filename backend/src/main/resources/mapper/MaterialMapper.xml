@@ -38,6 +38,18 @@
     <if test="stockState == 'zero'">
       AND coalesce(b.quantity, 0) = 0
     </if>
+    <!-- M-9 预警并集：负 / 零 / 低于安全线 / 呆滞，供概览预警卡跳转 -->
+    <if test="stockState == 'alert'">
+      AND (
+        coalesce(b.quantity, 0) &lt; 0
+        OR coalesce(b.quantity, 0) = 0
+        OR (coalesce(b.quantity, 0) &gt; 0 AND coalesce(b.quantity, 0) &lt; m.safety_stock)
+        OR (coalesce(b.quantity, 0) &gt; 0 AND NOT EXISTS (
+              SELECT 1 FROM stock_movement sm2
+              WHERE sm2.material_id = m.id AND sm2.type = 'OUT' AND sm2.reversed = false
+                AND sm2.occurred_at &gt; now() - interval '90 days'))
+      )
+    </if>
     <if test="stockState == 'stale'">
       AND coalesce(b.quantity, 0) > 0
       AND NOT EXISTS (

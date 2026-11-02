@@ -33,51 +33,59 @@ public class BootstrapAdmin implements ApplicationRunner {
     private final AppUserMapper mapper;
     private final PasswordEncoder passwordEncoder;
     private final String username;
-    private final String configuredPassword;
+    private final boolean production;
 
     public BootstrapAdmin(
             AppUserMapper mapper,
             PasswordEncoder passwordEncoder,
             @Value("${galley.bootstrap.admin-username:admin}") String username,
-            @Value("${galley.bootstrap.admin-password:}") String configuredPassword) {
+            @Value("${galley.env:dev}") String env) {
         this.mapper = mapper;
         this.passwordEncoder = passwordEncoder;
         this.username = username;
-        this.configuredPassword = configuredPassword;
+        this.production = "prod".equalsIgnoreCase(env);
     }
 
     @Override
     @Transactional
     public void run(ApplicationArguments args) {
-        if (mapper.selectCount(null) > 0) {
+        AppUserDO existing = mapper.findByUsername(username).orElse(null);
+
+        // 生产环境不能"重启即换密码"（否则旧会话与值班记录全部失效），只在空库时创建一次
+        if (existing != null && production) {
+            log.info("管理员 {} 已存在，生产环境不重置密码", username);
             return;
         }
 
-        boolean generated = configuredPassword == null || configuredPassword.isBlank();
-        String rawPassword = generated ? randomPassword() : configuredPassword;
-        if (!generated && rawPassword.length() < 8) {
-            throw new IllegalStateException("GALLEY_BOOTSTRAP_ADMIN_PASSWORD 至少 8 位");
-        }
-
+        String rawPassword = randomPassword();
         Instant now = Instant.now();
-        AppUserDO row = new AppUserDO();
-        row.setId(UuidV7.generate());
-        row.setUsername(username);
-        row.setDisplayName("管理员");
-        row.setPasswordHash(passwordEncoder.encode(rawPassword));
-        row.setRole(Role.ADMIN.dbValue());
-        row.setStatus(UserStatus.ACTIVE.dbValue());
-        row.setMustChangePassword(generated);
-        row.setPasswordUpdatedAt(now);
-        row.setCreatedAt(now);
-        row.setUpdatedAt(now);
-        mapper.insert(row);
 
-        if (generated) {
-            log.warn("已创建初始管理员 {}，一次性口令：{}（首次登录后必须修改）", username, rawPassword);
+        if (existing == null) {
+            AppUserDO row = new AppUserDO();
+            row.setId(UuidV7.generate());
+            row.setUsername(username);
+            row.setDisplayName("管理员");
+            row.setPasswordHash(passwordEncoder.encode(rawPassword));
+            row.setRole(Role.ADMIN.dbValue());
+            row.setStatus(UserStatus.ACTIVE.dbValue());
+            // 生产首次创建时强制改密；开发环境密码随启动日志滚动，不设改密负担
+            row.setMustChangePassword(production);
+            row.setPasswordUpdatedAt(now);
+            row.setCreatedAt(now);
+            row.setUpdatedAt(now);
+            mapper.insert(row);
         } else {
-            log.info("已创建初始管理员 {}（口令来自环境变量）", username);
+            existing.setPasswordHash(passwordEncoder.encode(rawPassword));
+            existing.setMustChangePassword(false);
+            existing.setUpdatedAt(now);
+            mapper.updateById(existing);
         }
+
+        log.warn(
+                "管理员 {} 的登录密码：{}{}",
+                username,
+                rawPassword,
+                production ? "（首次登录后必须修改）" : "（每次启动重新生成，以本次日志为准）");
     }
 
     private static String randomPassword() {

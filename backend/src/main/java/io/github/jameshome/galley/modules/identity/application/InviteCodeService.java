@@ -25,6 +25,20 @@ public class InviteCodeService {
         this.mapper = mapper;
     }
 
+    /**
+     * 校验邀请码是否可用。
+     *
+     * <p>只回布尔值，不区分"不存在 / 已用 / 已禁用"（D-18）：区分原因等于开放探测接口， 拿到一串码就能逐个试出哪些还能用。
+     */
+    public boolean usable(String code) {
+        if (code == null || code.isBlank()) {
+            return false;
+        }
+        return mapper.findByCode(code.trim())
+                .map(row -> InviteStatus.fromDb(row.getStatus()) == InviteStatus.UNUSED)
+                .orElse(false);
+    }
+
     public InviteCode create(UUID creatorId) {
         Instant now = Instant.now();
         for (int attempt = 0; attempt < 5; attempt++) {

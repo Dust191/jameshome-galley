@@ -1,37 +1,105 @@
-import { useQuery } from '@tanstack/react-query'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import type { ReactElement } from 'react'
+import { Result, Spin } from 'antd'
+import AppLayout from './components/AppLayout'
+import { isAdmin, useAuth } from './features/auth/AuthContext'
+import LoginPage from './features/auth/LoginPage'
+import RegisterPage from './features/auth/RegisterPage'
+import PasswordPage from './features/auth/PasswordPage'
+import OverviewPage from './features/overview/OverviewPage'
+import MaterialListPage from './features/materials/MaterialListPage'
+import MaterialFormPage from './features/materials/MaterialFormPage'
+import MovementListPage from './features/movements/MovementListPage'
+import MovementFormPage from './features/movements/MovementFormPage'
+import StatsPage from './features/stats/StatsPage'
+import UsersPage from './features/admin/UsersPage'
+import InvitesPage from './features/admin/InvitesPage'
 
-type Health = { status: string; version: string }
+/** 未登录一律跳登录，登录后回到原处。 */
+function RequireAuth({ children }: { children: ReactElement }) {
+  const { me, loading } = useAuth()
+  const location = useLocation()
 
-async function fetchHealth(): Promise<Health> {
-  const res = await fetch('/healthz')
-  if (!res.ok) throw new Error(`健康检查失败：${res.status}`)
-  return (await res.json()) as Health
+  if (loading) {
+    return (
+      <div style={{ display: 'grid', placeItems: 'center', minHeight: '100vh' }}>
+        <Spin size="large" />
+      </div>
+    )
+  }
+  if (!me) {
+    return <Navigate to="/login" replace state={{ from: location.pathname }} />
+  }
+  // 待改密时只放行改密页，否则每个接口都会 403
+  if (me.mustChangePassword && location.pathname !== '/password') {
+    return <Navigate to="/password" replace />
+  }
+  return children
+}
+
+function RequireAdmin({ children }: { children: ReactElement }) {
+  const { me } = useAuth()
+  if (!isAdmin(me?.role)) {
+    return <Result status="403" title="没有这个权限" subTitle="该页面仅管理员可见。" />
+  }
+  return children
 }
 
 export default function App() {
-  const { data, isPending, isError } = useQuery({ queryKey: ['health'], queryFn: fetchHealth })
-
   return (
-    <main style={{ fontFamily: 'system-ui, sans-serif', padding: 24, lineHeight: 1.7 }}>
-      <h1 style={{ marginBottom: 4 }}>jameshome-galley</h1>
-      <p style={{ marginTop: 0, color: '#666' }}>团体厨房库存远程查看系统</p>
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route
+        path="/password"
+        element={
+          <RequireAuth>
+            <PasswordPage />
+          </RequireAuth>
+        }
+      />
 
-      <section style={{ marginTop: 24 }}>
-        <h2 style={{ fontSize: 16 }}>运行状态</h2>
-        {isPending && <p>检测中…</p>}
-        {isError && <p style={{ color: '#b00020' }}>后端未就绪，请确认 `make dev` 已启动</p>}
-        {data && (
-          <p>
-            status=<code>{data.status}</code>
-            {' · '}
-            version=<code>{data.version}</code>
-          </p>
-        )}
-      </section>
+      <Route
+        element={
+          <RequireAuth>
+            <AppLayout />
+          </RequireAuth>
+        }
+      >
+        <Route path="/" element={<OverviewPage />} />
+        {/* 录入类页面对只读账号在组件内部渲染为"没有这个权限"或只读详情，不依赖路由层拦截 */}
+        <Route path="/materials" element={<MaterialListPage />} />
+        <Route path="/materials/new" element={<MaterialFormPage />} />
+        <Route path="/materials/:id" element={<MaterialFormPage />} />
+        <Route path="/movements" element={<MovementListPage />} />
+        <Route path="/movements/new" element={<MovementFormPage />} />
+        <Route
+          path="/stats"
+          element={
+            <RequireAdmin>
+              <StatsPage />
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <RequireAdmin>
+              <UsersPage />
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="/admin/invites"
+          element={
+            <RequireAdmin>
+              <InvitesPage />
+            </RequireAdmin>
+          }
+        />
+      </Route>
 
-      <p style={{ marginTop: 32, color: '#888', fontSize: 14 }}>
-        骨架阶段：尚无业务页面。库存记录、修改与统计将在 0.1.0 交付。
-      </p>
-    </main>
+      <Route path="*" element={<Result status="404" title="页面不存在" />} />
+    </Routes>
   )
 }
