@@ -59,19 +59,21 @@ export default function MaterialFormPage() {
   const [error, setError] = useState<string | null>(null)
 
   const editable = canWrite(me?.role)
-  // 只读账号新建物料：直接拒绝，不渲染表单
-  if (!editable && !isEdit) {
-    return <Result status="403" title="没有这个权限" subTitle="新建物料需要录入或管理员权限。" />
-  }
+  // 只读账号不能新建，也不能看到编辑表单。
+  // 注意：不能在 hook 之前 return——React 要求每次渲染的 hook 数量一致，
+  // 否则角色变化（登录态刷新）时会直接抛错。所以先算标志，hook 之后再拦。
+  const forbidden = !editable && !isEdit
 
   const categories = useQuery({
     queryKey: ['categories'],
     queryFn: () => api.get<Category[]>('/api/v1/categories'),
+    enabled: !forbidden,
   })
 
   const units = useQuery({
     queryKey: ['units'],
     queryFn: () => api.get<Unit[]>('/api/v1/units'),
+    enabled: !forbidden,
   })
 
   const detail = useQuery({
@@ -133,6 +135,11 @@ export default function MaterialFormPage() {
       }
     },
   })
+
+  // ---------- 只读账号新建：拒绝 ----------
+  if (forbidden) {
+    return <Result status="403" title="没有这个权限" subTitle="新建物料需要录入或管理员权限。" />
+  }
 
   // ---------- 只读视图（返工要求 3） ----------
   if (!editable) {
@@ -279,10 +286,22 @@ export default function MaterialFormPage() {
               name="safetyStock"
               style={{ flex: 1 }}
               tooltip="低于该数量会进入「待补货」清单；填 0 表示不设预警线"
-              rules={[{ required: true, message: '安全库存不能为空' }]}
+              rules={[
+                { required: true, message: '安全库存不能为空' },
+                () => ({
+                  validator(_, value) {
+                    if (value == null) return Promise.resolve()
+                    if (value < 0) return Promise.reject(new Error('不能为负数'))
+                    if ((String(value).split('.')[1] ?? '').length > 3) {
+                      return Promise.reject(new Error('最多三位小数'))
+                    }
+                    return Promise.resolve()
+                  },
+                }),
+              ]}
             >
               {/* 不用 InputNumber 的 min/precision：避免失焦静默钳位（返工要求 4） */}
-              <QtyInput />
+              <QtyInput allowZero />
             </Form.Item>
             <Form.Item
               label="保质期（天）"

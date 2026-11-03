@@ -87,7 +87,7 @@ public class AuthService {
                     .orElseThrow(
                             () ->
                                     new BusinessException(
-                                            ErrorCode.AUTH_INVALID_CREDENTIALS, "账号或口令不正确"));
+                                            ErrorCode.AUTH_INVALID_CREDENTIALS, "账号或密码不正确"));
         } catch (BadCredentialsException ex) {
             failures.merge(
                     key,
@@ -97,7 +97,7 @@ public class AuthService {
                         Instant until = count >= MAX_FAILURES ? Instant.now().plus(LOCK) : null;
                         return new Failure(count, until);
                     });
-            throw new BusinessException(ErrorCode.AUTH_INVALID_CREDENTIALS, "账号或口令不正确");
+            throw new BusinessException(ErrorCode.AUTH_INVALID_CREDENTIALS, "账号或密码不正确");
         }
     }
 
@@ -158,7 +158,7 @@ public class AuthService {
 
         if (!passwordEncoder.matches(oldPassword, row.getPasswordHash())) {
             throw new BusinessException(
-                    ErrorCode.AUTH_INVALID_CREDENTIALS, "原口令不正确", "oldPassword");
+                    ErrorCode.AUTH_INVALID_CREDENTIALS, "原密码不正确", "oldPassword");
         }
 
         Instant now = Instant.now();

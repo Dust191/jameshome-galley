@@ -56,7 +56,7 @@ public class MustChangePasswordFilter extends OncePerRequestFilter {
                         response.getWriter(),
                         new ApiError(
                                 ErrorCode.PASSWORD_CHANGE_REQUIRED.name(),
-                                "首次登录或口令被重置后必须先改密",
+                                "首次登录或密码被重置后必须先改密",
                                 null,
                                 MDC.get(TraceIdFilter.MDC_KEY)));
                 return;

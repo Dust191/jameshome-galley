@@ -86,12 +86,33 @@ public class MaterialExportService {
                         decimal(row.getSafetyStock()),
                         row.getShelfLifeDays() == null ? "" : row.getShelfLifeDays().toString(),
                         decimal(row.getCurrentStock()),
-                        nullToEmpty(row.getStatus()),
+                        materialStatusLabel(row.getStatus()),
                         nullToEmpty(row.getNote())
                     });
         }
 
         return withBom(sb.toString());
+    }
+
+    /** 导出给人看的状态；内部取值（active / inactive / archived）不得出现在文件里。 */
+    static String materialStatusLabel(String status) {
+        return switch (status == null ? "" : status) {
+            case "active" -> "启用";
+            case "inactive" -> "停用";
+            case "archived" -> "已归档";
+            default -> "";
+        };
+    }
+
+    /** 导出给人看的流水类型；内部取值（IN / OUT / ADJUST / REVERSAL）不得出现在文件里。 */
+    static String movementTypeLabel(String type) {
+        return switch (type == null ? "" : type) {
+            case "IN" -> "入库";
+            case "OUT" -> "出库";
+            case "ADJUST" -> "盘点调整";
+            case "REVERSAL" -> "冲正";
+            default -> "";
+        };
     }
 
     private static void appendRow(StringBuilder sb, String[] cells) {
@@ -170,7 +191,7 @@ public class MaterialExportService {
                         row.getOccurredAt() == null ? "" : TIME_FORMAT.format(row.getOccurredAt()),
                         nullToEmpty(row.getMaterialName()),
                         nullToEmpty(row.getUnitName()),
-                        nullToEmpty(row.getType()),
+                        movementTypeLabel(row.getType()),
                         decimal(row.getQuantity()),
                         nullToEmpty(row.getOperatorName()),
                         nullToEmpty(row.getNote()),

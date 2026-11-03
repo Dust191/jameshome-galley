@@ -17,7 +17,7 @@ public final class IdentityDtos {
 
     public record LoginRequest(
             @NotBlank(message = "账号名不能为空") String username,
-            @NotBlank(message = "口令不能为空") String password) {}
+            @NotBlank(message = "密码不能为空") String password) {}
 
     public record RegisterRequest(
             @NotBlank(message = "邀请码不能为空") String inviteCode,

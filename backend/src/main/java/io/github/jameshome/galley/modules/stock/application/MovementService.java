@@ -78,7 +78,8 @@ public class MovementService {
     @Transactional
     public MovementView create(MovementCreate body, AppUser operator) {
         if (!body.type().clientAssignable()) {
-            throw new BusinessException(ErrorCode.VALIDATION_FAILED, "红冲只能通过红冲接口发起", "type");
+            throw new BusinessException(
+                    ErrorCode.VALIDATION_FAILED, "冲正不能手工登记，请在记录上使用冲正操作", "type");
         }
         body.type().requireValidQuantity(body.quantity());
 
@@ -136,13 +137,13 @@ public class MovementService {
                         .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND, "流水不存在"));
 
         if (MovementType.REVERSAL.dbValue().equals(original.getType())) {
-            throw new BusinessException(ErrorCode.VALIDATION_FAILED, "红冲流水不能再被红冲", "movementId");
+            throw new BusinessException(ErrorCode.VALIDATION_FAILED, "冲正记录不能再冲正", "movementId");
         }
         if (Boolean.TRUE.equals(original.getReversed())) {
-            throw new BusinessException(ErrorCode.MOVEMENT_ALREADY_REVERSED, "该流水已被红冲");
+            throw new BusinessException(ErrorCode.MOVEMENT_ALREADY_REVERSED, "该记录已被冲正");
         }
         if (movementMapper.markReversed(movementId) == 0) {
-            throw new BusinessException(ErrorCode.MOVEMENT_ALREADY_REVERSED, "该流水已被红冲");
+            throw new BusinessException(ErrorCode.MOVEMENT_ALREADY_REVERSED, "该记录已被冲正");
         }
 
         Instant now = Instant.now();

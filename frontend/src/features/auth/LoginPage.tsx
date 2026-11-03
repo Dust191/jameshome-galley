@@ -17,6 +17,7 @@ export default function LoginPage() {
   const { signIn } = useAuth()
   const navigate = useNavigate()
   const [error, setError] = useState<string | null>(null)
+  const [submitting, setSubmitting] = useState(false)
   const [registerOpen, setRegisterOpen] = useState(false)
   const [inviteCode, setInviteCode] = useState('')
   const [inviteError, setInviteError] = useState<string | null>(null)
@@ -39,11 +40,14 @@ export default function LoginPage() {
 
   const onFinish = async (values: FormValues) => {
     setError(null)
+    setSubmitting(true)
     try {
       const me = await signIn(values.username, values.password)
       navigate(me.mustChangePassword ? '/password' : '/', { replace: true })
     } catch (e) {
       setError(e instanceof ApiError ? e.message : '登录失败，请稍后重试')
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -74,8 +78,8 @@ export default function LoginPage() {
           >
             <Input.Password autoComplete="current-password" />
           </Form.Item>
-          <Button type="primary" htmlType="submit" block loading={false}>
-            登录
+          <Button type="primary" htmlType="submit" block loading={submitting}>
+            {submitting ? '登录中…' : '登录'}
           </Button>
         </Form>
 
@@ -97,6 +101,7 @@ export default function LoginPage() {
 
       <Modal
         title="输入邀请码"
+        centered
         open={registerOpen}
         okText="校验并继续"
         cancelText="取消"

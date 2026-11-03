@@ -23,8 +23,9 @@ function round3(value: number): string {
 /**
  * @param raw 输入框里的原始字符串
  * @param allowNegative 盘点调整允许负数，入库/出库不允许
+ * @param allowZero 安全库存一类的字段允许 0（表示不设预警线）
  */
-export function clampQty(raw: string, allowNegative: boolean): ClampedResult {
+export function clampQty(raw: string, allowNegative: boolean, allowZero = false): ClampedResult {
   const text = raw.trim()
   if (text === '') {
     return { value: null, reason: null, invalid: false }
@@ -34,7 +35,7 @@ export function clampQty(raw: string, allowNegative: boolean): ClampedResult {
   if (Number.isNaN(num)) {
     return { value: null, reason: `「${text}」不是数字`, invalid: true }
   }
-  if (num === 0) {
+  if (num === 0 && !allowZero) {
     return { value: null, reason: '数量不能为 0', invalid: true }
   }
   if (!allowNegative && num < 0) {

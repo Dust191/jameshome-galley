@@ -7,6 +7,8 @@ type Props = {
   onChange?: (value: number | null) => void
   /** 盘点调整允许负数 */
   allowNegative?: boolean
+  /** 安全库存一类字段允许 0（表示不设预警线） */
+  allowZero?: boolean
   placeholder?: string
   disabled?: boolean
   autoFocus?: boolean
@@ -22,13 +24,14 @@ type Props = {
  *       否则用户填 5、10 这类"本来就合法"的数时，表单里根本没有值，
  *       提交时反报"请输入数量"（返工后首版正是这个缺陷）。
  *   <li><b>失焦只做两件事</b>：把值归一化为三位小数展示；被改写时红字说明原因。
- *       提示是解释，不是校验——校验由表单层的 {@code qtyRules} 兜底。
+ *       提示是解释，不是校验——校验由各表单的 rules 兜底。
  * </ul>
  */
 export default function QtyInput({
   value,
   onChange,
   allowNegative = false,
+  allowZero = false,
   placeholder,
   disabled,
   autoFocus,
@@ -82,7 +85,7 @@ export default function QtyInput({
         }}
         onBlur={() => {
           editingRef.current = false
-          const result = clampQty(text, allowNegative)
+          const result = clampQty(text, allowNegative, allowZero)
           setClampedReason(result.reason)
           setInvalid(result.invalid)
 
@@ -114,22 +117,4 @@ export default function QtyInput({
       )}
     </div>
   )
-}
-
-/** 表单提交前的硬校验：与 QtyInput 的提示同源，防绕过。 */
-export function qtyRules(allowNegative: boolean) {
-  return [
-    {
-      validator: (_: unknown, value: number | null | undefined) => {
-        if (value == null) return Promise.reject(new Error('请输入数量'))
-        if (value === 0) return Promise.reject(new Error('数量不能为 0'))
-        if (!allowNegative && value < 0) {
-          return Promise.reject(new Error('不能为负数；如需调整库存请选择"盘点调整"'))
-        }
-        const decimals = (String(value).split('.')[1] ?? '').length
-        if (decimals > 3) return Promise.reject(new Error('最多三位小数'))
-        return Promise.resolve()
-      },
-    },
-  ]
 }

@@ -31,7 +31,7 @@ public final class StockDtos {
 
     /** 红冲。原因必填——半年后回头看，没有原因的红冲等于没有记录。 */
     public record ReversalRequest(
-            @NotBlank(message = "红冲原因不能为空") @Size(max = 200, message = "原因不超过 200 字")
+            @NotBlank(message = "冲正原因不能为空") @Size(max = 200, message = "原因不超过 200 字")
                     String note) {}
 
     public record MovementView(
