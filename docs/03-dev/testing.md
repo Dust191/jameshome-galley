@@ -82,6 +82,15 @@ class StockServiceTest {
 | CI | `make test` + 覆盖率门槛 + E2E（S3 起） |
 | 发布前 | 手工 UAT 12 条 |
 
+E2E 运行方式：先启动前端 dev server，再执行
+
+```bash
+E2E_ADMIN_PASSWORD=<当前管理员密码> pnpm --dir frontend e2e
+```
+
+开发环境管理员密码每次启动都会重生成（`DEV-001`），从后端启动日志读取；
+`PLAYWRIGHT_OUTPUT_DIR` 可把失败产物指到临时目录，避免项目内批量删除触发安全策略。
+
 ## 7. 依赖漏洞扫描
 
 | 项 | 内容 |
