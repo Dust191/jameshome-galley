@@ -15,7 +15,8 @@ fi
 command -v gh >/dev/null 2>&1 || { echo "需要 GitHub CLI（gh）"; exit 1; }
 
 for name in bug documentation duplicate enhancement invalid question wontfix \
-            "good first issue" "help wanted"; do
+            "good first issue" "help wanted" \
+            accessibility dependencies github_actions java javascript; do
     gh label delete "$name" --repo "$REPO" --yes >/dev/null 2>&1 || true
 done
 
