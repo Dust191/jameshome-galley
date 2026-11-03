@@ -12,6 +12,10 @@
 
 以上三条写入 `docs/01-product/PRD-001.md`，任何迭代不得突破。
 
+## 项目状态
+
+**0.1.0（MVP）已发布**（2026-11-03）：物料建档与图片、流水记账与冲正、结存与预警、九项统计、CSV 导入导出、结存对账、Web 界面 11 个路由。当前处于 S4 开源治理阶段。
+
 ## 快速开始
 
 前置：JDK 25、Docker、Node 22 与 pnpm 9（`frontend/package.json` 的 `packageManager` 已锁定版本；pnpm 10 起默认拦截依赖的安装脚本，会导致 `pnpm install` 失败）。Maven 由 Wrapper 提供，无需预装。
@@ -26,7 +30,7 @@ make web            # 另开一个终端，起前端开发服务器
 验证：
 
 - 前端 <http://localhost:5173>
-- 健康检查 <http://localhost:8080/healthz> → `{"status":"ok","version":"0.0.1"}`
+- 健康检查 <http://localhost:8080/healthz> → `{"status":"ok","version":"0.1.0"}`
 
 更多环境说明见 `docs/03-dev/setup.md`（S2 建立）。容器相关操作若在本机不可用，可先 `make sync` 同步到 Ubuntu 虚拟机再执行，细则见 `DEV-001`。
 
@@ -62,6 +66,6 @@ scripts/     校验脚本（环境变量一致性、提交署名）
 
 ## 许可证
 
-[Apache License 2.0](LICENSE)。第三方依赖许可清单见 `docs/05-governance/third-party-licenses.md`（S4 建立）。
+[Apache License 2.0](LICENSE)。第三方依赖许可清单见 [`docs/05-governance/third-party-licenses.md`](docs/05-governance/third-party-licenses.md)。
 
 Maintained by The JamesHome Contributors. See [CONTRIBUTORS.md](CONTRIBUTORS.md).

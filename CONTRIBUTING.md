@@ -2,7 +2,30 @@
 
 本项目为人机协助的单人维护项目，但从第一行代码起即按团队规范执行：**所有变更走分支、留记录、可回滚**。
 
-## 1. 分支模型
+## 1. 环境搭建
+
+前置工具链：
+
+| 工具 | 版本 | 说明 |
+|---|---|---|
+| JDK | 25 | 与 `pom.xml` 的 `<java.version>` 一致；补丁号允许跟随同大版本最新 |
+| Node.js | 22 | 前端构建与脚本 |
+| pnpm | 9.x | `frontend/package.json` 的 `packageManager` 已锁 9.15.9；pnpm 10 起默认拦截依赖安装脚本，会导致 `pnpm install` 失败 |
+| Docker | 24+ | 数据库、对象存储与集成测试（Testcontainers） |
+| Maven | 无需预装 | 由 `backend/mvnw` 提供，首次运行自动下载 |
+
+```bash
+git clone https://github.com/<owner>/<repo>.git && cd jameshome-galley
+make setup     # 检查工具链、生成 .env、安装前端依赖、拉取镜像
+make dev       # 起数据库并在前台运行后端
+make web       # 另开终端，起前端开发服务器
+```
+
+验证：前端 `http://localhost:5173`，健康检查 `http://localhost:8080/healthz`。
+
+逐项说明、虚拟机与端口转发等场景见 `docs/03-dev/setup.md`；测试环境要求见 `docs/03-dev/testing.md`。
+
+## 2. 分支模型
 
 | 分支 | 用途 | 生命周期 |
 |---|---|---|
@@ -13,19 +36,22 @@
 
 分支命名：`<类型>/<issue号或 ITER 号>-<短描述>`，例如 `feat/12-csv-import`。
 
-## 2. 本地模拟 PR 流程
+## 3. 提交流程
 
-GitHub 仓库在 G3 通过后创建。在此之前，以本地模拟流程替代平台 PR：
+**仓库已建立（S4 起）**：
 
-1. 从 `main` 切分支。
-2. 完成变更，按 `.github/PULL_REQUEST_TEMPLATE.md` 逐项填写**自审清单 10 项**，写入 PR 描述草案（提交到 `docs/07-iteration/` 对应 ITER 的"变更过程"）。
-3. 运行 `make lint && make test`，全绿。
-4. 冷静期：完成自审后至少间隔一段时间再合并，具体时长见 `DEV-002`。
-5. Squash 合并到 `main`，删除分支，补写 ITER 记录。
+1. 先开 issue，按 `.github/ISSUE_TEMPLATE/` 填必填字段；维护者补 `type/*` 与 `p*/*`。
+2. 从 `main` 切分支，分支名带 issue 号。
+3. 完成变更，按 `.github/PULL_REQUEST_TEMPLATE.md` 逐项填写，关联 issue（`Closes #<issue>`）。
+4. `make lint && make test` 全绿后推送，开 PR。
+5. 等 CI 与评审通过，**Squash 合并**，删除分支。
+6. 合并后 24 小时内补写 `docs/07-iteration/` 迭代记录。
 
-单人期不得以"就我一个人"为由跳过上述任何一步。
+单人期同样走 PR：自己开、自己批，但**必须留下 PR 记录**——它是"这次改了什么、验证了什么"唯一的对外入口。
 
-## 3. 提交规范
+**仓库建立前（历史）**：以本地模拟流程替代，见文末附录。
+
+## 4. 提交规范
 
 格式：`<type>(<scope>): <subject>`，subject 用中文、≤50 字、不加句号。
 
@@ -45,38 +71,43 @@ Signed-off-by: Dust <3941305663@qq.com>
 | trailer | 必填 | 说明 |
 |---|---|---|
 | `Signed-off-by` | 是 | DCO 签署，须与 commit author 一致 |
-| `Refs` / `Closes` | 是 | 关联 issue；仓库建立前以 ITER 编号代替，见 §6 |
+| `Refs` / `Closes` | 是 | 关联 issue；仓库建立前的历史提交以 ITER 编号代替，见附录 |
 | `Assisted-by` | 否 | 一旦填写即须真实且在 `CONTRIBUTORS.md` 在册；无法确认则整行省略 |
 | `Co-authored-by` | 否 | 仅用于人类协作者，禁止用于模型 |
 
 提交前 `make lint` 会执行 commitlint 与署名校验，非法 message 或表外模型标识会被拦截。
 
-## 4. 代码要求
+## 5. 代码要求
 
 - 格式化由 Spotless 统一，不手工调整排版。
 - 模块间只能通过 `api` 包或领域事件交互；`domain` 不依赖 Spring 与 MyBatis-Plus。
 - 新增依赖须满足：许可证为 Apache-2.0 / MIT / BSD / EPL；版本统一在父 `pom.xml` 的 `dependencyManagement` 声明。
 - 新增查询须说明索引支撑；写操作须写审计。
 
-## 5. 文档要求
+## 6. 文档要求
 
 - 改接口或表结构时，同一次提交内更新 `docs/02-design/` 对应文件。
 - 新增概括性词语前，先到 `docs/00-glossary.md` 查词；未登记的先提 `proposed` 词条。
 - 每轮变更后 24 小时内补写迭代记录。
 
-## 6. 仓库建立前的过渡约定
+## 7. 评审规则
 
-GitHub 仓库在 G3 通过后创建。在此之前：
+| 项 | 规则 |
+|---|---|
+| 批准人数 | 至少 1 名 Maintainer；`db/migration/`、`infra/`、`security/` 相关变更需 2 名 |
+| 首次响应 | ≤24 小时 |
+| 合并方式 | 仅 Squash merge；禁止 merge commit；禁止 force push 到 `main` |
+| 粒度 | 有效 diff ≤400 行；超过 800 行必须拆分或说明理由 |
+| 不可合并 | CI 未绿、有未解决评论、分支落后 `main`、缺迭代记录、署名校验失败 |
+| 关注点 | 行为是否正确、边界是否覆盖、文档是否同步、是否出现无口径的性能声明 |
 
-- `Refs` 填对应的 `ITER-YYYYMMDD-NN`，建仓后改为 `Refs: #<issue>` 并在 ITER 中注明映射。
-- 分支保护由本地规则替代：`main` 不接受直接提交，所有变更经分支 + 自审 + squash 合并。
-- 该过渡随仓库建立自动失效，不得沿用。
+评审意见分三级：`must`（不修不合）、`should`（本轮或下轮修）、`nit`（可不修）。作者对 `must` 有异议时按 `GOVERNANCE.md` §3 处理。
 
-## 7. 贡献者协议
+## 8. 贡献者协议
 
 采用 DCO（`git commit -s`），不使用 CLA。签署身份 `Dust <3941305663@qq.com>`，须与 commit author 一致。
 
-## 8. 人机协作约定
+## 9. 人机协作约定
 
 本项目的改动由开发者与模型交替完成，工作区是两者共同的中间态：
 
@@ -84,3 +115,9 @@ GitHub 仓库在 G3 通过后创建。在此之前：
 - 因此模型每轮动手前必须先执行 `git diff` 与 `git status`，先读懂手改内容，再决定改哪里。
 - 禁止以「工作区应停留在我上次提交的状态」为前提直接覆盖；覆盖手改即视为失控。
 - 提交由模型统一执行，一次提交对应一轮迭代记录，提交前须先列出发现的问题并取得开发者确认。
+
+## 附录：仓库建立前的过渡约定（已失效）
+
+S4 建仓之前，以本地模拟流程替代平台 PR：切分支 → 按 PR 模板自审 10 项 → `make lint && make test` → 冷静期 → Squash 合并 → 补写迭代记录；`Refs` 填 `ITER-YYYYMMDD-NN`。
+
+该约定自仓库建立起失效，保留于此仅供追溯历史提交。

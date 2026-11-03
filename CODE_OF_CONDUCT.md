@@ -36,7 +36,8 @@
 
 ## 报告与处理
 
-- 报告渠道：通过仓库的私密安全通告（Security Advisory）或直接联系维护者；不在公开 issue 中讨论具体事件。
+- **执行联系人**：当前唯一维护者 [@Dust191](https://github.com/Dust191)（角色见 `GOVERNANCE.md` §1）。
+- 报告渠道：优先使用仓库的私密安全通告（Security Advisory → Report a vulnerability）；也可在 GitHub 上私信执行联系人。**不在公开 issue 中讨论具体事件。**
 - 处理时限：确认收到 ≤72 小时；给出处理结论 ≤14 天。
 - 保密：维护者有义务对报告者的身份与事件细节保密。
 - 升级：若被举报人是维护者，由 Owner 处理；Owner 本人涉事时，另指定一名未涉事贡献者处理。
@@ -52,4 +53,4 @@
 
 ## 归属
 
-本行为准则改编自 Contributor Covenant 2.1，可在 <https://www.contributor-covenant.org> 获取。
+本行为准则改编自 [Contributor Covenant 2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct/)，原文以 CC BY 4.0 许可发布，可在 <https://www.contributor-covenant.org> 获取。本项目的中文表述与执行梯度属改编部分，同样以 CC BY 4.0 提供。
