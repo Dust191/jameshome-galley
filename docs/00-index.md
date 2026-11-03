@@ -47,6 +47,7 @@ related: [GLOSSARY-001, PRD-001]
 | GOV-003 | `docs/05-governance/g3-freeze.md` | 阶段门 G3 通过记录与 0.1.0 冻结 | approved | @Dust191 | 2026-11-03 | S3 |
 | GOV-004 | `docs/05-governance/labels.md` | 标签体系 | in_review | @Dust191 | 2026-11-03 | S4 |
 | GOV-005 | `docs/05-governance/third-party-licenses.md` | 第三方依赖许可证清单 | in_review | @Dust191 | 2026-11-03 | S4 |
+| GOV-006 | `docs/05-governance/g4-check.md` | 阶段门 G4 验收记录 | in_review | @Dust191 | 2026-11-03 | S4 |
 | ITER-20261031-01 | `docs/07-iteration/ITER-20261031-01.md` | 首轮迭代记录（立项前置决策） | approved | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-02 | `docs/07-iteration/ITER-20261031-02.md` | S0 文档体系建立 | approved | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-03 | `docs/07-iteration/ITER-20261031-03.md` | S1 项目骨架搭建 | approved | @Dust191 | 2026-10-31 | S1 |
