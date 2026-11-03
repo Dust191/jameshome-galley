@@ -96,7 +96,11 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   })
 
   if (response.status === 401) {
-    throw new UnauthorizedError()
+    // 登录失败不代表会话过期：把后端文案（如「账号或密码不正确」）原样交给登录页，
+    // 否则用户永远只看到「登录失败，请稍后重试」，无法判断是账号还是密码的问题。
+    if (path !== '/api/v1/auth/login') {
+      throw new UnauthorizedError()
+    }
   }
   if (response.status === 204) {
     return undefined as T
@@ -123,6 +127,60 @@ export const api = {
   patch: <T>(path: string, body?: unknown) => request<T>(path, { method: 'PATCH', body }),
   delete: <T>(path: string) => request<T>(path, { method: 'DELETE' }),
   upload: <T>(path: string, formData: FormData) => request<T>(path, { method: 'POST', formData }),
+}
+
+/** 从 Content-Disposition 取文件名：优先 RFC 5987 的 filename*，退回 ASCII 的 filename。 */
+function filenameFrom(header: string | null): string | null {
+  if (!header) return null
+  const utf8 = /filename\*=UTF-8''([^;]+)/i.exec(header)
+  if (utf8) return decodeURIComponent(utf8[1])
+  const plain = /filename="?([^";]+)"?/i.exec(header)
+  return plain ? plain[1] : null
+}
+
+/**
+ * 下载文件（导出）。
+ *
+ * <p>不能直接把地址丢给 `location.href`：导出上限 422 时会跳到一个 JSON 页面，
+ * 用户只看到一屏乱码。这里统一取回 Blob，出错按普通接口的错误体抛 {@link ApiError}。
+ */
+export async function downloadFile(path: string): Promise<void> {
+  const response = await fetch(path, { credentials: 'same-origin' })
+
+  if (response.status === 401) {
+    throw new UnauthorizedError()
+  }
+  if (!response.ok) {
+    const text = await response.text()
+    let body: ApiErrorBody | null = null
+    try {
+      body = text ? (JSON.parse(text) as ApiErrorBody) : null
+    } catch {
+      // 网关或代理可能返回 HTML 错误页，按未知错误处理
+      body = null
+    }
+    throw new ApiError(
+      response.status,
+      body ?? {
+        code: 'UNKNOWN',
+        message: `导出失败（${response.status}）`,
+        field: null,
+        traceId: null,
+      },
+    )
+  }
+
+  const blob = await response.blob()
+  const name = filenameFrom(response.headers.get('Content-Disposition')) ?? 'export.csv'
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = name
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
+  // 立即回收会让部分浏览器取消下载，留一点时间
+  setTimeout(() => URL.revokeObjectURL(url), 1000)
 }
 
 /** 查询串拼装：空值一律不拼。 */

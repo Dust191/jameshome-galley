@@ -68,6 +68,7 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261102-08 | `docs/07-iteration/ITER-20261102-08.md` | 物料导入与流水导出 | in_review | @Dust191 | 2026-11-02 | S3 |
 | ITER-20261102-09 | `docs/07-iteration/ITER-20261102-09.md` | 前端返工：七项验收问题修复 | in_review | @Dust191 | 2026-11-02 | S3 |
 | ITER-20261103-01 | `docs/07-iteration/ITER-20261103-01.md` | 重启自检与验收前修正 | in_review | @Dust191 | 2026-11-03 | S3 |
+| ITER-20261103-02 | `docs/07-iteration/ITER-20261103-02.md` | 验收前修复：登录文案、缩略图、导出入口 | in_review | @Dust191 | 2026-11-03 | S3 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 

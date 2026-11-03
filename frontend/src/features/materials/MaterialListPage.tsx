@@ -5,6 +5,7 @@ import {
   Alert,
   App as AntApp,
   Button,
+  Image,
   Input,
   Popconfirm,
   Select,
@@ -13,7 +14,8 @@ import {
   Tooltip,
 } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import { api, ApiError, query } from '../../lib/api'
+import { DownloadOutlined } from '@ant-design/icons'
+import { api, ApiError, downloadFile, query } from '../../lib/api'
 import type { Category, Material, PageResult } from '../../lib/types'
 import PageHeader from '../../components/PageHeader'
 import { MaterialStatusTag, SeverityTag } from '../../components/tags'
@@ -113,6 +115,17 @@ export default function MaterialListPage() {
     [],
   )
 
+  /** 导出当前筛选结果，而不是"全部物料"——用户看到什么就导出什么。 */
+  const exportCsv = useMutation({
+    mutationFn: () =>
+      downloadFile(
+        `/api/v1/exports/materials.csv${query({ keyword, categoryId, stockState, status })}`,
+      ),
+    onError: (error) => {
+      message.error(error instanceof ApiError ? error.message : '导出失败，请稍后重试')
+    },
+  })
+
   const columns = useMemo<ColumnsType<Material>>(
     () => [
       {
@@ -121,11 +134,36 @@ export default function MaterialListPage() {
         fixed: 'left',
         width: 170,
         render: (name: string, row) => (
-          <Space direction="vertical" size={0}>
-            <Link to={`/materials/${row.id}`}>{name}</Link>
+          <Space direction="vertical" size={0} style={{ maxWidth: '100%' }}>
+            {/* 长名称在 170px 列宽内换行，不撑破表格也不截断 */}
+            <Link
+              to={`/materials/${row.id}`}
+              style={{ display: 'block', wordBreak: 'break-word', overflowWrap: 'anywhere' }}
+            >
+              {name}
+            </Link>
             {stockBadge(row)}
           </Space>
         ),
+      },
+      {
+        // 批量选料时靠缩略图确认，不必逐个点开详情
+        title: '图片',
+        dataIndex: 'imageUrl',
+        width: 68,
+        align: 'center',
+        render: (url: string | null, row) =>
+          url ? (
+            <Image
+              src={url}
+              alt={row.name}
+              width={40}
+              height={40}
+              style={{ objectFit: 'cover', borderRadius: 4 }}
+            />
+          ) : (
+            <span style={{ color: '#c8c8c8' }}>—</span>
+          ),
       },
       { title: '自编码', dataIndex: 'code', width: 100, render: (v) => orDash(v) },
       { title: '分类', dataIndex: 'categoryName', width: 100 },
@@ -214,11 +252,20 @@ export default function MaterialListPage() {
         title="物料"
         description={`共 ${list.data?.total ?? 0} 种`}
         extra={
-          canWrite(me?.role) ? (
-            <Button type="primary" onClick={() => navigate('/materials/new')}>
-              新建物料
+          <>
+            <Button
+              icon={<DownloadOutlined />}
+              loading={exportCsv.isPending}
+              onClick={() => exportCsv.mutate()}
+            >
+              导出
             </Button>
-          ) : null
+            {canWrite(me?.role) && (
+              <Button type="primary" onClick={() => navigate('/materials/new')}>
+                新建物料
+              </Button>
+            )}
+          </>
         }
       />
 
@@ -279,7 +326,7 @@ export default function MaterialListPage() {
         loading={list.isPending}
         dataSource={list.data?.items ?? []}
         columns={columns}
-        scroll={{ x: 1080 }}
+        scroll={{ x: 1150 }}
         locale={{ emptyText: canWrite(me?.role) ? '还没有物料，先建一条' : '没有符合条件的物料' }}
         pagination={{
           current: page,

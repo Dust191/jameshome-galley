@@ -14,6 +14,13 @@ type Props = {
   autoFocus?: boolean
 }
 
+/** 外部值统一显示三位小数：编辑态的安全库存 5 应显示 5.000，与列表、详情一致。 */
+function display(value: number | null | undefined): string {
+  if (value == null) return ''
+  const num = Number(value)
+  return Number.isFinite(num) ? num.toFixed(3) : ''
+}
+
 /**
  * 数量输入（修复版）。
  *
@@ -36,7 +43,7 @@ export default function QtyInput({
   disabled,
   autoFocus,
 }: Props) {
-  const [text, setText] = useState(value == null ? '' : String(value))
+  const [text, setText] = useState(display(value))
   const [clampedReason, setClampedReason] = useState<string | null>(null)
   const [invalid, setInvalid] = useState(false)
   // 正在输入时外部 value 回流（同一数值）不得覆盖输入框，否则 "5." 会被改回 "5"
@@ -45,9 +52,14 @@ export default function QtyInput({
   // 外部回填（编辑表单 setFieldsValue）同步到输入框
   useEffect(() => {
     if (editingRef.current) return
+    if (value == null) {
+      setText('')
+      return
+    }
     const parsed = Number(text)
-    if (text !== '' && !Number.isNaN(parsed) && parsed === value) return
-    setText(value == null ? '' : String(value))
+    // 输入框内容已经等于外部值（如 "5" 与 5）就不改写，避免用户输入被打断
+    if (text !== '' && !Number.isNaN(parsed) && parsed === Number(value)) return
+    setText(display(value))
   }, [value])
 
   const emit = (raw: string) => {
