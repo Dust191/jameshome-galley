@@ -22,7 +22,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <mybatis-plus.version>3.5.18.1</mybatis-plus.version>
     <archunit.version>1.5.1</archunit.version>
-    <spotless.version>2.44.2</spotless.version>
+    <spotless.version>3.10.4</spotless.version>
     <!-- 偏离说明：工程规范 §1.5 写 JaCoCo 0.8.12，但该版本无法解析 Java 25 的 class 文件
          （major version 69），只能在 test 阶段失败。此处按实测升级到 0.8.16，理由与影响见
          ITER-20261031-03 的偏差登记。 -->
