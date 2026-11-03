@@ -21,6 +21,9 @@ updates:
       # 构建工具自身的大版本：单独开轮次验证，不当周更处理
       - dependency-name: "org.apache.maven:apache-maven"
         versions: [">=3.10"]
+      # MinIO 8 -> 9 是大版本（连接层重写），单独开轮次（ITER-20261103-05 补记）
+      - dependency-name: "io.minio:minio"
+        versions: [">=9"]
 
   # 前端
   - package-ecosystem: npm
@@ -55,6 +58,8 @@ updates:
         versions: [">=5"]
       - dependency-name: "@tanstack/react-query"
         versions: [">=5.63"]
+      - dependency-name: "globals"
+        versions: [">=16"]
 
   # 流水线自身
   - package-ecosystem: github-actions
@@ -69,4 +74,6 @@ updates:
       - dependency-name: "actions/setup-java"
         versions: [">=5"]
       - dependency-name: "actions/setup-node"
+        versions: [">=5"]
+      - dependency-name: "pnpm/action-setup"
         versions: [">=5"]
