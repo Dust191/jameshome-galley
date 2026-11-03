@@ -1,0 +1,70 @@
+name: 缺陷报告
+description: 与文档或预期行为不符的问题（安全问题请走 Security Advisory，勿在此报告）
+labels: ["type/bug", "status/needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢报告。提交前请先检索已有 issue，避免重复。
+        **安全问题不要走这里**：见 `SECURITY.md`，使用仓库的私密安全通告。
+  - type: dropdown
+    id: environment
+    attributes:
+      label: 环境与部署方式
+      options:
+        - "local（本机开发：make dev / make up）"
+        - "self-hosted（自建服务器部署）"
+        - "未确定 / 其他"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: 受影响版本
+      description: 后端 healthz 返回的 version 字段，或 git 提交短 SHA
+      placeholder: "例如 0.1.0（提交 13c32ae）"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 从什么状态开始、做了什么、第几步出问题；能最小化就最小化
+      placeholder: |
+        1. 用 viewer 账号登录
+        2. 打开物料列表
+        3. ……
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望与实际
+      description: 期望发生什么 / 实际发生了什么
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志或截图
+      description: 后端日志片段（可脱敏）、浏览器控制台报错或截图
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: 影响范围
+      description: 哪些功能受影响、大致涉及多少物料或流水
+    validations:
+      required: true
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: 提交前自查
+      options:
+        - label: 已检索现有 issue，确认没有重复
+          required: true
+        - label: 这不是安全问题（安全问题走 SECURITY.md 的私密渠道）
+          required: true
+        - label: 标题已按「[模块] 动词 + 对象 + 现象」书写
+          required: true
