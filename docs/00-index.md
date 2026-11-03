@@ -75,6 +75,7 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261103-02 | `docs/07-iteration/ITER-20261103-02.md` | 验收前修复：登录文案、缩略图、导出入口 | approved | @Dust191 | 2026-11-03 | S3 |
 | ITER-20261103-03 | `docs/07-iteration/ITER-20261103-03.md` | T7/T8 收口：集成测试、对账、契约与发布 0.1.0 | approved | @Dust191 | 2026-11-03 | S3 |
 | ITER-20261103-04 | `docs/07-iteration/ITER-20261103-04.md` | S4 建仓前置：开源配套文件核对与补齐 | in_review | @Dust191 | 2026-11-03 | S4 |
+| ITER-20261103-05 | `docs/07-iteration/ITER-20261103-05.md` | 首个 PR：DCO 豁免、依赖升级范围约束与 Issue 模板 | in_review | @Dust191 | 2026-11-03 | S4 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 

@@ -107,6 +107,11 @@ Signed-off-by: Dust <3941305663@qq.com>
 
 采用 DCO（`git commit -s`），不使用 CLA。签署身份 `Dust <3941305663@qq.com>`，须与 commit author 一致。
 
+两类提交豁免签署检查（`scripts/check-signoff.sh` 执行）：
+
+- **合并提交**（merge commit）不承载内容变更；
+- **机器人作者**（`dependabot[bot]`、`github-actions[bot]`）无法自行签署——署名责任由 Squash 合并产生的最终提交承担，合并前须核对 CI 全绿。
+
 ## 9. 人机协作约定
 
 本项目的改动由开发者与模型交替完成，工作区是两者共同的中间态：
