@@ -40,6 +40,18 @@ class PermissionMatrixTest extends IntegrationTestBase {
     }
 
     @Test
+    void viewer_可看概览统计_不可看统计详情() {
+        ApiClient viewer = asViewer();
+        assertThat(viewer.get("/api/v1/stats/overview").status()).isEqualTo(200);
+        assertThat(viewer.get("/api/v1/stats/trend").status()).isEqualTo(200);
+        assertThat(viewer.get("/api/v1/stats/alerts").status()).isEqualTo(200);
+        // 统计详情页（DES-003 /stats）仅管理员
+        assertThat(viewer.get("/api/v1/stats/category-distribution").status()).isEqualTo(403);
+        assertThat(viewer.get("/api/v1/stats/top-out").status()).isEqualTo(403);
+        assertThat(asAdmin().get("/api/v1/stats/category-distribution").status()).isEqualTo(200);
+    }
+
+    @Test
     void viewer_管理接口一律403() {
         ApiClient viewer = asViewer();
         assertThat(viewer.get("/api/v1/users").status()).isEqualTo(403);

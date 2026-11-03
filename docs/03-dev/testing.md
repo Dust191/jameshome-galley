@@ -82,8 +82,23 @@ class StockServiceTest {
 | CI | `make test` + 覆盖率门槛 + E2E（S3 起） |
 | 发布前 | 手工 UAT 12 条 |
 
-## 7. 变更记录
+## 7. 依赖漏洞扫描
+
+| 项 | 内容 |
+|---|---|
+| 工具 | osv-scanner v2.7.0（Google OSV，联网查询 api.osv.dev） |
+| 命令 | `osv-scanner scan source -r .`；Windows 下需 `HTTPS_PROXY` 走代理 |
+| 范围 | Maven（`backend/pom.xml`）与 pnpm（`frontend/pnpm-lock.yaml`） |
+| 门槛 | 无 High / Critical 已知漏洞 |
+| 0.1.0 结果 | **0 High / 0 Critical**；5 条 Moderate（minimatch ×2、react-router ×2、vite ×1），均为开发期依赖或需要特定用法，记录在案 |
+
+**0.1.0 的边界说明**：开发机**未完成** OWASP dependency-check 的完整 NVD 数据下载与扫描——
+数据集体积大、本机网络受限，全量下载没有跑完。当前用 osv-scanner 的在线查询作为替代；
+OWASP 全量扫描留给 CI 或带宽稳定的受控环境。两者覆盖范围不同，不能把 osv 结果当作 OWASP 的等价物。
+
+## 8. 变更记录
 
 | 日期 | 变更 | 依据 |
 |---|---|---|
 | 2026-11-01 | 初版建立 | ITER-20261101-09 |
+| 2026-11-03 | 增依赖漏洞扫描章节（osv-scanner）与 0.1.0 的 OWASP 边界说明 | ITER-20261103-03 |

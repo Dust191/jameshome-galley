@@ -101,6 +101,12 @@ public class SecurityConfig {
                                                 "/api/v1/invite-codes/**",
                                                 "/api/v1/reconcile")
                                         .hasRole("ADMIN")
+                                        // 统计详情仅管理员（DES-002 §5、DES-003 /stats）；概览统计对所有人开放
+                                        .requestMatchers(
+                                                HttpMethod.GET,
+                                                "/api/v1/stats/category-distribution",
+                                                "/api/v1/stats/top-out")
+                                        .hasRole("ADMIN")
                                         // 读接口对所有已登录角色开放：viewer 的职责就是"能看不能改"
                                         // （DES-002 §5、UAT-10）。先列 GET，再列写方法，顺序不能反。
                                         .requestMatchers(

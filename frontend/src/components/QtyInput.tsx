@@ -3,6 +3,8 @@ import { Input, Typography } from 'antd'
 import { clampQty } from '../lib/inputRules'
 
 type Props = {
+  /** Form.Item 注入的 id，用于 label 关联与测试定位 */
+  id?: string
   value?: number | null
   onChange?: (value: number | null) => void
   /** 盘点调整允许负数 */
@@ -37,6 +39,7 @@ function display(value: number | null | undefined): string {
  * </ul>
  */
 export default function QtyInput({
+  id,
   value,
   onChange,
   allowNegative = false,
@@ -81,6 +84,7 @@ export default function QtyInput({
   return (
     <div>
       <Input
+        id={id}
         value={text}
         inputMode="decimal"
         placeholder={placeholder ?? '0.000'}

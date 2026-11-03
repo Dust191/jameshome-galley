@@ -14,11 +14,12 @@ import {
   Tooltip,
 } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import { DownloadOutlined } from '@ant-design/icons'
+import { DownloadOutlined, InboxOutlined } from '@ant-design/icons'
 import { api, ApiError, downloadFile, query } from '../../lib/api'
 import type { Category, Material, PageResult } from '../../lib/types'
 import PageHeader from '../../components/PageHeader'
 import MaterialCreateModal from './MaterialCreateModal'
+import MaterialImportModal from './MaterialImportModal'
 import { MaterialStatusTag, SeverityTag } from '../../components/tags'
 import { fmtQty, orDash, STOCK_STATE_OPTIONS } from '../../lib/format'
 import { canWrite, isAdmin, useAuth } from '../auth/AuthContext'
@@ -53,6 +54,7 @@ export default function MaterialListPage() {
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(20)
   const [sort, setSort] = useState('-updatedAt')
+  const [importOpen, setImportOpen] = useState(false)
 
   // URL 参数变化（例如再次点击概览卡）时同步筛选
   useEffect(() => {
@@ -264,6 +266,11 @@ export default function MaterialListPage() {
               导出
             </Button>
             {canWrite(me?.role) && (
+              <Button icon={<InboxOutlined />} onClick={() => setImportOpen(true)}>
+                导入
+              </Button>
+            )}
+            {canWrite(me?.role) && (
               <Button
                 type="primary"
                 onClick={() => setSearchParams({ ...Object.fromEntries(searchParams), new: '1' })}
@@ -356,6 +363,8 @@ export default function MaterialListPage() {
           setSort(single.order === 'descend' ? `-${field}` : field)
         }}
       />
+
+      <MaterialImportModal open={importOpen} onClose={() => setImportOpen(false)} />
 
       <MaterialCreateModal
         open={creating && canWrite(me?.role)}

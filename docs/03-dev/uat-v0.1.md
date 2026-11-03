@@ -23,7 +23,7 @@ related: [GOV-000, DES-001, DES-002, DES-004, DEV-003]
 | 日期 | 2026-11-03 |
 | 后端 | Spring Boot 4.1.2，PostgreSQL 18.3（容器），MinIO |
 | 前端 | React 18 + antd 5，Vite 开发服务器 |
-| 自动化 | `mvn verify`：单元 + Testcontainers 集成测试，共 109 个用例 |
+| 自动化 | `mvn verify`：单元 + Testcontainers 集成测试，共 110 个用例；Playwright 3 条 E2E |
 | 人工 | 开发者于 2026-11-02 ~ 11-03 在浏览器走查七项修复、表单输入与权限边界 |
 
 自动化用例的类名与方法名可直接检索；人工项在「证据」列注明走查范围。
@@ -53,7 +53,7 @@ related: [GOV-000, DES-001, DES-002, DES-004, DEV-003]
 | 端点覆盖 | 通过 | 40 个端点逐个覆盖（`EndpointCoverageTest` 30 个 + 认证/权限/流水/对账/上传分类覆盖） |
 | ArchUnit | 通过 | 4 条规则，已收回 `allowEmptyShould`；同时把 ArchUnit 升到 1.5.1（1.3.0 读不了 Java 25 字节码，此前规则实际未生效） |
 | OpenAPI 零差异 | 通过 | `contracts/openapi.yaml` 由 springdoc 生成，`scripts/check-contract.sh` 与实现逐字比对 |
-| 依赖漏洞 | 待补 | 未接入依赖漏洞扫描（S4 开源前处理） |
+| 依赖漏洞 | 通过（有边界） | osv-scanner v2.7.0：0 High / 0 Critical，5 Moderate（见 §4） |
 | 性能 | 通过 | 5 万物料 + 200 万流水：物料列表 P95 24ms（限 300ms），总览 P95 251ms（限 500ms） |
 | 结存对账零差异 | 通过 | 种子库 50 物料、500 流水，`GET /reconcile` 返回 `mismatched=0` |
 | 技术债台账 | 通过 | `DEV-004` 已建立 |
@@ -62,9 +62,12 @@ related: [GOV-000, DES-001, DES-002, DES-004, DEV-003]
 
 | 项 | 状态 | 说明 |
 |---|---|---|
-| Playwright 3 条 E2E | 未执行 | 需下载浏览器（约 150MB）并编写 UI 自动化；当前用手工走查 + 端点级集成测试替代，G3 该条暂不勾选 |
+| Playwright 3 条 E2E | 已完成 | `frontend/e2e/flows.spec.ts` 三条主流程全绿（11.1s）；前置：dev server + `E2E_ADMIN_PASSWORD` |
+| OWASP 全量扫描 | 未执行 | 开发机未能完成 NVD 数据下载；以 osv-scanner 在线查询替代（见 `DEV-003` §7），不等价于 OWASP 结果 |
 
 ## 5. 结论
 
-12 条 UAT 全部通过；工程质量门除「依赖漏洞扫描」与「Playwright E2E」外均通过。
-是否以现有证据放行 0.1.0，由开发者裁定。
+12 条 UAT 全部通过；工程质量门全部达成，其中「依赖漏洞」以 osv-scanner 结果为准（0 High / 0 Critical），
+OWASP dependency-check 的全量扫描未在 0.1.0 开发机完成，边界已在 `DEV-003` §7 说明。
+
+G3 可以冻结；是否打标签发布由开发者在冻结后决定。
