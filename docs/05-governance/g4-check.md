@@ -1,7 +1,7 @@
 ---
 title: 阶段门 G4 验收记录
 doc_id: GOV-006
-status: in_review
+status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-03
@@ -24,6 +24,7 @@ related: [GOV-000, GOV-003, GOV-004, GOV-005, DEV-004, DEV-005]
 | 日期 | 2026-11-03 |
 | 仓库 | github.com/Dust191/jameshome-galley（public，S3 冻结后建仓） |
 | 依据 | 开发者 2026-11-03 指令：直接 G4 收尾，最后文档一并审定 |
+| 开发者审定 | 通过（2026-11-03 22:00，与 ITER-20261103-04/05 一并审定）；S4 关账，S5 暂不开启，0.5.0 发布时机由开发者另行决定 |
 
 ## 2. 逐项核对（`GOV-000` §6.6）
 
