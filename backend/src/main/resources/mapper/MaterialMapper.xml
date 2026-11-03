@@ -32,8 +32,12 @@
       <when test="status != null and status != ''">AND m.status = #{status}</when>
       <otherwise>AND m.status = 'active'</otherwise>
     </choose>
+    <!-- M-2：严格小于安全库存，0 也计入（无结存记录视为 0），与总览同口径 -->
     <if test="stockState == 'low'">
-      AND coalesce(b.quantity, 0) > 0 AND coalesce(b.quantity, 0) &lt; m.safety_stock
+      AND coalesce(b.quantity, 0) &lt; m.safety_stock
+    </if>
+    <if test="stockState == 'negative'">
+      AND coalesce(b.quantity, 0) &lt; 0
     </if>
     <if test="stockState == 'zero'">
       AND coalesce(b.quantity, 0) = 0

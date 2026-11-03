@@ -24,13 +24,16 @@
     <if test="categoryId != null">AND m.category_id = #{categoryId}</if>
     <if test="stockState == 'negative'">AND coalesce(b.quantity, 0) &lt; 0</if>
     <if test="stockState == 'zero'">AND coalesce(b.quantity, 0) = 0</if>
+    <!-- 与 M-2 同口径：严格小于安全库存；0 与负结存也低于安全线 -->
     <if test="stockState == 'low'">
-      AND coalesce(b.quantity, 0) &gt; 0 AND coalesce(b.quantity, 0) &lt; m.safety_stock
+      AND coalesce(b.quantity, 0) &lt; m.safety_stock
     </if>
     <!-- M-9 预警清单：负、零、低库存、呆滞四类的并集，去重靠"一行一物料"天然成立 -->
     <if test="stockState == 'alert'">
+      <!-- M-9 由 M-2/M-3/M-7 合并，三者都只统计启用物料；停用物料不进预警清单 -->
+      AND m.status = 'active'
       AND (
-        b.quantity &lt; 0
+        coalesce(b.quantity, 0) &lt; 0
         OR coalesce(b.quantity, 0) = 0
         OR (coalesce(b.quantity, 0) &gt; 0 AND coalesce(b.quantity, 0) &lt; m.safety_stock)
         OR (coalesce(b.quantity, 0) &gt; 0 AND NOT EXISTS (

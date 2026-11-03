@@ -34,7 +34,7 @@ export const INVITE_STATUS_LABEL: Record<InviteStatus, string> = {
 
 /** 库存预警状态筛选项，值与后端 `stockState` 参数一致。 */
 export const STOCK_STATE_OPTIONS = [
-  { label: '待补货（有货但低于安全线）', value: 'low' },
+  { label: '待补货（低于安全线）', value: 'low' },
   { label: '缺货', value: 'zero' },
   { label: '负库存', value: 'negative' },
   { label: '长期未动', value: 'stale' },
