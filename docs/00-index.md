@@ -37,13 +37,14 @@ related: [GLOSSARY-001, PRD-001]
 | DEV-001 | `docs/03-dev/setup.md` | 本地搭建 | approved | @Dust191 | 2026-11-01 | S2 |
 | DEV-002 | `docs/03-dev/conventions.md` | 编码约定 | approved | @Dust191 | 2026-11-01 | S2 |
 | DEV-003 | `docs/03-dev/testing.md` | 测试策略 | approved | @Dust191 | 2026-11-01 | S2 |
-| DEV-004 | `docs/03-dev/tech-debt.md` | 技术债台账 | approved | @Dust191 | 2026-11-01 | S2 |
-| DEV-005 | `docs/03-dev/uat-v0.1.md` | 验收记录 v0.1 | in_review | @Dust191 | 2026-11-03 | S3 |
+| DEV-004 | `docs/03-dev/tech-debt.md` | 技术债台账 | approved | @Dust191 | 2026-11-03 | S2 |
+| DEV-005 | `docs/03-dev/uat-v0.1.md` | 验收记录 v0.1 | approved | @Dust191 | 2026-11-03 | S3 |
 | OPS-001 | `docs/04-ops/deploy.md` | 部署（S5 定稿，不参与 S2 审定） | in_review | @Dust191 | 2026-11-01 | S5 |
 | RUN-001 | `docs/04-ops/runbook.md` | 运行手册 | approved | @Dust191 | 2026-11-01 | S2 |
 | RUN-002 | `docs/04-ops/backup-restore.md` | 备份与恢复（S5 定稿，不参与 S2 审定） | in_review | @Dust191 | 2026-11-01 | S5 |
 | GOV-001 | `docs/05-governance/governance.md` | 治理模型 | approved | @Dust191 | 2026-11-01 | S2 |
-| GOV-002 | `docs/05-governance/release.md` | 发布流程 | approved | @Dust191 | 2026-11-01 | S2 |
+| GOV-002 | `docs/05-governance/release.md` | 发布流程 | approved | @Dust191 | 2026-11-03 | S2 |
+| GOV-003 | `docs/05-governance/g3-freeze.md` | 阶段门 G3 通过记录与 0.1.0 冻结 | approved | @Dust191 | 2026-11-03 | S3 |
 | ITER-20261031-01 | `docs/07-iteration/ITER-20261031-01.md` | 首轮迭代记录（立项前置决策） | approved | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-02 | `docs/07-iteration/ITER-20261031-02.md` | S0 文档体系建立 | approved | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-03 | `docs/07-iteration/ITER-20261031-03.md` | S1 项目骨架搭建 | approved | @Dust191 | 2026-10-31 | S1 |
@@ -66,11 +67,11 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261102-05 | `docs/07-iteration/ITER-20261102-05.md` | 出入库登记、红冲与结存 | approved | @Dust191 | 2026-11-02 | S3 |
 | ITER-20261102-06 | `docs/07-iteration/ITER-20261102-06.md` | 九项统计指标 | approved | @Dust191 | 2026-11-02 | S3 |
 | ITER-20261102-07 | `docs/07-iteration/ITER-20261102-07.md` | 物料 CSV 导出 | approved | @Dust191 | 2026-11-02 | S3 |
-| ITER-20261102-08 | `docs/07-iteration/ITER-20261102-08.md` | 物料导入与流水导出 | in_review | @Dust191 | 2026-11-02 | S3 |
+| ITER-20261102-08 | `docs/07-iteration/ITER-20261102-08.md` | 物料导入与流水导出 | approved | @Dust191 | 2026-11-03 | S3 |
 | ITER-20261102-09 | `docs/07-iteration/ITER-20261102-09.md` | 前端返工：七项验收问题修复 | approved | @Dust191 | 2026-11-02 | S3 |
 | ITER-20261103-01 | `docs/07-iteration/ITER-20261103-01.md` | 重启自检与验收前修正 | approved | @Dust191 | 2026-11-03 | S3 |
 | ITER-20261103-02 | `docs/07-iteration/ITER-20261103-02.md` | 验收前修复：登录文案、缩略图、导出入口 | approved | @Dust191 | 2026-11-03 | S3 |
-| ITER-20261103-03 | `docs/07-iteration/ITER-20261103-03.md` | T7/T8 收口：集成测试、对账、契约与发布 0.1.0 | in_review | @Dust191 | 2026-11-03 | S3 |
+| ITER-20261103-03 | `docs/07-iteration/ITER-20261103-03.md` | T7/T8 收口：集成测试、对账、契约与发布 0.1.0 | approved | @Dust191 | 2026-11-03 | S3 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
@@ -108,6 +109,9 @@ S2 阶段门要求 19 份强制文档齐备，已于 2026-11-01 全部建立：
 | 迭代 | ITER-* | 按轮次递增 |
 | 合计（不含 ITER） | — | 18 + ITER 类 |
 
+S3 新增两份，不计入 S2 的 19 份强制清单：`DEV-005`（12 条 UAT 与工程质量门记录）、
+`GOV-003`（G3 通过记录与 0.1.0 冻结）。
+
 模板集见 §6。`docs/idea.md` 为可选项，当前未建立，不参与阶段门。
 
 ## 4. 已知位置问题
@@ -141,6 +145,6 @@ S2 阶段门要求 19 份强制文档齐备，已于 2026-11-01 全部建立：
 |---|---|---|
 | `_templates/_template-doc.md` | 产品、治理等通用文档 | 开头三行内说明"回答什么问题" |
 | `_templates/_template-design.md` | DES-001 ~ DES-004 | 每条结论须可追溯到 PRD 故事或 glossary 词条 |
-| `_templates/_template-dev.md` | DEV-001 ~ DEV-004 | 步骤须可照做，含预期输出 |
+| `_templates/_template-dev.md` | DEV-001 ~ DEV-005 | 步骤须可照做，含预期输出 |
 | `_templates/_template-ops.md` | OPS-001、RUN-001、RUN-002 | 面向"凌晨三点被叫醒的人"，不可逆操作须写回滚 |
 | `_templates/_template-adr.md` | ADR-0005 起 | 状态栏与 front-matter 的 `status` 分开写 |
