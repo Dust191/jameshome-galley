@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 安全漏洞（私密报告）
+    url: https://github.com/Dust191/jameshome-galley/security/advisories/new
+    about: 请勿在公开 issue 报告安全问题；响应时限见 SECURITY.md

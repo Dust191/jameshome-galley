@@ -17,6 +17,13 @@ updates:
         patterns: ["com.baomidou*"]
       test:
         patterns: ["org.junit*", "org.assertj*", "com.tngtech.archunit*"]
+    ignore:
+      # 构建工具自身的大版本：单独开轮次验证，不当周更处理
+      - dependency-name: "org.apache.maven:apache-maven"
+        versions: [">=3.10"]
+      # MinIO 8 -> 9 是大版本（连接层重写），单独开轮次（ITER-20261103-05 补记）
+      - dependency-name: "io.minio:minio"
+        versions: [">=9"]
 
   # 前端
   - package-ecosystem: npm
@@ -32,6 +39,35 @@ updates:
         patterns: ["react*", "@types/react*"]
       tooling:
         patterns: ["vite", "typescript", "eslint*", "prettier"]
+    ignore:
+      # 以下为 UI 框架与路由的大版本：涉及 antd 5 兼容性，升级属 0.2.0 级工程
+      # （ITER-20261103-05；解除限制需 Maintainer 批准并更新此处）
+      - dependency-name: "antd"
+        versions: [">=6"]
+      - dependency-name: "react"
+        versions: [">=19"]
+      - dependency-name: "react-dom"
+        versions: [">=19"]
+      - dependency-name: "@types/react"
+        versions: [">=19"]
+      - dependency-name: "@types/react-dom"
+        versions: [">=19"]
+      - dependency-name: "react-router-dom"
+        versions: [">=7"]
+      - dependency-name: "@vitejs/plugin-react"
+        versions: [">=5"]
+      - dependency-name: "@tanstack/react-query"
+        versions: [">=5.63"]
+      - dependency-name: "globals"
+        versions: [">=16"]
+      # tooling 组 2026-11-03 的三连 major（eslint 10 / typescript 7 / vite 8），
+      # 升级牵动构建链，单独开轮次（ITER-20261103-05 补记二）
+      - dependency-name: "eslint"
+        versions: [">=10"]
+      - dependency-name: "typescript"
+        versions: [">=6"]
+      - dependency-name: "vite"
+        versions: [">=7"]
 
   # 流水线自身
   - package-ecosystem: github-actions
@@ -39,3 +75,13 @@ updates:
     schedule:
       interval: monthly
     open-pull-requests-limit: 3
+    ignore:
+      # actions 的大版本同步留给专门的轮次，避免与业务变更混在一起
+      - dependency-name: "actions/checkout"
+        versions: [">=5"]
+      - dependency-name: "actions/setup-java"
+        versions: [">=5"]
+      - dependency-name: "actions/setup-node"
+        versions: [">=5"]
+      - dependency-name: "pnpm/action-setup"
+        versions: [">=5"]
