@@ -44,6 +44,8 @@ updates:
       # （ITER-20261103-05；解除限制需 Maintainer 批准并更新此处）
       - dependency-name: "antd"
         versions: [">=6"]
+      - dependency-name: "@ant-design/icons"
+        versions: [">=6"]
       - dependency-name: "react"
         versions: [">=19"]
       - dependency-name: "react-dom"
