@@ -45,9 +45,9 @@ related: [GLOSSARY-001, PRD-001]
 | GOV-001 | `docs/05-governance/governance.md` | 治理模型 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-002 | `docs/05-governance/release.md` | 发布流程 | approved | @Dust191 | 2026-11-03 | S2 |
 | GOV-003 | `docs/05-governance/g3-freeze.md` | 阶段门 G3 通过记录与 0.1.0 冻结 | approved | @Dust191 | 2026-11-03 | S3 |
-| GOV-004 | `docs/05-governance/labels.md` | 标签体系 | in_review | @Dust191 | 2026-11-03 | S4 |
-| GOV-005 | `docs/05-governance/third-party-licenses.md` | 第三方依赖许可证清单 | in_review | @Dust191 | 2026-11-03 | S4 |
-| GOV-006 | `docs/05-governance/g4-check.md` | 阶段门 G4 验收记录 | in_review | @Dust191 | 2026-11-03 | S4 |
+| GOV-004 | `docs/05-governance/labels.md` | 标签体系 | approved | @Dust191 | 2026-11-03 | S4 |
+| GOV-005 | `docs/05-governance/third-party-licenses.md` | 第三方依赖许可证清单 | approved | @Dust191 | 2026-11-03 | S4 |
+| GOV-006 | `docs/05-governance/g4-check.md` | 阶段门 G4 验收记录 | approved | @Dust191 | 2026-11-03 | S4 |
 | ITER-20261031-01 | `docs/07-iteration/ITER-20261031-01.md` | 首轮迭代记录（立项前置决策） | approved | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-02 | `docs/07-iteration/ITER-20261031-02.md` | S0 文档体系建立 | approved | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-03 | `docs/07-iteration/ITER-20261031-03.md` | S1 项目骨架搭建 | approved | @Dust191 | 2026-10-31 | S1 |
@@ -75,8 +75,8 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261103-01 | `docs/07-iteration/ITER-20261103-01.md` | 重启自检与验收前修正 | approved | @Dust191 | 2026-11-03 | S3 |
 | ITER-20261103-02 | `docs/07-iteration/ITER-20261103-02.md` | 验收前修复：登录文案、缩略图、导出入口 | approved | @Dust191 | 2026-11-03 | S3 |
 | ITER-20261103-03 | `docs/07-iteration/ITER-20261103-03.md` | T7/T8 收口：集成测试、对账、契约与发布 0.1.0 | approved | @Dust191 | 2026-11-03 | S3 |
-| ITER-20261103-04 | `docs/07-iteration/ITER-20261103-04.md` | S4 建仓前置：开源配套文件核对与补齐 | in_review | @Dust191 | 2026-11-03 | S4 |
-| ITER-20261103-05 | `docs/07-iteration/ITER-20261103-05.md` | 首个 PR：DCO 豁免、依赖升级范围约束与 Issue 模板 | in_review | @Dust191 | 2026-11-03 | S4 |
+| ITER-20261103-04 | `docs/07-iteration/ITER-20261103-04.md` | S4 建仓前置：开源配套文件核对与补齐 | approved | @Dust191 | 2026-11-03 | S4 |
+| ITER-20261103-05 | `docs/07-iteration/ITER-20261103-05.md` | 首个 PR：DCO 豁免、依赖升级范围约束与 Issue 模板 | approved | @Dust191 | 2026-11-03 | S4 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 

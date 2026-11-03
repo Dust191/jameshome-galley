@@ -1,7 +1,7 @@
 ---
 title: 第三方依赖许可证清单
 doc_id: GOV-005
-status: in_review
+status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-03
