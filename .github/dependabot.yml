@@ -60,6 +60,14 @@ updates:
         versions: [">=5.63"]
       - dependency-name: "globals"
         versions: [">=16"]
+      # tooling 组 2026-11-03 的三连 major（eslint 10 / typescript 7 / vite 8），
+      # 升级牵动构建链，单独开轮次（ITER-20261103-05 补记二）
+      - dependency-name: "eslint"
+        versions: [">=10"]
+      - dependency-name: "typescript"
+        versions: [">=6"]
+      - dependency-name: "vite"
+        versions: [">=7"]
 
   # 流水线自身
   - package-ecosystem: github-actions
