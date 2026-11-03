@@ -41,7 +41,10 @@ export function clampQty(raw: string, allowNegative: boolean, allowZero = false)
   if (!allowNegative && num < 0) {
     return {
       value: '0.000',
-      reason: '不能为负数，已归零；如需调整库存请选择"盘点调整"',
+      // 安全库存没有"盘点调整"这回事，提示只说归零；流水才补下一步建议
+      reason: allowZero
+        ? '不能为负数，已归零'
+        : '不能为负数，已归零；如需调整库存请选择「盘点调整」',
       invalid: false,
     }
   }
