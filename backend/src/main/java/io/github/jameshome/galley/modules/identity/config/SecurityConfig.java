@@ -82,7 +82,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         auth ->
                                 auth.requestMatchers(
-                                                "/healthz", "/actuator/health/**", "/actuator/info")
+                                                "/healthz",
+                                                "/actuator/health/**",
+                                                "/actuator/info",
+                                                "/v3/api-docs",
+                                                "/v3/api-docs.yaml",
+                                                "/v3/api-docs/**")
                                         .permitAll()
                                         .requestMatchers(
                                                 "/api/v1/auth/login",
@@ -92,7 +97,9 @@ public class SecurityConfig {
                                                 "/api/v1/invite-codes/validate")
                                         .permitAll()
                                         .requestMatchers(
-                                                "/api/v1/users/**", "/api/v1/invite-codes/**")
+                                                "/api/v1/users/**",
+                                                "/api/v1/invite-codes/**",
+                                                "/api/v1/reconcile")
                                         .hasRole("ADMIN")
                                         // 读接口对所有已登录角色开放：viewer 的职责就是"能看不能改"
                                         // （DES-002 §5、UAT-10）。先列 GET，再列写方法，顺序不能反。

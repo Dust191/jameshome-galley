@@ -142,6 +142,14 @@ related: [DES-001, DES-004, PRD-001]
 | GET | `/exports/movements.csv` | 同上 | 已登录 |
 | POST | `/imports/materials` | `multipart/form-data`，返回逐行错误报告 | admin、editor |
 
+### 4.7 运维
+
+| 方法 | 路径 | 说明 | 权限 |
+|---|---|---|---|
+| GET | `/reconcile` | 结存对账：逐物料比对「结存 = 流水求和」，返回核对数、差异数与差异明细；只报告不修数据 | admin |
+
+对账同时由定时任务每日执行（默认 02:30，`GALLEY_RECONCILE_CRON`），发现差异只告警。
+
 ## 5. 权限矩阵
 
 | 能力 | admin | editor | viewer |

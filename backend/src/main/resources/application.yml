@@ -35,6 +35,10 @@ mybatis-plus:
   global-config:
     banner: false
 
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+
 management:
   endpoints:
     web:
@@ -47,10 +51,14 @@ management:
         enabled: true
 
 galley:
-  version: 0.0.2
+  # 由 Maven 资源过滤注入，保证契约版本与 pom 一致
+  version: @project.version@
   env: ${GALLEY_ENV:dev}
   bootstrap:
     admin-username: ${GALLEY_BOOTSTRAP_ADMIN_USERNAME:admin}
+  reconcile:
+    # 每日对账的 cron，默认 02:30；测试环境可设为 "-" 或关闭 scheduled 开关
+    cron: ${GALLEY_RECONCILE_CRON:0 30 2 * * *}
   storage:
     endpoint: ${GALLEY_S3_ENDPOINT:http://127.0.0.1:9000}
     access-key: ${GALLEY_S3_ACCESS_KEY:galley}

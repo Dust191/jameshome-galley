@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Input, Typography } from 'antd'
 import { clampQty } from '../lib/inputRules'
 
@@ -12,6 +12,8 @@ type Props = {
   placeholder?: string
   disabled?: boolean
   autoFocus?: boolean
+  /** 输入框末尾的附加内容（如当前物料的单位） */
+  addonAfter?: ReactNode
 }
 
 /** 外部值统一显示三位小数：编辑态的安全库存 5 应显示 5.000，与列表、详情一致。 */
@@ -42,6 +44,7 @@ export default function QtyInput({
   placeholder,
   disabled,
   autoFocus,
+  addonAfter,
 }: Props) {
   const [text, setText] = useState(display(value))
   const [clampedReason, setClampedReason] = useState<string | null>(null)
@@ -83,6 +86,7 @@ export default function QtyInput({
         placeholder={placeholder ?? '0.000'}
         disabled={disabled}
         autoFocus={autoFocus}
+        addonAfter={addonAfter}
         status={invalid ? 'error' : undefined}
         onFocus={() => {
           editingRef.current = true

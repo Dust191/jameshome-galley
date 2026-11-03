@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 /** 库存模块的出入参。 */
@@ -33,6 +34,12 @@ public final class StockDtos {
     public record ReversalRequest(
             @NotBlank(message = "冲正原因不能为空") @Size(max = 200, message = "原因不超过 200 字")
                     String note) {}
+
+    /** 结存对账结果：checked 为参与核对的物料数，items 只列不一致的。 */
+    public record ReconcileReport(
+            int checked, int mismatched, Instant checkedAt, List<Mismatch> items) {}
+
+    public record Mismatch(String materialId, String name, String balance, String movementSum) {}
 
     public record MovementView(
             UUID id,

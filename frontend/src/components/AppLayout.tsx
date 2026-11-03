@@ -97,9 +97,14 @@ export default function AppLayout() {
           borderBottom: '1px solid #f0f0f0',
         }}
       >
-        <Typography.Text strong style={{ fontSize: 16 }}>
-          jameshome-galley
-        </Typography.Text>
+        <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 8 }}>
+          <Typography.Text strong style={{ fontSize: 16 }}>
+            雅各家厨房
+          </Typography.Text>
+          <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+            {"James' Home Galley"}
+          </Typography.Text>
+        </span>
         <Dropdown
           menu={{
             items: [

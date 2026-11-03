@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.jameshome.galley.modules.stock.infrastructure.ReconcileMapper">
+
+  <select id="countMaterials" resultType="int">
+    SELECT count(*) FROM material WHERE deleted_at IS NULL
+  </select>
+
+  <!-- 结存与流水求和逐物料比对；null 结存按 0 处理，从未入库的物料也要参与 -->
+  <select id="findMismatches"
+          resultType="io.github.jameshome.galley.modules.stock.infrastructure.ReconcileRow">
+    SELECT m.id   AS material_id,
+           m.name AS name,
+           coalesce(b.quantity, 0)        AS balance,
+           coalesce(sum(sm.quantity), 0)  AS movement_sum
+    FROM material m
+    LEFT JOIN stock_balance b ON b.material_id = m.id
+    LEFT JOIN stock_movement sm ON sm.material_id = m.id
+    WHERE m.deleted_at IS NULL
+    GROUP BY m.id, m.name, b.quantity
+    HAVING coalesce(b.quantity, 0) &lt;&gt; coalesce(sum(sm.quantity), 0)
+    ORDER BY m.name
+  </select>
+
+</mapper>

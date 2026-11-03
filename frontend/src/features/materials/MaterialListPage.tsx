@@ -18,6 +18,7 @@ import { DownloadOutlined } from '@ant-design/icons'
 import { api, ApiError, downloadFile, query } from '../../lib/api'
 import type { Category, Material, PageResult } from '../../lib/types'
 import PageHeader from '../../components/PageHeader'
+import MaterialCreateModal from './MaterialCreateModal'
 import { MaterialStatusTag, SeverityTag } from '../../components/tags'
 import { fmtQty, orDash, STOCK_STATE_OPTIONS } from '../../lib/format'
 import { canWrite, isAdmin, useAuth } from '../auth/AuthContext'
@@ -41,6 +42,8 @@ export default function MaterialListPage() {
 
   // 概览卡跳转带 ?stockState=xxx：初始化进筛选条件，落地即筛好
   const initialStockState = searchParams.get('stockState') ?? undefined
+  // 新建改为弹窗：?new=1 打开，关闭即去掉参数，浏览器后退也能自然关掉
+  const creating = searchParams.get('new') === '1'
 
   const [keywordInput, setKeywordInput] = useState('')
   const [keyword, setKeyword] = useState('')
@@ -261,7 +264,10 @@ export default function MaterialListPage() {
               导出
             </Button>
             {canWrite(me?.role) && (
-              <Button type="primary" onClick={() => navigate('/materials/new')}>
+              <Button
+                type="primary"
+                onClick={() => setSearchParams({ ...Object.fromEntries(searchParams), new: '1' })}
+              >
                 新建物料
               </Button>
             )}
@@ -348,6 +354,15 @@ export default function MaterialListPage() {
           }
           const field = single.field === 'currentStock' ? 'currentStock' : 'safetyStock'
           setSort(single.order === 'descend' ? `-${field}` : field)
+        }}
+      />
+
+      <MaterialCreateModal
+        open={creating && canWrite(me?.role)}
+        onClose={() => {
+          const next = new URLSearchParams(searchParams)
+          next.delete('new')
+          setSearchParams(next, { replace: true })
         }}
       />
     </>

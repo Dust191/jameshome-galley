@@ -1,30 +1,1503 @@
-openapi: 3.0.3
+openapi: 3.1.0
 info:
   title: jameshome-galley API
-  version: 0.0.2
-  description: |
-    团体厨房库存远程查看系统的接口契约。
-    本文件由后端 springdoc 生成后固化提交，CI 校验实现与文件的差异；手工改动须与实现同步。
+  description: 团体厨房库存远程查看系统的接口契约，由实现生成。
+  version: 0.1.0
 servers:
-  - url: /
+- url: /
 paths:
-  /healthz:
-    get:
-      operationId: healthz
-      summary: 存活探针
-      description: 不查库，仅返回进程状态与版本号。就绪探针走 /actuator/health/readiness。
+  /api/v1/users/{id}/reset-password:
+    post:
+      tags:
+      - user-controller
+      operationId: resetPassword
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
       responses:
         "200":
-          description: 进程存活
+          description: OK
           content:
-            application/json:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResetPasswordResponse"
+  /api/v1/units:
+    get:
+      tags:
+      - unit-controller
+      operationId: list
+      parameters:
+      - name: includeInactive
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UnitView"
+    post:
+      tags:
+      - unit-controller
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnitCreate"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UnitView"
+  /api/v1/movements:
+    get:
+      tags:
+      - movement-controller
+      operationId: list_1
+      parameters:
+      - name: materialId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: from
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: to
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageResultMovementView"
+    post:
+      tags:
+      - movement-controller
+      operationId: create_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MovementCreate"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MovementView"
+  /api/v1/movements/{id}/reverse:
+    post:
+      tags:
+      - movement-controller
+      operationId: reverse
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReversalRequest"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MovementView"
+  /api/v1/materials:
+    get:
+      tags:
+      - material-controller
+      operationId: list_2
+      parameters:
+      - name: keyword
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: categoryId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: stockState
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageResultMaterialView"
+    post:
+      tags:
+      - material-controller
+      operationId: create_2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MaterialCreate"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MaterialView"
+  /api/v1/invite-codes:
+    get:
+      tags:
+      - invite-code-controller
+      operationId: list_3
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/InviteView"
+    post:
+      tags:
+      - invite-code-controller
+      operationId: create_3
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/InviteView"
+  /api/v1/invite-codes/validate:
+    post:
+      tags:
+      - invite-code-controller
+      operationId: validate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
               schema:
                 type: object
-                required: [status, version]
-                properties:
-                  status:
-                    type: string
-                    example: ok
-                  version:
-                    type: string
-                    example: 0.0.2
+                additionalProperties:
+                  type: boolean
+  /api/v1/imports/materials:
+    post:
+      tags:
+      - import-controller
+      operationId: importMaterials
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required:
+              - file
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ImportResult"
+  /api/v1/files:
+    post:
+      tags:
+      - file-controller
+      operationId: upload
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required:
+              - file
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UploadResponse"
+  /api/v1/categories:
+    get:
+      tags:
+      - category-controller
+      operationId: list_4
+      parameters:
+      - name: includeInactive
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CategoryView"
+    post:
+      tags:
+      - category-controller
+      operationId: create_4
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryCreate"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CategoryView"
+  /api/v1/auth/register:
+    post:
+      tags:
+      - auth-controller
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MeResponse"
+  /api/v1/auth/logout:
+    post:
+      tags:
+      - auth-controller
+      operationId: logout
+      responses:
+        "204":
+          description: No Content
+  /api/v1/auth/login:
+    post:
+      tags:
+      - auth-controller
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MeResponse"
+  /api/v1/users/{id}:
+    patch:
+      tags:
+      - user-controller
+      operationId: update
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserView"
+  /api/v1/units/{id}:
+    delete:
+      tags:
+      - unit-controller
+      operationId: delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "204":
+          description: No Content
+    patch:
+      tags:
+      - unit-controller
+      operationId: update_1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnitPatch"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UnitView"
+  /api/v1/materials/{id}:
+    get:
+      tags:
+      - material-controller
+      operationId: detail
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MaterialView"
+    delete:
+      tags:
+      - material-controller
+      operationId: delete_1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "204":
+          description: No Content
+    patch:
+      tags:
+      - material-controller
+      operationId: update_2
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MaterialPatch"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MaterialView"
+  /api/v1/invite-codes/{id}:
+    patch:
+      tags:
+      - invite-code-controller
+      operationId: disable
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/InviteView"
+  /api/v1/categories/{id}:
+    delete:
+      tags:
+      - category-controller
+      operationId: delete_2
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "204":
+          description: No Content
+    patch:
+      tags:
+      - category-controller
+      operationId: update_3
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryPatch"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CategoryView"
+  /api/v1/auth/password:
+    patch:
+      tags:
+      - auth-controller
+      operationId: changePassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordRequest"
+        required: true
+      responses:
+        "204":
+          description: No Content
+  /healthz:
+    get:
+      tags:
+      - health-controller
+      operationId: healthz
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+  /api/v1/users:
+    get:
+      tags:
+      - user-controller
+      operationId: list_5
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserView"
+  /api/v1/stats/trend:
+    get:
+      tags:
+      - stats-controller
+      operationId: trend
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TrendPoint"
+  /api/v1/stats/top-out:
+    get:
+      tags:
+      - stats-controller
+      operationId: topOut
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TopOutItem"
+  /api/v1/stats/overview:
+    get:
+      tags:
+      - stats-controller
+      operationId: overview
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OverviewView"
+  /api/v1/stats/category-distribution:
+    get:
+      tags:
+      - stats-controller
+      operationId: categoryDistribution
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CategoryShare"
+  /api/v1/stats/alerts:
+    get:
+      tags:
+      - stats-controller
+      operationId: alerts
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AlertList"
+  /api/v1/reconcile:
+    get:
+      tags:
+      - reconcile-controller
+      operationId: report
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ReconcileReport"
+  /api/v1/exports/movements.csv:
+    get:
+      tags:
+      - export-controller
+      operationId: exportMovements
+      parameters:
+      - name: materialId
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: from
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: to
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: byte
+  /api/v1/exports/materials.csv:
+    get:
+      tags:
+      - export-controller
+      operationId: exportMaterials
+      parameters:
+      - name: keyword
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: categoryId
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: stockState
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: byte
+  /api/v1/balances:
+    get:
+      tags:
+      - balance-controller
+      operationId: list_6
+      parameters:
+      - name: keyword
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: categoryId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: stockState
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageResultBalanceView"
+  /api/v1/auth/me:
+    get:
+      tags:
+      - auth-controller
+      operationId: me
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MeResponse"
+  /api/v1/auth/csrf:
+    get:
+      tags:
+      - auth-controller
+      operationId: csrf
+      parameters:
+      - name: token
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/CsrfToken"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+components:
+  schemas:
+    ResetPasswordResponse:
+      type: object
+      properties:
+        temporaryPassword:
+          type: string
+    UnitCreate:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 20
+          minLength: 0
+        sortOrder:
+          type: integer
+          format: int32
+          maximum: 32767
+          minimum: -32768
+      required:
+      - name
+    UnitView:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        sortOrder:
+          type: integer
+          format: int32
+        status:
+          type: string
+    MovementCreate:
+      type: object
+      properties:
+        materialId:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum:
+          - IN
+          - OUT
+          - ADJUST
+          - REVERSAL
+        quantity:
+          type: number
+        occurredAt:
+          type: string
+          format: date-time
+        note:
+          type: string
+          maxLength: 200
+          minLength: 0
+        idempotencyKey:
+          type: string
+          maxLength: 64
+          minLength: 0
+      required:
+      - materialId
+      - occurredAt
+      - quantity
+      - type
+    MovementView:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        materialId:
+          type: string
+          format: uuid
+        materialName:
+          type: string
+        unitName:
+          type: string
+        type:
+          type: string
+        quantity:
+          type: number
+        occurredAt:
+          type: string
+          format: date-time
+        operatorName:
+          type: string
+        note:
+          type: string
+        reversed:
+          type: boolean
+        reversalOf:
+          type: string
+          format: uuid
+    ReversalRequest:
+      type: object
+      properties:
+        note:
+          type: string
+          maxLength: 200
+          minLength: 0
+      required:
+      - note
+    MaterialCreate:
+      type: object
+      properties:
+        code:
+          type: string
+          maxLength: 32
+          minLength: 0
+        name:
+          type: string
+          maxLength: 80
+          minLength: 0
+        categoryId:
+          type: string
+          format: uuid
+        unitId:
+          type: string
+          format: uuid
+        spec:
+          type: string
+          maxLength: 50
+          minLength: 0
+        safetyStock:
+          type: number
+          minimum: 0
+        shelfLifeDays:
+          type: integer
+          format: int32
+          minimum: 1
+        imageKey:
+          type: string
+          maxLength: 255
+          minLength: 0
+        note:
+          type: string
+          maxLength: 200
+          minLength: 0
+      required:
+      - categoryId
+      - name
+      - safetyStock
+      - unitId
+    MaterialView:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        name:
+          type: string
+        categoryId:
+          type: string
+          format: uuid
+        categoryName:
+          type: string
+        unitId:
+          type: string
+          format: uuid
+        unitName:
+          type: string
+        spec:
+          type: string
+        safetyStock:
+          type: number
+        shelfLifeDays:
+          type: integer
+          format: int32
+        imageKey:
+          type: string
+        imageUrl:
+          type: string
+        note:
+          type: string
+        status:
+          type: string
+        version:
+          type: integer
+          format: int32
+        currentStock:
+          type: number
+    InviteView:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        status:
+          type: string
+        usedBy:
+          type: string
+          format: uuid
+        usedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+    ImportResult:
+      type: object
+      properties:
+        total:
+          type: integer
+          format: int32
+        created:
+          type: integer
+          format: int32
+        errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/RowError"
+    RowError:
+      type: object
+      properties:
+        line:
+          type: integer
+          format: int32
+        field:
+          type: string
+        message:
+          type: string
+        raw:
+          type: string
+    UploadResponse:
+      type: object
+      properties:
+        key:
+          type: string
+        url:
+          type: string
+    CategoryCreate:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 50
+          minLength: 0
+        sortOrder:
+          type: integer
+          format: int32
+          maximum: 32767
+          minimum: -32768
+      required:
+      - name
+    CategoryView:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        parentId:
+          type: string
+          format: uuid
+        sortOrder:
+          type: integer
+          format: int32
+        status:
+          type: string
+    RegisterRequest:
+      type: object
+      properties:
+        inviteCode:
+          type: string
+          minLength: 1
+        username:
+          type: string
+          minLength: 1
+          pattern: "^[a-z0-9_]{3,32}$"
+        password:
+          type: string
+          maxLength: 64
+          minLength: 8
+        displayName:
+          type: string
+          maxLength: 50
+          minLength: 0
+      required:
+      - inviteCode
+      - password
+      - username
+    MeResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        displayName:
+          type: string
+        role:
+          type: string
+        status:
+          type: string
+        mustChangePassword:
+          type: boolean
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+        password:
+          type: string
+          minLength: 1
+      required:
+      - password
+      - username
+    UpdateUserRequest:
+      type: object
+      properties:
+        displayName:
+          type: string
+        role:
+          type: string
+          enum:
+          - ADMIN
+          - EDITOR
+          - VIEWER
+        status:
+          type: string
+          enum:
+          - ACTIVE
+          - DISABLED
+    UserView:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        displayName:
+          type: string
+        role:
+          type: string
+        status:
+          type: string
+        passwordUpdatedAt:
+          type: string
+          format: date-time
+    UnitPatch:
+      type: object
+      properties:
+        name:
+          type: string
+        sortOrder:
+          type: integer
+          format: int32
+        status:
+          type: string
+          enum:
+          - ACTIVE
+          - INACTIVE
+    MaterialPatch:
+      type: object
+      properties:
+        code:
+          type: string
+          maxLength: 32
+          minLength: 0
+        name:
+          type: string
+          maxLength: 80
+          minLength: 0
+        categoryId:
+          type: string
+          format: uuid
+        unitId:
+          type: string
+          format: uuid
+        spec:
+          type: string
+          maxLength: 50
+          minLength: 0
+        safetyStock:
+          type: number
+          minimum: 0
+        shelfLifeDays:
+          type: integer
+          format: int32
+          minimum: 1
+        imageKey:
+          type: string
+          maxLength: 255
+          minLength: 0
+        note:
+          type: string
+          maxLength: 200
+          minLength: 0
+        status:
+          type: string
+          enum:
+          - ACTIVE
+          - INACTIVE
+          - ARCHIVED
+        version:
+          type: integer
+          format: int32
+    CategoryPatch:
+      type: object
+      properties:
+        name:
+          type: string
+        sortOrder:
+          type: integer
+          format: int32
+        status:
+          type: string
+          enum:
+          - ACTIVE
+          - INACTIVE
+    ChangePasswordRequest:
+      type: object
+      properties:
+        oldPassword:
+          type: string
+          minLength: 1
+        newPassword:
+          type: string
+          maxLength: 64
+          minLength: 8
+      required:
+      - newPassword
+      - oldPassword
+    TrendPoint:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        inCount:
+          type: integer
+          format: int64
+        outCount:
+          type: integer
+          format: int64
+    TopOutItem:
+      type: object
+      properties:
+        materialName:
+          type: string
+        unitName:
+          type: string
+        outCount:
+          type: integer
+          format: int64
+        totalQuantity:
+          type: number
+    OverviewView:
+      type: object
+      properties:
+        materialCount:
+          type: integer
+          format: int64
+        lowStockCount:
+          type: integer
+          format: int64
+        zeroStockCount:
+          type: integer
+          format: int64
+        staleCount:
+          type: integer
+          format: int64
+        completenessRate:
+          type: string
+    CategoryShare:
+      type: object
+      properties:
+        categoryName:
+          type: string
+        materialCount:
+          type: integer
+          format: int64
+        ratio:
+          type: string
+    AlertItem:
+      type: object
+      properties:
+        materialName:
+          type: string
+        unitName:
+          type: string
+        quantity:
+          type: string
+        safetyStock:
+          type: string
+        severity:
+          type: integer
+          format: int32
+        reason:
+          type: string
+    AlertList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/AlertItem"
+        total:
+          type: integer
+          format: int32
+    Mismatch:
+      type: object
+      properties:
+        materialId:
+          type: string
+        name:
+          type: string
+        balance:
+          type: string
+        movementSum:
+          type: string
+    ReconcileReport:
+      type: object
+      properties:
+        checked:
+          type: integer
+          format: int32
+        mismatched:
+          type: integer
+          format: int32
+        checkedAt:
+          type: string
+          format: date-time
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Mismatch"
+    PageResultMovementView:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/MovementView"
+        page:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        total:
+          type: integer
+          format: int64
+        capped:
+          type: boolean
+    PageResultMaterialView:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/MaterialView"
+        page:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        total:
+          type: integer
+          format: int64
+        capped:
+          type: boolean
+    BalanceView:
+      type: object
+      properties:
+        materialId:
+          type: string
+          format: uuid
+        materialName:
+          type: string
+        code:
+          type: string
+        spec:
+          type: string
+        categoryName:
+          type: string
+        unitName:
+          type: string
+        quantity:
+          type: number
+        safetyStock:
+          type: number
+        lastMovementAt:
+          type: string
+          format: date-time
+        severity:
+          type: integer
+          format: int32
+    PageResultBalanceView:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/BalanceView"
+        page:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        total:
+          type: integer
+          format: int64
+        capped:
+          type: boolean
+    CsrfToken:
+      type: object
+      properties:
+        parameterName:
+          type: string
+        token:
+          type: string
+        headerName:
+          type: string

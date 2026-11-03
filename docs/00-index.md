@@ -38,6 +38,7 @@ related: [GLOSSARY-001, PRD-001]
 | DEV-002 | `docs/03-dev/conventions.md` | 编码约定 | approved | @Dust191 | 2026-11-01 | S2 |
 | DEV-003 | `docs/03-dev/testing.md` | 测试策略 | approved | @Dust191 | 2026-11-01 | S2 |
 | DEV-004 | `docs/03-dev/tech-debt.md` | 技术债台账 | approved | @Dust191 | 2026-11-01 | S2 |
+| DEV-005 | `docs/03-dev/uat-v0.1.md` | 验收记录 v0.1 | in_review | @Dust191 | 2026-11-03 | S3 |
 | OPS-001 | `docs/04-ops/deploy.md` | 部署（S5 定稿，不参与 S2 审定） | in_review | @Dust191 | 2026-11-01 | S5 |
 | RUN-001 | `docs/04-ops/runbook.md` | 运行手册 | approved | @Dust191 | 2026-11-01 | S2 |
 | RUN-002 | `docs/04-ops/backup-restore.md` | 备份与恢复（S5 定稿，不参与 S2 审定） | in_review | @Dust191 | 2026-11-01 | S5 |
@@ -66,9 +67,10 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261102-06 | `docs/07-iteration/ITER-20261102-06.md` | 九项统计指标 | approved | @Dust191 | 2026-11-02 | S3 |
 | ITER-20261102-07 | `docs/07-iteration/ITER-20261102-07.md` | 物料 CSV 导出 | approved | @Dust191 | 2026-11-02 | S3 |
 | ITER-20261102-08 | `docs/07-iteration/ITER-20261102-08.md` | 物料导入与流水导出 | in_review | @Dust191 | 2026-11-02 | S3 |
-| ITER-20261102-09 | `docs/07-iteration/ITER-20261102-09.md` | 前端返工：七项验收问题修复 | in_review | @Dust191 | 2026-11-02 | S3 |
-| ITER-20261103-01 | `docs/07-iteration/ITER-20261103-01.md` | 重启自检与验收前修正 | in_review | @Dust191 | 2026-11-03 | S3 |
-| ITER-20261103-02 | `docs/07-iteration/ITER-20261103-02.md` | 验收前修复：登录文案、缩略图、导出入口 | in_review | @Dust191 | 2026-11-03 | S3 |
+| ITER-20261102-09 | `docs/07-iteration/ITER-20261102-09.md` | 前端返工：七项验收问题修复 | approved | @Dust191 | 2026-11-02 | S3 |
+| ITER-20261103-01 | `docs/07-iteration/ITER-20261103-01.md` | 重启自检与验收前修正 | approved | @Dust191 | 2026-11-03 | S3 |
+| ITER-20261103-02 | `docs/07-iteration/ITER-20261103-02.md` | 验收前修复：登录文案、缩略图、导出入口 | approved | @Dust191 | 2026-11-03 | S3 |
+| ITER-20261103-03 | `docs/07-iteration/ITER-20261103-03.md` | T7/T8 收口：集成测试、对账、契约与发布 0.1.0 | in_review | @Dust191 | 2026-11-03 | S3 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 

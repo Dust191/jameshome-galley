@@ -10,8 +10,7 @@ import org.junit.jupiter.api.Test;
 /**
  * 模块边界与分层约束。
  *
- * <p>骨架期模块包内只有 package-info，没有可检查的类，因此每条规则都允许"空集通过"（{@code
- * allowEmptyShould(true)}）。这不是放宽约束：一旦出现越界实现，规则立即失败；S3 建立实现后，可把该开关逐个收回，恢复 ArchUnit 默认的"空集即失败"。
+ * <p>S3 已建立实现，四个规则的"空集通过"开关全部收回：规则匹配不到任何类同样视为失败， 避免包名调整后规则悄悄失效。
  *
  * <p>规则的文字依据见工程规范 §3.4「分层与模块边界」。
  */
@@ -32,7 +31,6 @@ class ArchitectureTest {
                 .resideInAnyPackage(
                         "org.springframework..", "com.baomidou..", "jakarta.persistence..")
                 .because("domain 存放领域对象与规则，不得依赖框架")
-                .allowEmptyShould(true)
                 .check(CLASSES);
     }
 
@@ -45,7 +43,6 @@ class ArchitectureTest {
                 .dependOnClassesThat()
                 .resideInAPackage("..modules..")
                 .because("common 被所有模块依赖，反向依赖会造成环")
-                .allowEmptyShould(true)
                 .check(CLASSES);
     }
 
@@ -58,7 +55,6 @@ class ArchitectureTest {
                 .dependOnClassesThat()
                 .resideInAPackage("..modules..infrastructure..")
                 .because("接口层只能经 application 编排，不得直连持久化实现")
-                .allowEmptyShould(true)
                 .check(CLASSES);
     }
 
@@ -71,7 +67,6 @@ class ArchitectureTest {
                 .dependOnClassesThat()
                 .haveSimpleNameEndingWith("DO")
                 .because("Controller 不得直接返回 DO，必须经 DTO 转换")
-                .allowEmptyShould(true)
                 .check(CLASSES);
     }
 }

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   Alert,
@@ -19,15 +19,18 @@ import type { Dayjs } from 'dayjs'
 import { api, ApiError, query } from '../../lib/api'
 import type { Material, Movement, PageResult } from '../../lib/types'
 import PageHeader from '../../components/PageHeader'
+import MovementCreateModal from './MovementCreateModal'
 import { MovementTypeTag } from '../../components/tags'
 import { fmtQty, fmtTime, orDash } from '../../lib/format'
 import { canWrite, useAuth } from '../auth/AuthContext'
 
 export default function MovementListPage() {
   const { me } = useAuth()
-  const navigate = useNavigate()
   const { message } = AntApp.useApp()
   const queryClient = useQueryClient()
+  const [searchParams, setSearchParams] = useSearchParams()
+  // 登记改为弹窗：?new=1 打开；关闭即去掉参数
+  const creating = searchParams.get('new') === '1'
 
   const [materialId, setMaterialId] = useState<string | undefined>()
   const [type, setType] = useState<string | undefined>()
@@ -145,7 +148,10 @@ export default function MovementListPage() {
         description="记录一经写入不可修改；录错了用「冲正」抵消"
         extra={
           canWrite(me?.role) ? (
-            <Button type="primary" onClick={() => navigate('/movements/new')}>
+            <Button
+              type="primary"
+              onClick={() => setSearchParams({ ...Object.fromEntries(searchParams), new: '1' })}
+            >
               登记出入库
             </Button>
           ) : null
@@ -258,6 +264,15 @@ export default function MovementListPage() {
           </Form.Item>
         </Form>
       </Modal>
+
+      <MovementCreateModal
+        open={creating && canWrite(me?.role)}
+        onClose={() => {
+          const next = new URLSearchParams(searchParams)
+          next.delete('new')
+          setSearchParams(next, { replace: true })
+        }}
+      />
     </>
   )
 }

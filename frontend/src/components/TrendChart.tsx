@@ -79,7 +79,7 @@ export default function TrendChart({ data }: { data: TrendPoint[] }) {
           return (
             <g key={ratio} pointerEvents="none">
               <line x1={padding.left} y1={y} x2={width - padding.right} y2={y} stroke="#f0f0f0" />
-              <text x={padding.left - 8} y={y + 4} fontSize={11} fill="#999" textAnchor="end">
+              <text x={padding.left - 8} y={y + 4} fontSize={10} fill="#999" textAnchor="end">
                 {value}
               </text>
             </g>
@@ -131,10 +131,10 @@ export default function TrendChart({ data }: { data: TrendPoint[] }) {
               rx={6}
               fill="rgba(0,0,0,0.82)"
             />
-            <text x={tooltipX + 10} y={tooltipY + 18} fontSize={11} fill="#fff">
+            <text x={tooltipX + 10} y={tooltipY + 18} fontSize={10} fill="#fff">
               {current.date}
             </text>
-            <text x={tooltipX + 10} y={tooltipY + 35} fontSize={11} fill="#fff">
+            <text x={tooltipX + 10} y={tooltipY + 35} fontSize={10} fill="#fff">
               入库 {current.inCount} 笔 · 出库 {current.outCount} 笔
             </text>
           </g>
@@ -145,7 +145,7 @@ export default function TrendChart({ data }: { data: TrendPoint[] }) {
             key={index}
             x={xOf(index)}
             y={height - 8}
-            fontSize={11}
+            fontSize={10}
             fill="#999"
             textAnchor={index === 0 ? 'start' : index === data.length - 1 ? 'end' : 'middle'}
             pointerEvents="none"
@@ -155,7 +155,7 @@ export default function TrendChart({ data }: { data: TrendPoint[] }) {
         ))}
       </svg>
 
-      <div style={{ display: 'flex', gap: 16, fontSize: 13, color: '#666', marginTop: 4 }}>
+      <div style={{ display: 'flex', gap: 16, fontSize: 12, color: '#666', marginTop: 4 }}>
         <span>
           <span
             style={{
@@ -180,7 +180,7 @@ export default function TrendChart({ data }: { data: TrendPoint[] }) {
           />
           出库笔数
         </span>
-        <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+        <Typography.Text type="secondary" style={{ fontSize: 11 }}>
           （冲正流水与其抵消的原记录不计入笔数；轻点或悬浮折线区域查看当日数值）
         </Typography.Text>
       </div>

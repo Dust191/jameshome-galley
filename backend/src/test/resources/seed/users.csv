@@ -1,0 +1,4 @@
+id,username,display_name,role
+3fc07bfc-670f-7f4e-b0c9-3c05bd999387,admin,管理员,admin
+f1dffe76-7339-7789-af7e-aada5fa0bf51,editor,录入员,editor
+577e1a0e-ac1f-720c-b587-eb45414d3c71,viewer,查看者,viewer
