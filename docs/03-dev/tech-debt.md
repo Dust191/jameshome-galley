@@ -5,7 +5,7 @@ status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-01
-updated: 2026-11-03
+updated: 2026-11-04
 next_review: 2027-01-30
 iter: ITER-20261101-09
 related: [DEV-002, DEV-003]
@@ -22,7 +22,6 @@ related: [DEV-002, DEV-003]
 | 编号 | 债务 | 影响 | 偿还时点 | 状态 |
 |---|---|---|---|---|
 | TD-02 | `toolchains.xml` 未建立 | 本机 JDK 补丁号实际由 `JAVA_HOME` 决定，未由 Toolchains 锁定；ADR-0004 的"好的一面"未兑现 | S3 环境准备期（已过期未偿，随 S4 环境整理处理） | 待偿 |
-| TD-04 | `GOV-000` 是外部指导文档，未落地为仓内规范 | 规范与实现可能分叉，且新贡献者看不到约束 | S4 建仓后另写仓内版本 | 待偿 |
 | TD-05 | CI 未在真实 GitHub Runner 上跑过 | 仅在 act + 本机等价脚本链验证；runner 镜像差异、缓存行为未验证 | S4 建仓首次 PR | 待偿 |
 | TD-06 | 前端无组件测试 | 交互规则靠 3 条 E2E 与人工走查兜底；单个组件的行为回归定位慢 | S4 引入组件测试框架时 | 待偿 |
 | TD-09 | OWASP dependency-check 全量未执行 | 开发机未能完成 NVD 数据下载；osv-scanner 在线查询覆盖面小于 OWASP，供应链风险结论不完整 | CI 或带宽稳定的受控环境（S4） | 待偿 |
@@ -41,6 +40,7 @@ related: [DEV-002, DEV-003]
 | TD-01 | `ArchitectureTest` 四条规则带 `allowEmptyShould(true)` | 收回开关，并把 ArchUnit 升到 1.5.1（1.3.0 读不了 Java 25 字节码，规则实际从未生效）；四条规则现真正拦截 | 2026-11-03 |
 | TD-07 | 种子数据生成脚本未实现 | `scripts/gen-seed.py` 固定随机种子生成 8 分类 / 6 单位 / 50 物料 / 3 账号 / 500 流水，并产出 `seed.sql` | 2026-11-03 |
 | TD-08 | `contracts/openapi.yaml` 仅 1 条路径 | springdoc 由实现生成 32 条路径，`check-contract.sh` 与运行实例逐字比对 | 2026-11-03 |
+| TD-04 | `GOV-000` 是外部指导文档，未落地为仓内规范 | 建 `DEV-006` 工程规范仓内版与 `DEV-007` 偏离登记台账；GOV-000 保持指导文档定位（INDEX 2026-10-31 裁定） | 2026-11-04 |
 
 ## 3. 记账规则
 
@@ -58,3 +58,4 @@ related: [DEV-002, DEV-003]
 |---|---|---|
 | 2026-11-01 | 初版建立，登记 8 项在册债务 | ITER-20261101-09 |
 | 2026-11-03 | 偿还 TD-01 / TD-07 / TD-08；新增 TD-09 ~ TD-13（OWASP 缺口、Moderate 依赖、E2E 凭据、antd 体积、口径重复实现） | ITER-20261103-03 |
+| 2026-11-04 | 偿还 TD-04（GOV-000 落地为 DEV-006 / DEV-007） | ITER-20261104-01 |

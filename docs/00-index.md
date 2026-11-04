@@ -39,6 +39,8 @@ related: [GLOSSARY-001, PRD-001]
 | DEV-003 | `docs/03-dev/testing.md` | 测试策略 | approved | @Dust191 | 2026-11-01 | S2 |
 | DEV-004 | `docs/03-dev/tech-debt.md` | 技术债台账 | approved | @Dust191 | 2026-11-03 | S2 |
 | DEV-005 | `docs/03-dev/uat-v0.1.md` | 验收记录 v0.1 | approved | @Dust191 | 2026-11-03 | S3 |
+| DEV-006 | `docs/03-dev/spec.md` | 工程规范（仓内版） | in_review | @Dust191 | 2026-11-04 | S4 |
+| DEV-007 | `docs/03-dev/deviations.md` | 偏离登记台账 | in_review | @Dust191 | 2026-11-04 | S4 |
 | OPS-001 | `docs/04-ops/deploy.md` | 部署（S5 定稿，不参与 S2 审定） | in_review | @Dust191 | 2026-11-01 | S5 |
 | RUN-001 | `docs/04-ops/runbook.md` | 运行手册 | approved | @Dust191 | 2026-11-01 | S2 |
 | RUN-002 | `docs/04-ops/backup-restore.md` | 备份与恢复（S5 定稿，不参与 S2 审定） | in_review | @Dust191 | 2026-11-01 | S5 |
@@ -77,6 +79,7 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261103-03 | `docs/07-iteration/ITER-20261103-03.md` | T7/T8 收口：集成测试、对账、契约与发布 0.1.0 | approved | @Dust191 | 2026-11-03 | S3 |
 | ITER-20261103-04 | `docs/07-iteration/ITER-20261103-04.md` | S4 建仓前置：开源配套文件核对与补齐 | approved | @Dust191 | 2026-11-03 | S4 |
 | ITER-20261103-05 | `docs/07-iteration/ITER-20261103-05.md` | 首个 PR：DCO 豁免、依赖升级范围约束与 Issue 模板 | approved | @Dust191 | 2026-11-03 | S4 |
+| ITER-20261104-01 | `docs/07-iteration/ITER-20261104-01.md` | GOV-000 落地：工程规范仓内版与偏离登记台账 | in_review | @Dust191 | 2026-11-04 | S4 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
@@ -89,14 +92,14 @@ related: [GLOSSARY-001, PRD-001]
 | PRD | 产品需求 | 001 | 002 |
 | SCOPE | 范围 | 001 | 002 |
 | NFR | 非功能 | 001 | 002 |
-| DES | 设计（模型/接口/UI/指标） | — | 001 |
+| DES | 设计（模型/接口/UI/指标） | 001 ~ 004 | 005 |
 | ADR | 架构决策 | 0001 ~ 0005 | 0006 |
-| DEV | 开发规范（文档编号） | 001 ~ 004 | 005 |
-| DVT | 偏离登记（条目编号） | 01 ~ 03 | 04 |
+| DEV | 开发规范（文档编号） | 001 ~ 007 | 008 |
+| DVT | 偏离登记（条目编号） | 01 ~ 06 | 07 |
 | OPS / RUN | 运维与运行手册 | 001、001 ~ 002 | 002 / 003 |
-| GOV | 治理 | 000（工程规范）、001、002 | 003 |
+| GOV | 治理 | 000（指导文档）、001 ~ 006 | 007 |
 | RFC | 重大变更提案 | 0001 | 0002 |
-| ITER | 迭代记录 | 20261031-01、20261031-02 | — |
+| ITER | 迭代记录 | 20261031-01 ~ 20261104-01（30 份） | — |
 | MTG | 会议纪要 | — | — |
 
 ## 3. 强制文档齐备情况
@@ -116,7 +119,7 @@ S2 阶段门要求 19 份强制文档齐备，已于 2026-11-01 全部建立：
 
 S3 新增三份，不计入 S2 的 19 份强制清单：`DEV-005`（12 条 UAT 与工程质量门记录）、
 `GOV-003`（G3 通过记录与 0.1.0 冻结）、`GOV-005`（第三方依赖许可清单，S4 起草）。
-S4 新增 `GOV-004`（标签体系）。
+S4 新增 `GOV-004`（标签体系）、`GOV-006`（G4 验收记录）、`DEV-006`（工程规范仓内版）、`DEV-007`（偏离登记台账）。
 
 模板集见 §6。`docs/idea.md` 为可选项，当前未建立，不参与阶段门。
 
@@ -124,7 +127,7 @@ S4 新增 `GOV-004`（标签体系）。
 
 | 事项 | 说明 | 处置 |
 |---|---|---|
-| `GOV-000` 位于 `docs/` 之外 | GOV-000 §4.5 约束 1 要求 `docs/` 之外的 Markdown 不超过 100 行，而工程规范有 1600 余行 | **已裁定（2026-10-31）**：`GOV-000` 定位为「指导文档」，不是本项目的落地工程规范，不迁入 `docs/`、不归属本仓库；`.workbuddy/` 在 S1 建仓时由 `.gitignore` 排除。约束 1 仅适用于仓库内的 Markdown，故不构成违反。后续若需落地工程规范，须依当前已实现的内容与细节另写一份本地化版本，届时按普通文档登记入本索引 |
+| `GOV-000` 位于 `docs/` 之外 | GOV-000 §4.5 约束 1 要求 `docs/` 之外的 Markdown 不超过 100 行，而工程规范有 1600 余行 | **已裁定（2026-10-31）**：`GOV-000` 定位为「指导文档」，不是本项目的落地工程规范，不迁入 `docs/`、不归属本仓库；`.workbuddy/` 在 S1 建仓时由 `.gitignore` 排除。约束 1 仅适用于仓库内的 Markdown，故不构成违反。**落地版本已于 2026-11-04 建立**：`DEV-006`（工程规范仓内版）+ `DEV-007`（偏离登记台账），GOV-000 保持指导文档定位 |
 
 ## 5. `status` 与「状态」
 
@@ -151,6 +154,6 @@ S4 新增 `GOV-004`（标签体系）。
 |---|---|---|
 | `_templates/_template-doc.md` | 产品、治理等通用文档 | 开头三行内说明"回答什么问题" |
 | `_templates/_template-design.md` | DES-001 ~ DES-004 | 每条结论须可追溯到 PRD 故事或 glossary 词条 |
-| `_templates/_template-dev.md` | DEV-001 ~ DEV-005 | 步骤须可照做，含预期输出 |
+| `_templates/_template-dev.md` | DEV-001 ~ DEV-007 | 步骤须可照做，含预期输出 |
 | `_templates/_template-ops.md` | OPS-001、RUN-001、RUN-002 | 面向"凌晨三点被叫醒的人"，不可逆操作须写回滚 |
 | `_templates/_template-adr.md` | ADR-0005 起 | 状态栏与 front-matter 的 `status` 分开写 |
