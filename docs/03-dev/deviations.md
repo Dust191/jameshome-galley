@@ -7,7 +7,7 @@ reviewers: ["@Dust191"]
 created: 2026-11-04
 updated: 2026-11-10
 next_review: 2027-02-10
-iter: ITER-20261110-02
+iter: ITER-20261110-03
 related: [GOV-000, DEV-003, DEV-006, GOV-006]
 ---
 
@@ -35,7 +35,6 @@ related: [GOV-000, DEV-003, DEV-006, GOV-006]
 | DVT-04 | `GOV-000` §6.5 约束 3：`main` 保护不可被 Maintainer 绕过 | `enforce_admins: false`；PR 批准数 0；未要求 CODEOWNERS 审查 | 单人期没有第二审批人（GitHub 禁止自批），全锁死连紧急修复都无法进行 | 规则对贡献者生效；Owner 保留通道，PR 记录仍是常态 | S6 首名 Maintainer 入组即收紧：`enforce_admins: true` + 批准数 ≥1 + CODEOWNERS 审查 | 生效中 |
 | DVT-05 | `GOV-000` §6.5 约束 1：所有贡献者须签署 DCO，CI 校验 `Signed-off-by` | 机器人提交（`dependabot[bot]`、`github-actions[bot]`）与合并提交不参与签署检查 | 机器人无法自行签署；合并提交不承载内容变更 | 署名责任由 Squash 合并产生的最终提交承担；人类提交的检查一条未松 | 若引入 DCO App 能对机器人单独放行时复核；否则长期保留 | 生效中 |
 | DVT-06 | `GOV-000` §6.4：发版前执行依赖扫描，不允许 High / Critical | 以 osv-scanner 在线查询替代 OWASP dependency-check；后者本轮未跑全量 | 开发机无法完成 NVD 数据下载（体积与网络限制） | osv 覆盖面小于 OWASP，结论不等价；已写入 `DEV-003` §7 与 `GOV-006` §3 | CI 或带宽稳定环境接入 OWASP（`TD-09`） | 生效中 |
-| DVT-07 | `GOV-000` §3.4：提交信息由 CI 校验 | `scripts/check-commit-message.sh` 已存在，但只手动执行；CI 的 `guards` 只跑契约、环境变量、署名、文档四项 | 脚本按人类提交口径写；机器人提交 scope 为 `deps-dev`、subject 常超 50 字，直接接入会在每次依赖升级时误伤 | 人类提交靠每轮合并前手动执行；PR 标题由 Squash 保证；机器人提交不受约束 | 脚本支持按作者与合并提交豁免，并接入 `guards` 后 | 生效中 |
 | DVT-08 | `GOV-000` §1.3 / 红线 7；`SCOPE-001` In：所有写操作写入审计 | `audit_log` 只有建表语句，Java 与 XML 无写入路径；`created_by` / `updated_by` 列存在但未填 | 审计需要统一拦截或在每个写用例补写，涉及全部写路径；G3 的 12 条 UAT 未列审计，因而未被发现 | 写操作不可追溯；红线 7 未满足；`PRD-001` 口令重置验收 3 无法证明 | 所有写路径写入 `audit_log`（actor、action、before、after），并在 UAT 增加审计断言（`TD-15`） | 生效中 |
 | DVT-09 | `SCOPE-001` In：注册端点限流（决策 D-20） | 注册只校验邀请码状态与账号名重复，无频率限制；`RATE_LIMITED` 仅用于登录失败锁定 | 邀请码为 8 位加密随机，命中成本高，限流被视为第二道防线 | 注册端点可被高频尝试；邀请码熵值降低命中率但不消除资源消耗 | 注册端点按 IP 与邀请码加频率限制，超限返回 429 `RATE_LIMITED`（`TD-16`） | 生效中 |
 
@@ -44,6 +43,7 @@ related: [GOV-000, DEV-003, DEV-006, GOV-006]
 | 编号 | 收回日期 | 收回方式 |
 |---|---|---|
 | DVT-03 | 2026-11-03 | `ArchitectureTest` 去掉 `allowEmptyShould(true)`，ArchUnit 升 1.5.1；四条规则恢复严格模式并全绿 |
+| DVT-07 | 2026-11-10 | 脚本增加两类豁免（合并提交、机器人作者，口径与署名校验一致）后接入 `guards` 的「提交信息校验」步骤（Issue #47）；实测 main 全量历史 47 条人工提交通过、12 条机器人豁免 |
 
 ## 4. 变更记录
 
@@ -52,3 +52,4 @@ related: [GOV-000, DEV-003, DEV-006, GOV-006]
 | 2026-11-04 | 初版建立：汇入 DVT-01 ~ DVT-03（原散落在 `ITER-20261031-03`），新增 DVT-04 ~ DVT-06 | ITER-20261104-01 |
 | 2026-11-10 | 新增 DVT-07 ~ DVT-09（提交信息未接入 CI、写操作未落审计、注册端点未限流）：重写工程规范时按代码核对发现，前两条此前未被任何文档记录 | ITER-20261110-01 |
 | 2026-11-10 | 开发者裁定：三项均须于 S5 前收回，转入「Issue → 修复 → 模拟评审 → push 合并」流程——#47（DVT-07）、#46（DVT-08）、#45（DVT-09）；收回与偿还登记在 ITER-20261110-03 | ITER-20261110-02 |
+| 2026-11-10 | DVT-07 收回（见 §3）；DVT-08 / DVT-09 修复中（#46 / #45） | ITER-20261110-03 |
