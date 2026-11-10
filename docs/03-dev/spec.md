@@ -1,13 +1,13 @@
 ---
 title: 工程规范·总纲
 doc_id: DEV-006
-status: in_review
+status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-04
 updated: 2026-11-10
 next_review: 2027-02-10
-iter: ITER-20261110-01
+iter: ITER-20261110-02
 related: [GOV-000, INDEX-001, GLOSSARY-001, PRD-001, SCOPE-001, NFR-001, ADR-0001, DES-001, DES-004, DEV-002, DEV-007, DEV-008, DEV-009, DEV-010, GOV-001, GOV-002, GOV-003, GOV-006, CONTRIBUTING]
 ---
 
@@ -275,7 +275,7 @@ S4 已关账，`main` 处于"可发布但未发布 0.5.0"的状态；S5 的前�
 | 结构差异 | 六表 → 八表；10 项指标 → 9 项；MVP 增注册与邀请码 | 已在 `DES-001` / `DES-004` / `SCOPE-001` 定稿；GOV-000 附录 R-01 ~ R-03 已记 |
 | 版本差异 | JDK 补丁、MP 3.5.18.1、Maven 3.9.16、JaCoCo 0.8.16、ArchUnit 1.5.1 | `DVT-01` / `DVT-02`；§4.1 按实测 |
 | 流程差异 | S4 的 0.5.0 未发布 | `GOV-002` §6，开发者决定时机 |
-| 设计差异 | 图片访问：GOV-000 要求私有读 + 签名 URL | `ADR-0005` 定为 `publicUrl`（key 不可枚举）；S5 切 OSS 时复核签名方案 |
+| 设计差异 | 图片访问：GOV-000 要求私有读 + 签名 URL | `ADR-0005` 定为 `publicUrl`（key 不可枚举）；**2026-11-10 开发者裁定：以实现为准，不再改动** |
 | 门禁缺口 | 提交信息未接入 CI（`DVT-07`）；写操作未落审计（`DVT-08`）；注册端点未限流（`DVT-09`） | 台账 + `DEV-004` 的 TD-14 ~ TD-16 |
 | 单人期豁免 | 分支保护管理员通道、机器人签署、OWASP 全量 | `DVT-04` ~ `DVT-06`；`GOV-006` §3 |
 | 规则修订 | `status` 五个取值（GOV-000 §4.4.3 与 §4.5 自相矛盾）；`docs/` 外篇幅上限对根目录对外文件的例外 | `DEV-008` §2.2 / §2.10，随本套一并审定 |

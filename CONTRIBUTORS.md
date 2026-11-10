@@ -19,7 +19,8 @@ jameshome-galley 由 JamesHome 维护。对外统一署名 The JamesHome Contrib
 
 | 模型标识 | 厂商 | 版本 | 参与轮次 | 参与范围 | 记录来源 | 登记人 |
 |---|---|---|---|---|---|---|
-| DeepSeek-V4.1-Flash | DeepSeek | V4.1 | 2026-10-30 至 2026-11-03；S1 骨架至 S3 发布收口（ITER-20261031-01 ~ ITER-20261103-04）；GOV-000 v1.3 ~ v1.12 | 文档起草与核对、后端/前端实现、集成与 E2E 测试、发布收口、开源配套文件 | 运行时声明（WorkBuddy） | Dust191 |
+| DeepSeek-V4.1-Flash | DeepSeek | V4.1 | S1-S5全阶段，详情贡献见ITER | 文档起草与核对、后端/前端实现、集成与 E2E 测试、发布收口、开源配套文件 | 运行时声明（WorkBuddy） | Dust191 |
+| GLM-5.3-Flash | GLM | V5.3 | - | 当DeepSeek-V4.1-Flash限流时，补充协助其完成剩余任务 | 运行时声明（WorkBuddy） | Dust191 |
 
 ## 登记规则
 

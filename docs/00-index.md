@@ -39,11 +39,11 @@ related: [GLOSSARY-001, PRD-001]
 | DEV-003 | `docs/03-dev/testing.md` | 测试策略 | approved | @Dust191 | 2026-11-01 | S2 |
 | DEV-004 | `docs/03-dev/tech-debt.md` | 技术债台账 | approved | @Dust191 | 2026-11-10 | S2 |
 | DEV-005 | `docs/03-dev/uat-v0.1.md` | 验收记录 v0.1 | approved | @Dust191 | 2026-11-03 | S3 |
-| DEV-006 | `docs/03-dev/spec.md` | 工程规范·总纲 | in_review | @Dust191 | 2026-11-10 | S4 |
-| DEV-007 | `docs/03-dev/deviations.md` | 偏离登记台账 | in_review | @Dust191 | 2026-11-10 | S4 |
-| DEV-008 | `docs/03-dev/spec-work.md` | 作业规范 | in_review | @Dust191 | 2026-11-10 | S4 |
-| DEV-009 | `docs/03-dev/spec-stages.md` | 阶段实施规范 | in_review | @Dust191 | 2026-11-10 | S4 |
-| DEV-010 | `docs/03-dev/spec-team.md` | 团体开发规范 | in_review | @Dust191 | 2026-11-10 | S4 |
+| DEV-006 | `docs/03-dev/spec.md` | 工程规范·总纲 | approved | @Dust191 | 2026-11-10 | S4 |
+| DEV-007 | `docs/03-dev/deviations.md` | 偏离登记台账 | approved | @Dust191 | 2026-11-10 | S4 |
+| DEV-008 | `docs/03-dev/spec-work.md` | 作业规范 | approved | @Dust191 | 2026-11-10 | S4 |
+| DEV-009 | `docs/03-dev/spec-stages.md` | 阶段实施规范 | approved | @Dust191 | 2026-11-10 | S4 |
+| DEV-010 | `docs/03-dev/spec-team.md` | 团体开发规范（搁置至 G5） | in_review | @Dust191 | 2026-11-10 | S4 |
 | OPS-001 | `docs/04-ops/deploy.md` | 部署（S5 定稿，不参与 S2 审定） | in_review | @Dust191 | 2026-11-01 | S5 |
 | RUN-001 | `docs/04-ops/runbook.md` | 运行手册 | approved | @Dust191 | 2026-11-01 | S2 |
 | RUN-002 | `docs/04-ops/backup-restore.md` | 备份与恢复（S5 定稿，不参与 S2 审定） | in_review | @Dust191 | 2026-11-01 | S5 |
@@ -83,7 +83,8 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261103-04 | `docs/07-iteration/ITER-20261103-04.md` | S4 建仓前置：开源配套文件核对与补齐 | approved | @Dust191 | 2026-11-03 | S4 |
 | ITER-20261103-05 | `docs/07-iteration/ITER-20261103-05.md` | 首个 PR：DCO 豁免、依赖升级范围约束与 Issue 模板 | approved | @Dust191 | 2026-11-03 | S4 |
 | ITER-20261104-01 | `docs/07-iteration/ITER-20261104-01.md` | GOV-000 落地：工程规范仓内版与偏离登记台账 | in_review | @Dust191 | 2026-11-04 | S4 |
-| ITER-20261110-01 | `docs/07-iteration/ITER-20261110-01.md` | 重写工程规范：总纲、作业、阶段与团体四分册 | in_review | @Dust191 | 2026-11-10 | S4 |
+| ITER-20261110-01 | `docs/07-iteration/ITER-20261110-01.md` | 重写工程规范：总纲、作业、阶段与团体四分册 | approved | @Dust191 | 2026-11-10 | S4 |
+| ITER-20261110-02 | `docs/07-iteration/ITER-20261110-02.md` | 审定回填与三项偏离转 Issue | approved | @Dust191 | 2026-11-10 | S4 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
@@ -103,7 +104,7 @@ related: [GLOSSARY-001, PRD-001]
 | OPS / RUN | 运维与运行手册 | 001、001 ~ 002 | 002 / 003 |
 | GOV | 治理 | 000（指导文档）、001 ~ 006 | 007 |
 | RFC | 重大变更提案 | 0001 | 0002 |
-| ITER | 迭代记录 | 20261031-01 ~ 20261110-01（31 份） | — |
+| ITER | 迭代记录 | 20261031-01 ~ 20261110-02（32 份） | — |
 | MTG | 会议纪要 | — | — |
 
 ## 3. 强制文档齐备情况
@@ -124,7 +125,7 @@ S2 阶段门要求 19 份强制文档齐备，已于 2026-11-01 全部建立：
 S3 新增三份，不计入 S2 的 19 份强制清单：`DEV-005`（12 条 UAT 与工程质量门记录）、
 `GOV-003`（G3 通过记录与 0.1.0 冻结）、`GOV-005`（第三方依赖许可清单，S4 起草）。
 S4 新增 `GOV-004`（标签体系）、`GOV-006`（G4 验收记录）、`DEV-006`（工程规范·总纲）、`DEV-007`（偏离登记台账）。
-2026-11-10 重写落地版：`DEV-006` 由 145 行摘要改为总纲，新增 `DEV-008`（作业规范）、`DEV-009`（阶段实施规范）、`DEV-010`（团体开发规范），GOV-000 的每一章在 `DEV-006` §7 有唯一落点。
+2026-11-10 重写落地版：`DEV-006` 由 145 行摘要改为总纲，新增 `DEV-008`（作业规范）、`DEV-009`（阶段实施规范）、`DEV-010`（团体开发规范），GOV-000 的每一章在 `DEV-006` §7 有唯一落点。同日审定：`DEV-006` ~ `DEV-009` 转 `approved`，`DEV-010` 搁置至 G5（`ITER-20261110-01/02`）。
 
 模板集见 §6。`docs/idea.md` 为可选项，当前未建立，不参与阶段门。
 

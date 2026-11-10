@@ -1,13 +1,13 @@
 ---
 title: 偏离登记台账
 doc_id: DEV-007
-status: in_review
+status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-04
 updated: 2026-11-10
 next_review: 2027-02-10
-iter: ITER-20261110-01
+iter: ITER-20261110-02
 related: [GOV-000, DEV-003, DEV-006, GOV-006]
 ---
 
@@ -51,3 +51,4 @@ related: [GOV-000, DEV-003, DEV-006, GOV-006]
 |---|---|---|
 | 2026-11-04 | 初版建立：汇入 DVT-01 ~ DVT-03（原散落在 `ITER-20261031-03`），新增 DVT-04 ~ DVT-06 | ITER-20261104-01 |
 | 2026-11-10 | 新增 DVT-07 ~ DVT-09（提交信息未接入 CI、写操作未落审计、注册端点未限流）：重写工程规范时按代码核对发现，前两条此前未被任何文档记录 | ITER-20261110-01 |
+| 2026-11-10 | 开发者裁定：三项均须于 S5 前收回，转入「Issue → 修复 → 模拟评审 → push 合并」流程——#47（DVT-07）、#46（DVT-08）、#45（DVT-09）；收回与偿还登记在 ITER-20261110-03 | ITER-20261110-02 |

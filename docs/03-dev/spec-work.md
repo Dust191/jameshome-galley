@@ -1,13 +1,13 @@
 ---
 title: 作业规范
 doc_id: DEV-008
-status: in_review
+status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-10
 updated: 2026-11-10
 next_review: 2027-02-10
-iter: ITER-20261110-01
+iter: ITER-20261110-02
 related: [DEV-002, DEV-003, DEV-004, DEV-006, DEV-007, GOV-002, GOV-005, GLOSSARY-001, INDEX-001, CONTRIBUTING]
 ---
 
