@@ -1,10 +1,12 @@
 package io.github.jameshome.galley.modules.material.application;
 
+import io.github.jameshome.galley.common.audit.AuditService;
 import io.github.jameshome.galley.common.error.BusinessException;
 import io.github.jameshome.galley.common.error.ErrorCode;
 import io.github.jameshome.galley.common.id.UuidV7;
 import io.github.jameshome.galley.common.storage.ObjectStorage;
 import io.github.jameshome.galley.common.web.PageResult;
+import io.github.jameshome.galley.modules.identity.application.CurrentUserService;
 import io.github.jameshome.galley.modules.material.api.dto.MaterialDtos.MaterialCreate;
 import io.github.jameshome.galley.modules.material.api.dto.MaterialDtos.MaterialPatch;
 import io.github.jameshome.galley.modules.material.api.dto.MaterialDtos.MaterialView;
@@ -45,16 +47,22 @@ public class MaterialService {
     private final CategoryMapper categoryMapper;
     private final UnitMapper unitMapper;
     private final ObjectStorage storage;
+    private final AuditService audit;
+    private final CurrentUserService currentUser;
 
     public MaterialService(
             MaterialMapper mapper,
             CategoryMapper categoryMapper,
             UnitMapper unitMapper,
-            ObjectStorage storage) {
+            ObjectStorage storage,
+            AuditService audit,
+            CurrentUserService currentUser) {
         this.mapper = mapper;
         this.categoryMapper = categoryMapper;
         this.unitMapper = unitMapper;
         this.storage = storage;
+        this.audit = audit;
+        this.currentUser = currentUser;
     }
 
     public PageResult<MaterialView> search(
@@ -115,16 +123,20 @@ public class MaterialService {
         row.setShelfLifeDays(body.shelfLifeDays());
         row.setImageUrl(blankToNull(body.imageKey()));
         row.setNote(blankToNull(body.note()));
+        UUID actorId = currentUser.requireId();
         row.setStatus(MaterialStatus.ACTIVE.dbValue());
         row.setVersion(0);
         row.setCreatedAt(now);
         row.setUpdatedAt(now);
+        row.setCreatedBy(actorId);
+        row.setUpdatedBy(actorId);
 
         try {
             mapper.insert(row);
         } catch (DuplicateKeyException ex) {
             throw new BusinessException(ErrorCode.DUPLICATE_KEY, "自编码已被占用", "code");
         }
+        audit.record(actorId, "CREATE", "material", row.getId(), null, audit.snapshot(row));
         return detail(row.getId());
     }
 
@@ -136,6 +148,8 @@ public class MaterialService {
     @Transactional
     public MaterialView update(UUID id, MaterialPatch body) {
         MaterialDO row = require(id);
+        // 快照必须在改动前取，否则 before/after 一样
+        String before = audit.snapshot(row);
         MaterialStatus current = MaterialStatus.fromDb(row.getStatus());
 
         if (body.status() != null && !current.canTransitionTo(body.status())) {
@@ -182,6 +196,7 @@ public class MaterialService {
 
         row.setVersion(body.version() == null ? row.getVersion() : body.version());
         row.setUpdatedAt(Instant.now());
+        row.setUpdatedBy(currentUser.requireId());
 
         int affected;
         try {
@@ -192,6 +207,7 @@ public class MaterialService {
         if (affected == 0) {
             throw new BusinessException(ErrorCode.VERSION_CONFLICT, "该物料已被他人修改，请刷新后重试");
         }
+        audit.record(row.getUpdatedBy(), "UPDATE", "material", id, before, audit.snapshot(row));
         return detail(id);
     }
 
@@ -208,12 +224,15 @@ public class MaterialService {
             throw new BusinessException(
                     ErrorCode.MATERIAL_HAS_MOVEMENTS, "该物料已有 " + movements + " 条流水，不能删除，可改为停用或归档");
         }
+        String before = audit.snapshot(row);
         row.setDeletedAt(Instant.now());
         row.setUpdatedAt(Instant.now());
+        row.setUpdatedBy(currentUser.requireId());
         row.setVersion(row.getVersion());
         if (mapper.updateById(row) == 0) {
             throw new BusinessException(ErrorCode.VERSION_CONFLICT, "该物料已被他人修改，请刷新后重试");
         }
+        audit.record(row.getUpdatedBy(), "DELETE", "material", id, before, audit.snapshot(row));
     }
 
     private MaterialDO require(UUID id) {

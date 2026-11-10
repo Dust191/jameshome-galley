@@ -1,8 +1,10 @@
 package io.github.jameshome.galley.modules.imports.application;
 
+import io.github.jameshome.galley.common.audit.AuditService;
 import io.github.jameshome.galley.common.error.BusinessException;
 import io.github.jameshome.galley.common.error.ErrorCode;
 import io.github.jameshome.galley.common.id.UuidV7;
+import io.github.jameshome.galley.modules.identity.application.CurrentUserService;
 import io.github.jameshome.galley.modules.material.domain.MaterialStatus;
 import io.github.jameshome.galley.modules.material.infrastructure.CategoryDO;
 import io.github.jameshome.galley.modules.material.infrastructure.CategoryMapper;
@@ -43,12 +45,20 @@ public class MaterialImportService {
     private final MaterialMapper materialMapper;
     private final CategoryMapper categoryMapper;
     private final UnitMapper unitMapper;
+    private final AuditService audit;
+    private final CurrentUserService currentUser;
 
     public MaterialImportService(
-            MaterialMapper materialMapper, CategoryMapper categoryMapper, UnitMapper unitMapper) {
+            MaterialMapper materialMapper,
+            CategoryMapper categoryMapper,
+            UnitMapper unitMapper,
+            AuditService audit,
+            CurrentUserService currentUser) {
         this.materialMapper = materialMapper;
         this.categoryMapper = categoryMapper;
         this.unitMapper = unitMapper;
+        this.audit = audit;
+        this.currentUser = currentUser;
     }
 
     @Transactional
@@ -58,6 +68,8 @@ public class MaterialImportService {
             throw new BusinessException(ErrorCode.VALIDATION_FAILED, "文件为空");
         }
 
+        UUID actorId = currentUser.requireId();
+        UUID batchId = UuidV7.generate();
         int start = isHeader(rows.get(0)) ? 1 : 0;
         int total = rows.size() - start;
         if (total <= 0) {
@@ -159,6 +171,8 @@ public class MaterialImportService {
             Instant now = Instant.now();
             MaterialDO entity = new MaterialDO();
             entity.setId(UuidV7.generate());
+            entity.setCreatedBy(actorId);
+            entity.setUpdatedBy(actorId);
             entity.setCode(code.isEmpty() ? null : code);
             entity.setName(name);
             entity.setCategoryId(categoryId);
@@ -187,6 +201,21 @@ public class MaterialImportService {
             throw new BusinessException(ErrorCode.DUPLICATE_KEY, "自编码与已有物料冲突，请检查后重新导入", "code");
         }
 
+        // entityId 存批次 id：一批导入了多少条在 after 里，行级明细以物料自己的 CREATE 之外由批次号关联
+        audit.record(
+                actorId,
+                "IMPORT",
+                "material",
+                batchId,
+                null,
+                audit.snapshot(
+                        Map.of(
+                                "total",
+                                total,
+                                "created",
+                                pending.size(),
+                                "batch",
+                                batchId.toString())));
         return new ImportResult(total, pending.size(), List.of());
     }
 

@@ -1,5 +1,6 @@
 package io.github.jameshome.galley.modules.stock.application;
 
+import io.github.jameshome.galley.common.audit.AuditService;
 import io.github.jameshome.galley.common.error.BusinessException;
 import io.github.jameshome.galley.common.error.ErrorCode;
 import io.github.jameshome.galley.common.id.UuidV7;
@@ -39,14 +40,17 @@ public class MovementService {
     private final StockMovementMapper movementMapper;
     private final StockBalanceMapper balanceMapper;
     private final MaterialMapper materialMapper;
+    private final AuditService audit;
 
     public MovementService(
             StockMovementMapper movementMapper,
             StockBalanceMapper balanceMapper,
-            MaterialMapper materialMapper) {
+            MaterialMapper materialMapper,
+            AuditService audit) {
         this.movementMapper = movementMapper;
         this.balanceMapper = balanceMapper;
         this.materialMapper = materialMapper;
+        this.audit = audit;
     }
 
     public PageResult<MovementView> search(
@@ -120,6 +124,8 @@ public class MovementService {
         }
 
         balanceMapper.addQuantity(row.getMaterialId(), row.getQuantity(), row.getOccurredAt());
+        audit.record(
+                operator.id(), "PLACE", "stock_movement", row.getId(), null, audit.snapshot(row));
         return detail(row.getId());
     }
 
@@ -142,6 +148,8 @@ public class MovementService {
         if (Boolean.TRUE.equals(original.getReversed())) {
             throw new BusinessException(ErrorCode.MOVEMENT_ALREADY_REVERSED, "该记录已被冲正");
         }
+        // 快照取在翻标记前：before 里 reversed 还是 false
+        String before = audit.snapshot(original);
         if (movementMapper.markReversed(movementId) == 0) {
             throw new BusinessException(ErrorCode.MOVEMENT_ALREADY_REVERSED, "该记录已被冲正");
         }
@@ -162,6 +170,13 @@ public class MovementService {
 
         movementMapper.insert(row);
         balanceMapper.addQuantity(row.getMaterialId(), row.getQuantity(), now);
+        audit.record(
+                operator.id(),
+                "REVERSE",
+                "stock_movement",
+                row.getId(),
+                before,
+                audit.snapshot(row));
         return detail(row.getId());
     }
 

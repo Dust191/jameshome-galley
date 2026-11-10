@@ -1,5 +1,6 @@
 package io.github.jameshome.galley.modules.identity.application;
 
+import io.github.jameshome.galley.common.audit.AuditService;
 import io.github.jameshome.galley.common.error.BusinessException;
 import io.github.jameshome.galley.common.error.ErrorCode;
 import io.github.jameshome.galley.common.id.UuidV7;
@@ -19,10 +20,15 @@ import org.springframework.stereotype.Service;
 public class InviteCodeService {
 
     private final InviteCodeMapper mapper;
+    private final AuditService audit;
+    private final CurrentUserService currentUser;
     private final SecureRandom random = new SecureRandom();
 
-    public InviteCodeService(InviteCodeMapper mapper) {
+    public InviteCodeService(
+            InviteCodeMapper mapper, AuditService audit, CurrentUserService currentUser) {
         this.mapper = mapper;
+        this.audit = audit;
+        this.currentUser = currentUser;
     }
 
     /**
@@ -54,6 +60,8 @@ public class InviteCodeService {
             row.setCreatedAt(now);
             row.setUpdatedAt(now);
             mapper.insert(row);
+            audit.record(
+                    creatorId, "CREATE", "invite_code", row.getId(), null, audit.snapshot(row));
             return toDomain(row);
         }
         throw new BusinessException(ErrorCode.INTERNAL_ERROR, "邀请码生成冲突，请重试");
@@ -76,9 +84,12 @@ public class InviteCodeService {
         if (!InviteStatus.UNUSED.dbValue().equals(row.getStatus())) {
             throw new BusinessException(ErrorCode.INVITE_CODE_INVALID, "只有未使用的邀请码可以禁用");
         }
+        String before = audit.snapshot(row);
         row.setStatus(InviteStatus.DISABLED.dbValue());
         row.setUpdatedAt(Instant.now());
         mapper.updateById(row);
+        audit.record(
+                currentUser.requireId(), "DISABLE", "invite_code", id, before, audit.snapshot(row));
         return toDomain(row);
     }
 

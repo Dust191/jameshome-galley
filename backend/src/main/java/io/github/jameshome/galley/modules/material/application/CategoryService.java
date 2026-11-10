@@ -1,8 +1,10 @@
 package io.github.jameshome.galley.modules.material.application;
 
+import io.github.jameshome.galley.common.audit.AuditService;
 import io.github.jameshome.galley.common.error.BusinessException;
 import io.github.jameshome.galley.common.error.ErrorCode;
 import io.github.jameshome.galley.common.id.UuidV7;
+import io.github.jameshome.galley.modules.identity.application.CurrentUserService;
 import io.github.jameshome.galley.modules.material.domain.Category;
 import io.github.jameshome.galley.modules.material.domain.DictStatus;
 import io.github.jameshome.galley.modules.material.infrastructure.CategoryDO;
@@ -19,9 +21,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class CategoryService {
 
     private final CategoryMapper mapper;
+    private final AuditService audit;
+    private final CurrentUserService currentUser;
 
-    public CategoryService(CategoryMapper mapper) {
+    public CategoryService(
+            CategoryMapper mapper, AuditService audit, CurrentUserService currentUser) {
         this.mapper = mapper;
+        this.audit = audit;
+        this.currentUser = currentUser;
     }
 
     public List<Category> list(boolean includeInactive) {
@@ -49,12 +56,20 @@ public class CategoryService {
         } catch (org.springframework.dao.DuplicateKeyException ex) {
             throw new BusinessException(ErrorCode.DUPLICATE_KEY, "分类名已存在", "name");
         }
+        audit.record(
+                currentUser.requireId(),
+                "CREATE",
+                "material_category",
+                row.getId(),
+                null,
+                audit.snapshot(row));
         return toDomain(row);
     }
 
     @Transactional
     public Category update(UUID id, String name, Integer sortOrder, DictStatus status) {
         CategoryDO row = require(id);
+        String before = audit.snapshot(row);
         if (name != null && !name.isBlank()) {
             row.setName(name);
         }
@@ -70,18 +85,32 @@ public class CategoryService {
         } catch (org.springframework.dao.DuplicateKeyException ex) {
             throw new BusinessException(ErrorCode.DUPLICATE_KEY, "分类名已存在", "name");
         }
+        audit.record(
+                currentUser.requireId(),
+                "UPDATE",
+                "material_category",
+                id,
+                before,
+                audit.snapshot(row));
         return toDomain(row);
     }
 
     @Transactional
     public void delete(UUID id) {
-        require(id);
+        CategoryDO row = require(id);
         long used = mapper.countMaterials(id);
         if (used > 0) {
             throw new BusinessException(
                     ErrorCode.CATEGORY_IN_USE, "该分类下还有 " + used + " 种物料，不能删除，可改为停用");
         }
         mapper.deleteById(id);
+        audit.record(
+                currentUser.requireId(),
+                "DELETE",
+                "material_category",
+                id,
+                audit.snapshot(row),
+                null);
     }
 
     private CategoryDO require(UUID id) {

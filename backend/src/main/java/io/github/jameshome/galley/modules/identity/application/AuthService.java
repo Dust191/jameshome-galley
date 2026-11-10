@@ -1,5 +1,6 @@
 package io.github.jameshome.galley.modules.identity.application;
 
+import io.github.jameshome.galley.common.audit.AuditService;
 import io.github.jameshome.galley.common.error.BusinessException;
 import io.github.jameshome.galley.common.error.ErrorCode;
 import io.github.jameshome.galley.common.id.UuidV7;
@@ -43,6 +44,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AppUserDetailsService detailsService;
     private final RegisterRateLimiter registerRateLimiter;
+    private final AuditService audit;
     private final Map<String, Failure> failures = new ConcurrentHashMap<>();
 
     public AuthService(
@@ -52,7 +54,8 @@ public class AuthService {
             InviteCodeMapper inviteMapper,
             PasswordEncoder passwordEncoder,
             AppUserDetailsService detailsService,
-            RegisterRateLimiter registerRateLimiter) {
+            RegisterRateLimiter registerRateLimiter,
+            AuditService audit) {
         this.authenticationManager = authenticationManager;
         this.contextRepository = contextRepository;
         this.userMapper = userMapper;
@@ -60,6 +63,7 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
         this.detailsService = detailsService;
         this.registerRateLimiter = registerRateLimiter;
+        this.audit = audit;
     }
 
     public AppUser login(
@@ -87,12 +91,22 @@ public class AuthService {
             SecurityContextHolder.setContext(context);
             contextRepository.saveContext(context, request, response);
 
-            return detailsService
-                    .findDomain(username)
-                    .orElseThrow(
-                            () ->
-                                    new BusinessException(
-                                            ErrorCode.AUTH_INVALID_CREDENTIALS, "账号或密码不正确"));
+            AppUser user =
+                    detailsService
+                            .findDomain(username)
+                            .orElseThrow(
+                                    () ->
+                                            new BusinessException(
+                                                    ErrorCode.AUTH_INVALID_CREDENTIALS,
+                                                    "账号或密码不正确"));
+            audit.record(
+                    user.id(),
+                    "LOGIN",
+                    "app_user",
+                    user.id(),
+                    null,
+                    audit.snapshot(java.util.Map.of("username", username)));
+            return user;
         } catch (BadCredentialsException ex) {
             failures.merge(
                     key,
@@ -167,6 +181,13 @@ public class AuthService {
         invite.setUpdatedAt(now);
         inviteMapper.updateById(invite);
 
+        audit.record(
+                row.getId(),
+                "CREATE",
+                "app_user",
+                row.getId(),
+                null,
+                audit.snapshot(UserService.sanitizedUser(row)));
         return AppUserDetailsService.toDomain(row);
     }
 
@@ -188,6 +209,13 @@ public class AuthService {
         row.setPasswordUpdatedAt(now);
         row.setUpdatedAt(now);
         userMapper.updateById(row);
+        audit.record(
+                row.getId(),
+                "CHANGE_PASSWORD",
+                "app_user",
+                row.getId(),
+                audit.snapshot(UserService.sanitizedUser(row)),
+                audit.snapshot(UserService.sanitizedUser(row)));
     }
 
     /** 生成 8 位加密随机码。去掉易混字符 I/O/0/1，避免口头传递出错。 */
