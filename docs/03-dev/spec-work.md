@@ -7,7 +7,7 @@ reviewers: ["@Dust191"]
 created: 2026-11-10
 updated: 2026-11-10
 next_review: 2027-02-10
-iter: ITER-20261110-02
+iter: ITER-20261110-03
 related: [DEV-002, DEV-003, DEV-004, DEV-006, DEV-007, GOV-002, GOV-005, GLOSSARY-001, INDEX-001, CONTRIBUTING]
 ---
 
@@ -343,12 +343,12 @@ Signed-off-by: Dust <3941305663@qq.com>
 
 | 环节 | 命令 | 现状 |
 |---|---|---|
-| 提交信息 | `bash scripts/check-commit-message.sh <range>` | 每轮合并前手动执行；**未接入 CI**（`DVT-07`） |
+| 提交信息 | `bash scripts/check-commit-message.sh <range>` | CI `guards` 执行；豁免合并提交与机器人作者（口径与署名校验一致，`DVT-07` 已收回） |
 | 署名 | `bash scripts/check-signoff.sh <range>` | CI `guards` 执行；豁免机器人与合并提交（`DVT-05`） |
 | 提交规则配置 | `commitlint.config.cjs` | 与脚本规则同源；无本地钩子 |
 | 格式 | `make lint` | Spotless + Prettier + `check-docs` |
 
-机器人的 scope 为 `deps-dev`、subject 常超 50 字，直接接入 CI 会误伤，这是 `DVT-07` 至今未收回的直接原因。
+机器人提交按作者豁免（与署名校验同口径），其 `deps-dev` scope 与超长 subject 不再构成接入障碍；人类提交的格式在 CI 强制。
 
 ## 5. 评审
 

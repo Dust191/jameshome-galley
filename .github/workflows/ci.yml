@@ -52,6 +52,7 @@ jobs:
         run: pnpm build
 
   guards:
+    # 注意：本 job 的 name 是分支保护的必需检查上下文，改名会导致 PR 被必需检查卡住。
     name: 契约 + 环境变量 + 署名
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -63,6 +64,8 @@ jobs:
         run: bash scripts/check-contract.sh
       - name: 环境变量一致性
         run: bash scripts/check-env-example.sh
+      - name: 提交信息校验
+        run: bash scripts/check-commit-message.sh "${{ github.event.pull_request.base.sha || 'HEAD~1' }}..HEAD"
       - name: 提交署名校验
         run: bash scripts/check-signoff.sh "${{ github.event.pull_request.base.sha || 'HEAD~1' }}..HEAD"
       - name: 文档结构校验
