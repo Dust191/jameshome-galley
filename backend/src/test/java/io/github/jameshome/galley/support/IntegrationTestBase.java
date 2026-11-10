@@ -1,5 +1,6 @@
 package io.github.jameshome.galley.support;
 
+import io.github.jameshome.galley.modules.identity.application.RegisterRateLimiter;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,12 +59,16 @@ public abstract class IntegrationTestBase {
     @Autowired protected PasswordEncoder passwordEncoder;
     @Autowired protected ObjectMapper json;
 
+    @Autowired private RegisterRateLimiter registerRateLimiter;
+
     @BeforeEach
     void resetDatabase() {
         // 流水表有"不可改删"行级触发器（DES-001 I-2），DELETE 会被拒；TRUNCATE 不触发行级触发器。
         jdbc.execute(
                 "truncate table stock_movement, stock_balance, audit_log, material, "
                         + "material_category, unit, invite_code, app_user cascade");
+        // 进程内的限流计数不属于数据库，但同样会跨用例累积，逐用例清零
+        registerRateLimiter.clear();
 
         insertUser("admin", "管理员", "admin");
         insertUser("editor", "录入员", "editor");

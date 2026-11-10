@@ -5,15 +5,24 @@ public class BusinessException extends RuntimeException {
 
     private final ErrorCode code;
     private final String field;
+    private final Long retryAfterSeconds;
 
     public BusinessException(ErrorCode code, String message) {
-        this(code, message, null);
+        this(code, message, null, null);
     }
 
     public BusinessException(ErrorCode code, String message, String field) {
+        this(code, message, field, null);
+    }
+
+    /**
+     * @param retryAfterSeconds 限流类错误的 {@code Retry-After} 响应头秒数；非限流错误传 {@code null}
+     */
+    public BusinessException(ErrorCode code, String message, String field, Long retryAfterSeconds) {
         super(message);
         this.code = code;
         this.field = field;
+        this.retryAfterSeconds = retryAfterSeconds;
     }
 
     public ErrorCode code() {
@@ -22,5 +31,9 @@ public class BusinessException extends RuntimeException {
 
     public String field() {
         return field;
+    }
+
+    public Long retryAfterSeconds() {
+        return retryAfterSeconds;
     }
 }
