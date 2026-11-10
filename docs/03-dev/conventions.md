@@ -5,10 +5,10 @@ status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-01
-updated: 2026-11-01
-next_review: 2027-01-30
-iter: ITER-20261101-09
-related: [ADR-0002, ADR-0003, DEV-003, CONTRIBUTING]
+updated: 2026-11-10
+next_review: 2027-02-10
+iter: ITER-20261110-01
+related: [ADR-0002, ADR-0003, DEV-003, DEV-008, CONTRIBUTING]
 ---
 
 # DEV-002 编码约定
@@ -72,17 +72,17 @@ web（Controller/DTO） → application（Service/事务边界） → domain（�
 | 主分支 | `main`，只接受 squash 后的单提交 |
 | 分支命名 | `feat/<主题>`、`fix/<主题>`、`docs/<主题>`、`chore/<主题>` |
 | 提交格式 | Conventional Commits：`<type>(<scope>): <subject>` |
-| type | `feat` `fix` `docs` `refactor` `test` `chore` `perf` `build` `ci` |
-| scope | 模块名或对象名：`stock`、`identity`、`infra`、`docs`、`ci` |
+| type | `feat` `fix` `refactor` `perf` `docs` `test` `build` `ci` `chore` `revert` |
+| scope | `api` `web` `db` `auth` `material` `stock` `stats` `infra` `docs` `deps` `release` |
 | 必填尾注 | `Refs: <ITER 编号或 issue>`、`Signed-off-by: <姓名> <邮箱>` |
 | 可选尾注 | `Assisted-by: <模型名-版本>`，无法确认标识时留空 |
 | 长度 | subject ≤50 字符，正文每行 ≤72 字符 |
 
-提交信息由 `scripts/check-commit-message.sh` 校验，署名由 `scripts/check-signoff.sh` 校验，两者都在 CI 里跑。
+提交信息由 `scripts/check-commit-message.sh` 校验，署名由 `scripts/check-signoff.sh` 校验。署名在 CI 的 `guards` 中执行；提交信息目前只在合并前手动执行，尚未接入 CI（`DVT-07`：机器人提交的 `deps-dev` scope 与超长 subject 会误伤）。
 
-## 5. 本地模拟 PR（单人期过渡）
+## 5. 本地模拟 PR（已失效）
 
-团队规模为 1 时以本地流程替代 GitHub 保护：
+S4 建仓前，团队规模为 1 且无远端仓库时，以本地流程替代平台 PR：
 
 1. 从 `main` 切分支；
 2. 按 `.github/PULL_REQUEST_TEMPLATE.md` 自审；
@@ -90,7 +90,7 @@ web（Controller/DTO） → application（Service/事务边界） → domain（�
 4. `git merge --squash` 回 `main`，单提交落地；
 5. 删除分支。
 
-失效条件：出现第二位贡献者即恢复强制 review 与真实 PR。
+**失效时间：2026-11-03 建仓后**。此后一律走真实 PR（自己开、自己批），本节的流程仅用于追溯建仓前的提交历史，见 `CONTRIBUTING` 附录。
 
 ## 6. 数据库变更
 
@@ -103,3 +103,4 @@ web（Controller/DTO） → application（Service/事务边界） → domain（�
 | 日期 | 变更 | 依据 |
 |---|---|---|
 | 2026-11-01 | 初版建立 | ITER-20261101-09 |
+| 2026-11-10 | 更正提交校验的现状（署名在 CI、提交信息仍手动，`DVT-07`）；scope 白名单与 `commitlint.config.cjs` 对齐；§5 本地模拟 PR 标注为建仓后失效；指向 `DEV-008` 的提交与署名细则 | ITER-20261110-01 |

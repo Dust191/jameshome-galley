@@ -89,6 +89,7 @@ Signed-off-by: Dust <3941305663@qq.com>
 - 改接口或表结构时，同一次提交内更新 `docs/02-design/` 对应文件。
 - 新增概括性词语前，先到 `docs/00-glossary.md` 查词；未登记的先提 `proposed` 词条。
 - 每轮变更后 24 小时内补写迭代记录。
+- 工程规范的正文在 `docs/03-dev/spec.md`（总纲）与 `spec-work.md` / `spec-stages.md` / `spec-team.md` 三份分册；改流程或门禁前先读对应分册，改完在同轮迭代记录中登记。
 
 ## 7. 评审规则
 
