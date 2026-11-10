@@ -62,7 +62,7 @@ scripts/     校验脚本（环境变量一致性、提交署名）
 
 ## 参与
 
-提交前请阅读 `CONTRIBUTING.md`。提交信息遵循 Conventional Commits 子集，并携带 `Refs` 与 `Signed-off-by` 两个必需 trailer；`Assisted-by` 为选填，填写即须真实且在册。
+提交前请阅读 `CONTRIBUTING.md`。工程规范全文从 [`docs/03-dev/spec.md`](docs/03-dev/spec.md)（DEV-006 总纲）读起，作业、阶段与团体细则见 `DEV-008` ~ `DEV-010`。提交信息遵循 Conventional Commits 子集，并携带 `Refs` 与 `Signed-off-by` 两个必需 trailer；`Assisted-by` 为选填，填写即须真实且在册。
 
 ## 许可证
 
