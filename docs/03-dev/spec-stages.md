@@ -7,7 +7,7 @@ reviewers: ["@Dust191"]
 created: 2026-11-10
 updated: 2026-11-10
 next_review: 2027-02-10
-iter: ITER-20261110-04
+iter: ITER-20261110-05
 related: [DEV-005, DEV-006, DEV-007, DEV-008, GOV-002, GOV-003, GOV-004, GOV-005, GOV-006, PRD-001, SCOPE-001, NFR-001, DES-001, DES-002, DES-003, DES-004, OPS-001, RUN-001, RUN-002]
 ---
 
@@ -344,7 +344,7 @@ G2 通过，`DES-001` / `DES-002` / `DES-004` 已 `approved`。
 | 图片上传 | 已实现 | `FileController`、`FileEndpointTest` |
 | 注册 / 登录 / 口令重置 / 邀请码 | 已实现 | `AuthController`、`InviteCodeController`、`UserController` |
 | 注册端点限流 | 已实现 | 按 IP 固定窗口限流（10 次 / 600 秒），429 + `Retry-After`（`RegisterRateLimitEndpointTest`） |
-| 审计日志 | **未实现** | `audit_log` 无写入路径（`DVT-08`） |
+| 审计日志 | 已实现 | `common/audit` 同事务写 `audit_log`；断言见 `AuditTrailTest`（`ITER-20261110-05`） |
 | 每日结存对账 | 已实现 | `ReconciliationService` 定时任务 + `GET /reconcile` |
 
 ### 5.7 关键约束
@@ -393,7 +393,7 @@ G2 通过，`DES-001` / `DES-002` / `DES-004` 已 `approved`。
 
 | 项 | 性质 | 事实 | 处置 |
 |---|---|---|---|
-| 写操作审计 | 偏离（`DVT-08`） | `audit_log` 只有建表语句，Java 与 XML 均无引用；`created_by` / `updated_by` 未填 | S5 前收回；否则红线 7 与 `PRD-001` 口令重置验收 3 不成立 |
+| 写操作审计 | 偏离（`DVT-08`）——**已收回（2026-11-10）** | 实现见 `ITER-20261110-05` | 已闭环 |
 | 注册端点限流 | 偏离（`DVT-09`）——**已收回（2026-11-10）** | 实现见 `ITER-20261110-04` | 已闭环 |
 | 盘点按分类批量录入 | 范围缺口 | 支持单条 `ADJUST`；批量录入未实现，CSV 导入只处理物料主数据 | 记入下个 minor，不插当前版本（红线 2） |
 | 物料恢复入口 | 范围缺口 | `SCOPE-001` 未把"30 天内可恢复"列入 In；软删已有，恢复未做 | 明确不进 v0.1，待后续 minor |

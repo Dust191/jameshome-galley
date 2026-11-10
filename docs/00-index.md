@@ -87,6 +87,7 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261110-02 | `docs/07-iteration/ITER-20261110-02.md` | 审定回填与三项偏离转 Issue | approved | @Dust191 | 2026-11-10 | S4 |
 | ITER-20261110-03 | `docs/07-iteration/ITER-20261110-03.md` | 提交信息校验接入 CI（DVT-07 收回） | approved | @Dust191 | 2026-11-10 | S4 |
 | ITER-20261110-04 | `docs/07-iteration/ITER-20261110-04.md` | 注册端点限流（DVT-09 收回） | approved | @Dust191 | 2026-11-10 | S4 |
+| ITER-20261110-05 | `docs/07-iteration/ITER-20261110-05.md` | 写操作审计落地（DVT-08 收回） | approved | @Dust191 | 2026-11-10 | S4 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
@@ -106,7 +107,7 @@ related: [GLOSSARY-001, PRD-001]
 | OPS / RUN | 运维与运行手册 | 001、001 ~ 002 | 002 / 003 |
 | GOV | 治理 | 000（指导文档）、001 ~ 006 | 007 |
 | RFC | 重大变更提案 | 0001 | 0002 |
-| ITER | 迭代记录 | 20261031-01 ~ 20261110-04（34 份） | — |
+| ITER | 迭代记录 | 20261031-01 ~ 20261110-05（35 份） | — |
 | MTG | 会议纪要 | — | — |
 
 ## 3. 强制文档齐备情况
