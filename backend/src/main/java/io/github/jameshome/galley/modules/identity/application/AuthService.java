@@ -42,6 +42,7 @@ public class AuthService {
     private final InviteCodeMapper inviteMapper;
     private final PasswordEncoder passwordEncoder;
     private final AppUserDetailsService detailsService;
+    private final RegisterRateLimiter registerRateLimiter;
     private final Map<String, Failure> failures = new ConcurrentHashMap<>();
 
     public AuthService(
@@ -50,13 +51,15 @@ public class AuthService {
             AppUserMapper userMapper,
             InviteCodeMapper inviteMapper,
             PasswordEncoder passwordEncoder,
-            AppUserDetailsService detailsService) {
+            AppUserDetailsService detailsService,
+            RegisterRateLimiter registerRateLimiter) {
         this.authenticationManager = authenticationManager;
         this.contextRepository = contextRepository;
         this.userMapper = userMapper;
         this.inviteMapper = inviteMapper;
         this.passwordEncoder = passwordEncoder;
         this.detailsService = detailsService;
+        this.registerRateLimiter = registerRateLimiter;
     }
 
     public AppUser login(
@@ -67,7 +70,9 @@ public class AuthService {
         String key = username.toLowerCase(java.util.Locale.ROOT);
         Failure f = failures.get(key);
         if (f != null && f.lockedUntil != null && f.lockedUntil.isAfter(Instant.now())) {
-            throw new BusinessException(ErrorCode.RATE_LIMITED, "失败次数过多，请稍后再试");
+            long retryAfter =
+                    Math.max(1, Duration.between(Instant.now(), f.lockedUntil).toSeconds());
+            throw new BusinessException(ErrorCode.RATE_LIMITED, "失败次数过多，请稍后再试", null, retryAfter);
         }
 
         try {
@@ -105,10 +110,26 @@ public class AuthService {
         SecurityContextHolder.clearContext();
     }
 
-    /** 注册。三种无效邀请码对外返回同一错误码，不区分"不存在/已使用/已禁用"（D-18）。 */
+    /**
+     * 注册。三种无效邀请码对外返回同一错误码，不区分"不存在/已使用/已禁用"（D-18）。
+     *
+     * <p>入口先过按 IP 的固定窗口限流（DVT-09 / 决策 D-20）：**成败都计数**—— 限流防的是"高频尝试"这件事本身，而不是某一次请求的成败。
+     */
     @Transactional
     public AppUser register(
-            String inviteCode, String username, String rawPassword, String displayName) {
+            String inviteCode,
+            String username,
+            String rawPassword,
+            String displayName,
+            String clientIp) {
+        if (!registerRateLimiter.allow(clientIp)) {
+            throw new BusinessException(
+                    ErrorCode.RATE_LIMITED,
+                    "尝试过于频繁，请稍后再试",
+                    null,
+                    registerRateLimiter.retryAfterSeconds(clientIp));
+        }
+
         InviteCodeDO invite =
                 inviteMapper
                         .findByCode(inviteCode)

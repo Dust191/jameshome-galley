@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.CookieManager;
 import java.net.URI;
 import java.net.http.HttpClient;
+import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
@@ -84,7 +85,7 @@ public class ApiClient {
             }
             HttpResponse<String> response =
                     http.send(builder.build(), HttpResponse.BodyHandlers.ofString());
-            return new Response(response.statusCode(), response.body(), json);
+            return new Response(response.statusCode(), response.body(), response.headers(), json);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new IllegalStateException("请求被中断：" + method + " " + path, e);
@@ -135,7 +136,12 @@ public class ApiClient {
     }
 
     /** 一次响应：状态码 + 原始体，另带 JSON 取值方法。 */
-    public record Response(int status, String body, ObjectMapper json) {
+    public record Response(int status, String body, HttpHeaders headers, ObjectMapper json) {
+
+        /** 取响应头（大小写不敏感）；不存在返回 {@code null}。 */
+        public String header(String name) {
+            return headers.firstValue(name).orElse(null);
+        }
 
         public JsonNode node() {
             return json.readTree(body);

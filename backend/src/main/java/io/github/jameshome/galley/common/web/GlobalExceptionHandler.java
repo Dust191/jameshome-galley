@@ -30,8 +30,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ApiError> onBusiness(BusinessException ex) {
         ErrorCode code = ex.code();
-        return ResponseEntity.status(code.status())
-                .body(error(code.name(), ex.getMessage(), ex.field()));
+        ResponseEntity.BodyBuilder builder = ResponseEntity.status(code.status());
+        // DES-002 §3：429 限流必须带 Retry-After，告诉调用方什么时候可以再试
+        if (ex.retryAfterSeconds() != null) {
+            builder.header("Retry-After", String.valueOf(ex.retryAfterSeconds()));
+        }
+        return builder.body(error(code.name(), ex.getMessage(), ex.field()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

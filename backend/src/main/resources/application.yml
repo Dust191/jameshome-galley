@@ -56,6 +56,11 @@ galley:
   env: ${GALLEY_ENV:dev}
   bootstrap:
     admin-username: ${GALLEY_BOOTSTRAP_ADMIN_USERNAME:admin}
+  register:
+    # 注册端点按 IP 的固定窗口限流（DVT-09 / 决策 D-20）：窗口内成败都计数，超限返回 429 + Retry-After
+    rate-limit:
+      max-attempts: 10
+      window-seconds: 600
   reconcile:
     # 每日对账的 cron，默认 02:30；测试环境可设为 "-" 或关闭 scheduled 开关
     cron: ${GALLEY_RECONCILE_CRON:0 30 2 * * *}

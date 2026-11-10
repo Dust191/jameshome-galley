@@ -1,5 +1,6 @@
 package io.github.jameshome.galley.modules.identity.api;
 
+import io.github.jameshome.galley.common.web.ClientIp;
 import io.github.jameshome.galley.modules.identity.api.dto.IdentityDtos.ChangePasswordRequest;
 import io.github.jameshome.galley.modules.identity.api.dto.IdentityDtos.LoginRequest;
 import io.github.jameshome.galley.modules.identity.api.dto.IdentityDtos.MeResponse;
@@ -71,10 +72,15 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public MeResponse register(@Valid @RequestBody RegisterRequest body) {
+    public MeResponse register(
+            @Valid @RequestBody RegisterRequest body, HttpServletRequest request) {
         AppUser user =
                 authService.register(
-                        body.inviteCode(), body.username(), body.password(), body.displayName());
+                        body.inviteCode(),
+                        body.username(),
+                        body.password(),
+                        body.displayName(),
+                        ClientIp.from(request));
         return MeResponse.from(user);
     }
 
