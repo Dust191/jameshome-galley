@@ -64,6 +64,9 @@ jobs:
         run: bash scripts/check-contract.sh
       - name: 环境变量一致性
         run: bash scripts/check-env-example.sh
+      # 生产编排从来没有被解析过，变量插值写错只能等真机启动才暴露；用模板跑一次 config 挡在合并前
+      - name: 生产编排校验
+        run: docker compose --env-file infra/compose/.env.prod.example -f infra/compose/compose.prod.yml config -q
       - name: 提交信息校验
         run: bash scripts/check-commit-message.sh "${{ github.event.pull_request.base.sha || 'HEAD~1' }}..HEAD"
       - name: 提交署名校验

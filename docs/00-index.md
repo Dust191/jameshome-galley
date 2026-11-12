@@ -95,6 +95,7 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261112-05 | `docs/07-iteration/ITER-20261112-05.md` | 发布 0.2.0：ACR 转存、签名地址实测与首次 tag | in_review | @Dust191 | 2026-11-12 | S5 |
 | ITER-20261112-06 | `docs/07-iteration/ITER-20261112-06.md` | 首次部署：五服务上线与冒烟 | in_review | @Dust191 | 2026-11-12 | S5 |
 | ITER-20261112-07 | `docs/07-iteration/ITER-20261112-07.md` | 备份脚本落地与首次恢复演练 | in_review | @Dust191 | 2026-11-12 | S5 |
+| ITER-20261112-08 | `docs/07-iteration/ITER-20261112-08.md` | 关闭 Issue #55：模板、编排透传与 CI 守卫 | in_review | @Dust191 | 2026-11-12 | S5 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
@@ -114,7 +115,7 @@ related: [GLOSSARY-001, PRD-001]
 | OPS / RUN | 运维与运行手册 | 001、001 ~ 002 | 002 / 003 |
 | GOV | 治理 | 000（指导文档）、001 ~ 006 | 007 |
 | RFC | 重大变更提案 | 0001 | 0002 |
-| ITER | 迭代记录 | 20261031-01 ~ 20261112-07（42 份） | — |
+| ITER | 迭代记录 | 20261031-01 ~ 20261112-08（43 份） | — |
 | MTG | 会议纪要 | — | — |
 
 ## 3. 强制文档齐备情况

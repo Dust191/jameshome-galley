@@ -66,6 +66,19 @@ docker compose -f infra/compose/compose.prod.yml logs cloudflared | grep -o 'htt
 
 全部通过环境变量注入。真实值只存在服务器的 `.env.prod`，不入仓、不入镜像、不进日志。
 
+**从模板复制，不要手写**：`infra/compose/.env.prod.example` 列出全部键与占位值，复制到 `/opt/galley/.env.prod` 后改值即可。三条约定：
+
+1. 含空格的值必须加引号（`GALLEY_RECONCILE_CRON="0 30 2 * * *"`）。不加引号时，任何脚本 `source` 本文件都会把值当命令执行，其后的变量全部变空。
+2. 文件必须 LF 行尾。从 Windows 直接传会带 CRLF，值尾多一个 `\r`；compose 能容忍，shell 与 `ossutil` 不能，表现为 `invalid oss path` 这类看不出根因的错。
+3. 改完先校验再启动：
+
+```bash
+docker compose --env-file /opt/galley/.env.prod \
+  -f infra/compose/compose.prod.yml config -q
+```
+
+`GALLEY_ENV`、`GALLEY_LOG_LEVEL`、`GALLEY_RECONCILE_CRON` 由编排透传给容器；此前这三个是写死的，改 `.env.prod` 不生效（`ITER-20261112-08`）。
+
 | 变量 | 必填 | 说明 |
 |---|---|---|
 | `GALLEY_ENV` | ✓ | 固定 `prod`；该值决定初始管理员是否允许重置口令 |
