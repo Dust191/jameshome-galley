@@ -82,21 +82,21 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261103-03 | `docs/07-iteration/ITER-20261103-03.md` | T7/T8 收口：集成测试、对账、契约与发布 0.1.0 | approved | @Dust191 | 2026-11-03 | S3 |
 | ITER-20261103-04 | `docs/07-iteration/ITER-20261103-04.md` | S4 建仓前置：开源配套文件核对与补齐 | approved | @Dust191 | 2026-11-03 | S4 |
 | ITER-20261103-05 | `docs/07-iteration/ITER-20261103-05.md` | 首个 PR：DCO 豁免、依赖升级范围约束与 Issue 模板 | approved | @Dust191 | 2026-11-03 | S4 |
-| ITER-20261104-01 | `docs/07-iteration/ITER-20261104-01.md` | GOV-000 落地：工程规范仓内版与偏离登记台账 | in_review | @Dust191 | 2026-11-04 | S4 |
+| ITER-20261104-01 | `docs/07-iteration/ITER-20261104-01.md` | GOV-000 落地：工程规范仓内版与偏离登记台账 | approved | @Dust191 | 2026-11-04 | S4 |
 | ITER-20261110-01 | `docs/07-iteration/ITER-20261110-01.md` | 重写工程规范：总纲、作业、阶段与团体四分册 | approved | @Dust191 | 2026-11-10 | S4 |
 | ITER-20261110-02 | `docs/07-iteration/ITER-20261110-02.md` | 审定回填与三项偏离转 Issue | approved | @Dust191 | 2026-11-10 | S4 |
 | ITER-20261110-03 | `docs/07-iteration/ITER-20261110-03.md` | 提交信息校验接入 CI（DVT-07 收回） | approved | @Dust191 | 2026-11-10 | S4 |
 | ITER-20261110-04 | `docs/07-iteration/ITER-20261110-04.md` | 注册端点限流（DVT-09 收回） | approved | @Dust191 | 2026-11-10 | S4 |
 | ITER-20261110-05 | `docs/07-iteration/ITER-20261110-05.md` | 写操作审计落地（DVT-08 收回） | approved | @Dust191 | 2026-11-10 | S4 |
-| ITER-20261112-01 | `docs/07-iteration/ITER-20261112-01.md` | S5 资源口径补充：自建库、内网 OSS、Cloudflare Tunnel | in_review | @Dust191 | 2026-11-12 | S5 |
-| ITER-20261112-02 | `docs/07-iteration/ITER-20261112-02.md` | OSS 图片改签名下发，编排补齐五服务与内网代理 | in_review | @Dust191 | 2026-11-12 | S5 |
-| ITER-20261112-03 | `docs/07-iteration/ITER-20261112-03.md` | 入口改用 Cloudflare Quick Tunnel，登记换址风险 | in_review | @Dust191 | 2026-11-12 | S5 |
-| ITER-20261112-04 | `docs/07-iteration/ITER-20261112-04.md` | 产出镜像构建与发布流水线 | in_review | @Dust191 | 2026-11-12 | S5 |
-| ITER-20261112-05 | `docs/07-iteration/ITER-20261112-05.md` | 发布 0.2.0：ACR 转存、签名地址实测与首次 tag | in_review | @Dust191 | 2026-11-12 | S5 |
-| ITER-20261112-06 | `docs/07-iteration/ITER-20261112-06.md` | 首次部署：五服务上线与冒烟 | in_review | @Dust191 | 2026-11-12 | S5 |
-| ITER-20261112-07 | `docs/07-iteration/ITER-20261112-07.md` | 备份脚本落地与首次恢复演练 | in_review | @Dust191 | 2026-11-12 | S5 |
-| ITER-20261112-08 | `docs/07-iteration/ITER-20261112-08.md` | 关闭 Issue #55：模板、编排透传与 CI 守卫 | in_review | @Dust191 | 2026-11-12 | S5 |
-| ITER-20261112-09 | `docs/07-iteration/ITER-20261112-09.md` | 文档与实现一致性核查，重写运行手册 | in_review | @Dust191 | 2026-11-12 | S5 |
+| ITER-20261112-01 | `docs/07-iteration/ITER-20261112-01.md` | S5 资源口径补充：自建库、内网 OSS、Cloudflare Tunnel | approved | @Dust191 | 2026-11-12 | S5 |
+| ITER-20261112-02 | `docs/07-iteration/ITER-20261112-02.md` | OSS 图片改签名下发，编排补齐五服务与内网代理 | approved | @Dust191 | 2026-11-12 | S5 |
+| ITER-20261112-03 | `docs/07-iteration/ITER-20261112-03.md` | 入口改用 Cloudflare Quick Tunnel，登记换址风险 | approved | @Dust191 | 2026-11-12 | S5 |
+| ITER-20261112-04 | `docs/07-iteration/ITER-20261112-04.md` | 产出镜像构建与发布流水线 | approved | @Dust191 | 2026-11-12 | S5 |
+| ITER-20261112-05 | `docs/07-iteration/ITER-20261112-05.md` | 发布 0.2.0：ACR 转存、签名地址实测与首次 tag | approved | @Dust191 | 2026-11-12 | S5 |
+| ITER-20261112-06 | `docs/07-iteration/ITER-20261112-06.md` | 首次部署：五服务上线与冒烟 | approved | @Dust191 | 2026-11-12 | S5 |
+| ITER-20261112-07 | `docs/07-iteration/ITER-20261112-07.md` | 备份脚本落地与首次恢复演练 | approved | @Dust191 | 2026-11-12 | S5 |
+| ITER-20261112-08 | `docs/07-iteration/ITER-20261112-08.md` | 关闭 Issue #55：模板、编排透传与 CI 守卫 | approved | @Dust191 | 2026-11-12 | S5 |
+| ITER-20261112-09 | `docs/07-iteration/ITER-20261112-09.md` | 文档与实现一致性核查，重写运行手册 | approved | @Dust191 | 2026-11-12 | S5 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
