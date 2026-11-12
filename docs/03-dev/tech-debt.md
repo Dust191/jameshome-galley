@@ -22,7 +22,6 @@ related: [DEV-002, DEV-003]
 | 编号 | 债务 | 影响 | 偿还时点 | 状态 |
 |---|---|---|---|---|
 | TD-02 | `toolchains.xml` 未建立 | 本机 JDK 补丁号实际由 `JAVA_HOME` 决定，未由 Toolchains 锁定；ADR-0004 的"好的一面"未兑现 | S3 环境准备期（已过期未偿，随 S4 环境整理处理） | 待偿 |
-| TD-05 | CI 未在真实 GitHub Runner 上跑过 | 仅在 act + 本机等价脚本链验证；runner 镜像差异、缓存行为未验证 | S4 建仓首次 PR | 待偿 |
 | TD-06 | 前端无组件测试 | 交互规则靠 3 条 E2E 与人工走查兜底；单个组件的行为回归定位慢 | S4 引入组件测试框架时 | 待偿 |
 | TD-09 | OWASP dependency-check 全量未执行 | 开发机未能完成 NVD 数据下载；osv-scanner 在线查询覆盖面小于 OWASP，供应链风险结论不完整 | CI 或带宽稳定的受控环境（S4） | 待偿 |
 | TD-10 | 5 条 Moderate 依赖漏洞未修 | minimatch ×2、react-router ×2、vite ×1；多为开发期依赖或需特定用法，仍可能被扫描工具报出 | 上游修复版本可用时；S4 开源前复核 | 待偿 |
@@ -38,6 +37,7 @@ related: [DEV-002, DEV-003]
 | TD-00 | 骨架期无 CI | S1 建立 `ci.yml` 与四项守卫脚本 | 2026-10-31 |
 | TD-0A | JaCoCo / 格式化器与 JDK 25 不兼容 | 升 0.8.16 / 1.29.0，记入 DVT-01、DVT-02 | 2026-10-31 |
 | TD-03 | 禁用写法反查降级为提示 | 按 RFC-0001 拆分「禁用写法」与「易混提示」，禁用列升级为 CI 失败 | 2026-11-01 |
+| TD-05 | CI 未在真实 GitHub Runner 上跑过 | 自 2026-11-03 起在真实 runner 上执行；至 0.2.0 累计 66 次成功，含 Testcontainers 集成与覆盖率门槛 | 2026-11-03 |
 | TD-01 | `ArchitectureTest` 四条规则带 `allowEmptyShould(true)` | 收回开关，并把 ArchUnit 升到 1.5.1（1.3.0 读不了 Java 25 字节码，规则实际从未生效）；四条规则现真正拦截 | 2026-11-03 |
 | TD-07 | 种子数据生成脚本未实现 | `scripts/gen-seed.py` 固定随机种子生成 8 分类 / 6 单位 / 50 物料 / 3 账号 / 500 流水，并产出 `seed.sql` | 2026-11-03 |
 | TD-08 | `contracts/openapi.yaml` 仅 1 条路径 | springdoc 由实现生成 32 条路径，`check-contract.sh` 与运行实例逐字比对 | 2026-11-03 |
@@ -67,3 +67,4 @@ related: [DEV-002, DEV-003]
 | 2026-11-10 | 偿还 TD-14（Issue #47） | ITER-20261110-03 |
 | 2026-11-10 | 偿还 TD-16（Issue #45） | ITER-20261110-04 |
 | 2026-11-10 | 偿还 TD-15（Issue #46） | ITER-20261110-05 |
+| 2026-11-12 | 偿还 TD-05：真实 GitHub Runner 已跑通数十次，原「未经真实 runner 验证」不再成立 | ITER-20261112-09 |

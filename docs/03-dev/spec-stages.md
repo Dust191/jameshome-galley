@@ -599,24 +599,24 @@ staging 与 prod 必须同镜像、同编排、不同配置；允许差异只有
 | 项 | 状态 | 缺口 |
 |---|---|---|
 | 生产编排与代理 | 骨架可用 | 五服务已就位；资源限制与蓝绿切换未定 |
-| 部署与运行文档 | 草案 | `OPS-001` 定稿、`RUN-001` 增补 |
+| 部署与运行文档 | 基本可用 | `RUN-002` 与实现一致；`RUN-001` 已按真实拓扑重写并补齐八类故障；`OPS-001` 仍 `in_review` |
 | 备份 | 已落地 | `backup-db.sh` 每日 02:00 导出并上传内网 OSS（回查大小与 MD5），本地按日/周/月留存；`restore-db.sh` 可从 OSS 恢复到独立库并做行级核对，首次演练已通过（`ITER-20261112-07`）。RPO 仍为 24 小时（`DVT-11`） |
 | 监控告警 | 未建 | 指标清单、阈值、通知渠道、七条告警 |
 | 上线检查单 | 未建 | 按 §7.6 落成文件并逐项签字 |
-| 发布流水线 | 未建 | tag 触发、镜像推送、staging 自动、prod 手动审批 |
-| 云资源与接入 | 部分就绪 | ECS 与 OSS 已购；bucket 未建；入口用 Quick Tunnel 过渡（`DVT-13`）；规格低于规范（`DVT-10`） |
+| 发布流水线 | 已跑通 | tag → 构建 api/web → 推 GHCR 已验证（0.2.0）；缺 staging 段与 prod 手动审批 |
+| 云资源与接入 | 部分就绪 | ECS 与 OSS 已购，桶 `jameshome-galley` 已建并验证私有；入口用 Quick Tunnel 过渡（`DVT-13`）；规格低于规范（`DVT-10`） |
 
 ### 7.8 阶段任务列表
 
-S5 执行段尚未开启，下列事项按「能否在不接外部账号的前提下推进」排序。T5-01 ~ T5-03 由开发者于 2026-11-12 明确留到 S5 执行段。
+S5 执行段尚未开启，下列事项按「能否在不接外部账号的前提下推进」排序。T5-01 ~ T5-03 原定留到执行段，实际随首次发布一并完成，状态据实更新。
 
 | 编号 | 事项 | 具体内容 | 前置 | 状态 |
 |---|---|---|---|---|
-| T5-01 | 镜像构建 | `backend/Dockerfile`（JRE 25 运行层、非特权账号）、`frontend/Dockerfile`（nginx + SPA 回退）、两份 `.dockerignore` | 无 | 已完成（本地） |
-| T5-02 | 发布流水线 | `release.yml` 已写：tag → 构建 api/web → 推 GHCR；staging 与 prod 审批段待接。仍需在仓库设置 Actions 读写权限 | GitHub Actions 权限 | 部分就绪 |
-| T5-03 | 镜像坐标 | 固定 tag 已与 `pom.xml` 对齐（0.1.0）；GHCR 包名 `galley-api` / `galley-web`，可见性待首次推送后确认 | 首个 tag | 部分就绪 |
+| T5-01 | 镜像构建 | `backend/Dockerfile`（JRE 25 运行层、非特权账号）、`frontend/Dockerfile`（nginx + SPA 回退）、两份 `.dockerignore` | 无 | 已完成（CI 构建并推送） |
+| T5-02 | 发布流水线 | `release.yml`：tag → 构建 api/web → 推 GHCR，v0.2.0 实测两 job 全绿；staging 段与 prod 手动审批未接 | Actions 读写权限 | 部分就绪 |
+| T5-03 | 镜像坐标 | 固定 tag 与 `pom.xml` 对齐（0.2.0）；GHCR 包 `galley-api` / `galley-web` 已设公开，云上匿名拉取验证通过 | 首个 tag | 已完成 |
 | T5-04 | 镜像转存 | `caddy:2-alpine` 与 `cloudflared:2026.10.7` 经隧道拉取并推入 ACR，编排默认值改用 ACR 地址 | 隧道在线 | 已完成 |
-| T5-05 | OSS 建桶 | 桶 `jameshome-galley` 已建并验证私有；过期与归档规则、RAM 子账号范围待确认 | 账号权限 | 部分就绪 |
+| T5-05 | OSS 建桶 | 桶 `jameshome-galley` 已建，公网匿名 403、内网可读写；剩余：RAM 子账号最小权限核对、过期与归档规则 | 账号权限 | 部分就绪 |
 | T5-06 | 正式入口 | 域名 + Named Tunnel + 备案；当前 Quick Tunnel 只作过渡，切换时同步收回 `DVT-13` | 域名与备案 | 未开始 |
 | T5-07 | 备份 | `infra/backup/backup-db.sh`（导出、sha256、上传内网 OSS、回查、留存）与 `restore-db.sh`（演练库、安全闸、行级核对）；cron 每日 02:00 | T5-05 | 已完成 |
 | T5-08 | 监控告警 | `monitoring.md` 与七条告警，逐条测试触发 | T5-06 | 未开始 |

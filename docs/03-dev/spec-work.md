@@ -391,7 +391,7 @@ GitHub 禁止作者自批，`main` 的分支保护因此设 `enforce_admins: fal
 | 依赖漏洞 | 0 High / 0 Critical | osv-scanner + GitHub 告警 | 0 / 0（Moderate 4） |
 | 结存对账 | 种子库零差异 | `GET /api/v1/reconcile` | `checked=50, mismatched=0` |
 | 文档 | 结构校验全过、禁用写法零命中 | `scripts/check-docs.mjs` | 通过 |
-| 技术债 | 入账有判据，偿还即迁移 | `DEV-004` | 在册 12 项、已偿 7 项 |
+| 技术债 | 入账有判据，偿还即迁移 | `DEV-004` | 在册 11 项、已偿 8 项 |
 
 执行时机：本地提交前 `make lint && make test`；PR 由 `ci.yml` 三个 job 执行；发版前按 `GOV-002` §2 八项清单；每日 02:30 对账。门槛只升不降；下调须走 RFC 并在 `DEV-002` / `DEV-003` 同步。
 
