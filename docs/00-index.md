@@ -98,7 +98,7 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261112-07 | `docs/07-iteration/ITER-20261112-07.md` | 备份脚本落地与首次恢复演练 | approved | @Dust191 | 2026-11-12 | S5 |
 | ITER-20261112-08 | `docs/07-iteration/ITER-20261112-08.md` | 关闭 Issue #55：模板、编排透传与 CI 守卫 | approved | @Dust191 | 2026-11-12 | S5 |
 | ITER-20261112-09 | `docs/07-iteration/ITER-20261112-09.md` | 文档与实现一致性核查，重写运行手册 | approved | @Dust191 | 2026-11-12 | S5 |
-| ITER-20261112-10 | `docs/07-iteration/ITER-20261112-10.md` | 建立模型偏离台账（`GOV-007`） | in_review | @Dust191 | 2026-11-12 | S5 |
+| ITER-20261112-10 | `docs/07-iteration/ITER-20261112-10.md` | 建立模型偏离台账（`GOV-007`） | approved | @Dust191 | 2026-11-12 | S5 |
 | ITER-20261112-11 | `docs/07-iteration/ITER-20261112-11.md` | ITER 结构校验落地与台账闭环 | in_review | @Dust191 | 2026-11-12 | S5 |
 | ITER-20261112-12 | `docs/07-iteration/ITER-20261112-12.md` | 术语核查与 GLOSSARY 补录 | in_review | @Dust191 | 2026-11-12 | S5 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
