@@ -100,6 +100,7 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261112-09 | `docs/07-iteration/ITER-20261112-09.md` | 文档与实现一致性核查，重写运行手册 | approved | @Dust191 | 2026-11-12 | S5 |
 | ITER-20261112-10 | `docs/07-iteration/ITER-20261112-10.md` | 建立模型偏离台账（`GOV-007`） | in_review | @Dust191 | 2026-11-12 | S5 |
 | ITER-20261112-11 | `docs/07-iteration/ITER-20261112-11.md` | ITER 结构校验落地与台账闭环 | in_review | @Dust191 | 2026-11-12 | S5 |
+| ITER-20261112-12 | `docs/07-iteration/ITER-20261112-12.md` | 术语核查与 GLOSSARY 补录 | in_review | @Dust191 | 2026-11-12 | S5 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
@@ -119,7 +120,7 @@ related: [GLOSSARY-001, PRD-001]
 | OPS / RUN | 运维与运行手册 | 001、001 ~ 002 | 002 / 003 |
 | GOV | 治理 | 000（指导文档）、001 ~ 007 | 008 |
 | RFC | 重大变更提案 | 0001 | 0002 |
-| ITER | 迭代记录 | 20261031-01 ~ 20261112-11（46 份） | — |
+| ITER | 迭代记录 | 20261031-01 ~ 20261112-12（47 份） | — |
 | MDV | 模型偏离（条目编号） | 01 ~ 04 | 05 |
 | MTG | 会议纪要 | — | — |
 
