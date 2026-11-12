@@ -40,13 +40,13 @@ related: [GLOSSARY-001, PRD-001]
 | DEV-004 | `docs/03-dev/tech-debt.md` | 技术债台账 | approved | @Dust191 | 2026-11-10 | S2 |
 | DEV-005 | `docs/03-dev/uat-v0.1.md` | 验收记录 v0.1 | approved | @Dust191 | 2026-11-03 | S3 |
 | DEV-006 | `docs/03-dev/spec.md` | 工程规范·总纲 | approved | @Dust191 | 2026-11-10 | S4 |
-| DEV-007 | `docs/03-dev/deviations.md` | 偏离登记台账 | approved | @Dust191 | 2026-11-10 | S4 |
+| DEV-007 | `docs/03-dev/deviations.md` | 偏离登记台账 | approved | @Dust191 | 2026-11-12 | S4 |
 | DEV-008 | `docs/03-dev/spec-work.md` | 作业规范 | approved | @Dust191 | 2026-11-10 | S4 |
-| DEV-009 | `docs/03-dev/spec-stages.md` | 阶段实施规范 | approved | @Dust191 | 2026-11-10 | S4 |
+| DEV-009 | `docs/03-dev/spec-stages.md` | 阶段实施规范 | approved | @Dust191 | 2026-11-12 | S4 |
 | DEV-010 | `docs/03-dev/spec-team.md` | 团体开发规范（搁置至 G5） | in_review | @Dust191 | 2026-11-10 | S4 |
-| OPS-001 | `docs/04-ops/deploy.md` | 部署（S5 定稿，不参与 S2 审定） | in_review | @Dust191 | 2026-11-01 | S5 |
+| OPS-001 | `docs/04-ops/deploy.md` | 部署（S5 准备期版本） | in_review | @Dust191 | 2026-11-12 | S5 |
 | RUN-001 | `docs/04-ops/runbook.md` | 运行手册 | approved | @Dust191 | 2026-11-01 | S2 |
-| RUN-002 | `docs/04-ops/backup-restore.md` | 备份与恢复（S5 定稿，不参与 S2 审定） | in_review | @Dust191 | 2026-11-01 | S5 |
+| RUN-002 | `docs/04-ops/backup-restore.md` | 备份与恢复（S5 准备期版本） | in_review | @Dust191 | 2026-11-12 | S5 |
 | GOV-001 | `docs/05-governance/governance.md` | 治理模型 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-002 | `docs/05-governance/release.md` | 发布流程 | approved | @Dust191 | 2026-11-03 | S2 |
 | GOV-003 | `docs/05-governance/g3-freeze.md` | 阶段门 G3 通过记录与 0.1.0 冻结 | approved | @Dust191 | 2026-11-03 | S3 |
@@ -88,6 +88,8 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261110-03 | `docs/07-iteration/ITER-20261110-03.md` | 提交信息校验接入 CI（DVT-07 收回） | approved | @Dust191 | 2026-11-10 | S4 |
 | ITER-20261110-04 | `docs/07-iteration/ITER-20261110-04.md` | 注册端点限流（DVT-09 收回） | approved | @Dust191 | 2026-11-10 | S4 |
 | ITER-20261110-05 | `docs/07-iteration/ITER-20261110-05.md` | 写操作审计落地（DVT-08 收回） | approved | @Dust191 | 2026-11-10 | S4 |
+| ITER-20261112-01 | `docs/07-iteration/ITER-20261112-01.md` | S5 资源口径补充：自建库、内网 OSS、Cloudflare Tunnel | in_review | @Dust191 | 2026-11-12 | S5 |
+| ITER-20261112-02 | `docs/07-iteration/ITER-20261112-02.md` | OSS 图片改签名下发，编排补齐五服务与内网代理 | in_review | @Dust191 | 2026-11-12 | S5 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
@@ -103,11 +105,11 @@ related: [GLOSSARY-001, PRD-001]
 | DES | 设计（模型/接口/UI/指标） | 001 ~ 004 | 005 |
 | ADR | 架构决策 | 0001 ~ 0005 | 0006 |
 | DEV | 开发规范（文档编号） | 001 ~ 010 | 011 |
-| DVT | 偏离登记（条目编号） | 01 ~ 09 | 10 |
+| DVT | 偏离登记（条目编号） | 01 ~ 12 | 13 |
 | OPS / RUN | 运维与运行手册 | 001、001 ~ 002 | 002 / 003 |
 | GOV | 治理 | 000（指导文档）、001 ~ 006 | 007 |
 | RFC | 重大变更提案 | 0001 | 0002 |
-| ITER | 迭代记录 | 20261031-01 ~ 20261110-05（35 份） | — |
+| ITER | 迭代记录 | 20261031-01 ~ 20261112-02（37 份） | — |
 | MTG | 会议纪要 | — | — |
 
 ## 3. 强制文档齐备情况

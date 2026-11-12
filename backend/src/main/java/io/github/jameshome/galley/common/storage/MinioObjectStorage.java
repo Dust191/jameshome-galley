@@ -5,10 +5,12 @@ import io.github.jameshome.galley.common.error.ErrorCode;
 import io.minio.BucketExistsArgs;
 import io.minio.GetObjectArgs;
 import io.minio.GetObjectResponse;
+import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
+import io.minio.http.Method;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import okhttp3.Headers;
@@ -25,8 +27,9 @@ public class MinioObjectStorage implements ObjectStorage {
     private static final Logger log = LoggerFactory.getLogger(MinioObjectStorage.class);
 
     private final MinioClient client;
+    private final MinioClient signer;
     private final String bucket;
-    private final String publicBase;
+    private final int signedUrlTtlSeconds;
 
     private volatile boolean bucketReady;
 
@@ -34,10 +37,19 @@ public class MinioObjectStorage implements ObjectStorage {
         this.client =
                 MinioClient.builder()
                         .endpoint(properties.endpoint())
+                        // 显式给区域：否则签名前会先发 GetBucketLocation，私有桶或内网端点会直接失败
+                        .region(properties.region())
+                        .credentials(properties.accessKey(), properties.secretKey())
+                        .build();
+        // 签名不发网络请求，但需要独立的 endpoint：生产上读写走内网，浏览器只认公网
+        this.signer =
+                MinioClient.builder()
+                        .endpoint(properties.publicEndpoint())
+                        .region(properties.region())
                         .credentials(properties.accessKey(), properties.secretKey())
                         .build();
         this.bucket = properties.bucket();
-        this.publicBase = stripTrailingSlash(properties.publicBase());
+        this.signedUrlTtlSeconds = properties.signedUrlTtlSeconds();
     }
 
     @Override
@@ -76,8 +88,18 @@ public class MinioObjectStorage implements ObjectStorage {
     }
 
     @Override
-    public String publicUrl(String key) {
-        return publicBase + "/" + key;
+    public String signedUrl(String key) {
+        try {
+            return signer.getPresignedObjectUrl(
+                    GetPresignedObjectUrlArgs.builder()
+                            .method(Method.GET)
+                            .bucket(bucket)
+                            .object(key)
+                            .expiry(signedUrlTtlSeconds)
+                            .build());
+        } catch (Exception ex) {
+            throw new BusinessException(ErrorCode.STORAGE_FAILED, "生成图片地址失败：" + ex.getMessage());
+        }
     }
 
     private void ensureBucket() {
@@ -105,12 +127,5 @@ public class MinioObjectStorage implements ObjectStorage {
     private static String contentTypeOf(Headers headers) {
         String type = headers == null ? null : headers.get("Content-Type");
         return type == null ? "application/octet-stream" : type;
-    }
-
-    private static String stripTrailingSlash(String value) {
-        if (value == null || value.isBlank()) {
-            return "";
-        }
-        return value.endsWith("/") ? value.substring(0, value.length() - 1) : value;
     }
 }

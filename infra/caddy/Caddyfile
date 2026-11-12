@@ -1,11 +1,13 @@
-# 反向代理骨架。S5 阶段补全域名与备案信息。
-# 职责：TLS 自动签发、安全响应头、/api 与 /actuator 转发、静态资源托管。
+# 生产反向代理。
+# TLS 由 Cloudflare 终结（Tunnel 香港出口），本机只监听内网 80，不参与证书签发。
+# 职责：安全响应头、访问日志、/api 与 /actuator/health 转发、前端静态资源托管。
 
 {
-  email {$ACME_EMAIL}
+	admin off
+	auto_https off
 }
 
-:443 {
+:80 {
 	encode zstd gzip
 
 	header {
@@ -13,14 +15,22 @@
 		X-Content-Type-Options "nosniff"
 		Referrer-Policy "strict-origin-when-cross-origin"
 		X-Frame-Options "DENY"
+		# 图片走 OSS 公网地址（私有桶 + 预签名），因此 img-src 要放行 OSS 域名
+		Content-Security-Policy "default-src 'self'; img-src 'self' data: blob: https://*.aliyuncs.com; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; font-src 'self' data:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
 		-Server
+	}
+
+	log {
+		output stdout
+		format json
 	}
 
 	handle /api/* {
 		reverse_proxy api:8080
 	}
 
-	handle /actuator/* {
+	# 只放行健康检查，其余 actuator 端点不对外
+	handle /actuator/health* {
 		reverse_proxy api:8080
 	}
 

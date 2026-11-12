@@ -5,9 +5,9 @@ status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-04
-updated: 2026-11-10
-next_review: 2027-02-10
-iter: ITER-20261110-05
+updated: 2026-11-12
+next_review: 2027-02-12
+iter: ITER-20261112-01
 related: [GOV-000, DEV-003, DEV-006, GOV-006]
 ---
 
@@ -35,6 +35,9 @@ related: [GOV-000, DEV-003, DEV-006, GOV-006]
 | DVT-04 | `GOV-000` §6.5 约束 3：`main` 保护不可被 Maintainer 绕过 | `enforce_admins: false`；PR 批准数 0；未要求 CODEOWNERS 审查 | 单人期没有第二审批人（GitHub 禁止自批），全锁死连紧急修复都无法进行 | 规则对贡献者生效；Owner 保留通道，PR 记录仍是常态 | S6 首名 Maintainer 入组即收紧：`enforce_admins: true` + 批准数 ≥1 + CODEOWNERS 审查 | 生效中 |
 | DVT-05 | `GOV-000` §6.5 约束 1：所有贡献者须签署 DCO，CI 校验 `Signed-off-by` | 机器人提交（`dependabot[bot]`、`github-actions[bot]`）与合并提交不参与签署检查 | 机器人无法自行签署；合并提交不承载内容变更 | 署名责任由 Squash 合并产生的最终提交承担；人类提交的检查一条未松 | 若引入 DCO App 能对机器人单独放行时复核；否则长期保留 | 生效中 |
 | DVT-06 | `GOV-000` §6.4：发版前执行依赖扫描，不允许 High / Critical | 以 osv-scanner 在线查询替代 OWASP dependency-check；后者本轮未跑全量 | 开发机无法完成 NVD 数据下载（体积与网络限制） | osv 覆盖面小于 OWASP，结论不等价；已写入 `DEV-003` §7 与 `GOV-006` §3 | CI 或带宽稳定环境接入 OWASP（`TD-09`） | 生效中 |
+| DVT-10 | `DEV-009` §7.4：ECS 2 vCPU / 4 GB / ESSD 60 GB | `ecs.e-c1m1.large`：2 vCPU / 1740 MB / 40 GB，另配 2 GB swap | 预算约束，暂不升级 | 构建与并发空间小，JVM 堆需下调；40 GB 盘在镜像与备份叠加后需盯占用；swap 只缓解不替代内存 | 升级到 4 GB / 60 GB，或在 staging 用接近真实的负载证明 P95 与构建均达标后，由开发者改写该条款 | 生效中 |
+| DVT-11 | `DEV-009` §7.4：托管库自动备份 + 日志备份，RPO ≤5 分钟 | ECS 内容器自建 PostgreSQL 18，仅每日 02:00 `pg_dump -Fc` 全量，RPO ≤24 小时 | 不购 RDS，省托管费；备份改由 `RUN-002` 脚本自管 | 最坏丢一天数据；无高可用，容器或磁盘故障只能从 OSS 拉回备份 | 启用 WAL 归档并把归档日志另存 OSS，或改回 RDS | 生效中 |
+| DVT-12 | `DEV-009` §7.4：Bucket 私有读，图片经后端签名 URL 下发 | 已改为预签名地址：读写走内网 endpoint，签名走公网 endpoint，默认 1 小时 | 2026-11-10 曾裁定「以实现为准」；2026-11-12 开发者改判为补签名 URL | 桶可保持私有读；图片地址带有效期，页面停留超过 1 小时需刷新 | — | 已收回（2026-11-12） |
 
 
 
@@ -46,6 +49,7 @@ related: [GOV-000, DEV-003, DEV-006, GOV-006]
 | DVT-07 | 2026-11-10 | 脚本增加两类豁免（合并提交、机器人作者，口径与署名校验一致）后接入 `guards` 的「提交信息校验」步骤（Issue #47）；实测 main 全量历史 47 条人工提交通过、12 条机器人豁免 |
 | DVT-09 | 2026-11-10 | 新增按 IP 固定窗口限流（默认 10 次 / 600 秒，`galley.register.rate-limit.*`），429 携带 `Retry-After`（登录失败锁定同步补齐）；集成测试 2 条 + 单元测试 5 条（Issue #45） |
 | DVT-08 | 2026-11-10 | 新增 `common/audit`（`AuditService` + jsonb 写入），全部写路径同事务落审计；账号快照手工脱敏；`material.created_by` / `updated_by` 回填；审计断言 6 条（Issue #46） |
+| DVT-12 | 2026-11-12 | `ObjectStorage.publicUrl` 改为 `signedUrl`：新增 `public-endpoint` 与 `region` 配置，用预签名 GET 下发；单元测试 3 条（Issue #52） |
 
 ## 4. 变更记录
 
@@ -57,3 +61,5 @@ related: [GOV-000, DEV-003, DEV-006, GOV-006]
 | 2026-11-10 | DVT-07 收回（见 §3）；DVT-08 / DVT-09 修复中（#46 / #45） | ITER-20261110-03 |
 | 2026-11-10 | DVT-09 收回（见 §3）；DVT-08 修复中（#46） | ITER-20261110-04 |
 | 2026-11-10 | DVT-08 收回（见 §3）；三项偏离全部闭环 | ITER-20261110-05 |
+| 2026-11-12 | 新增 DVT-10（计算规格低于规范）、DVT-11（自建库 RPO 24 小时）、DVT-12（OSS 访问模型与实现冲突）；三项均由 S5 资源决定引出 | ITER-20261112-01 |
+| 2026-11-12 | DVT-12 收回（见 §3），OSS 访问模型定为私有读 + 签名 URL | ITER-20261112-02 |
