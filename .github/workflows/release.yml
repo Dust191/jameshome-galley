@@ -42,6 +42,9 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}
+          # 生产只用固定 tag，禁止 latest 漂移
+          flavor: |
+            latest=false
           # semver 会把 v0.1.0 归一成 0.1.0，与编排里的固定 tag 对齐
           tags: |
             type=semver,pattern={{version}}
