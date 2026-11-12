@@ -53,6 +53,7 @@ related: [GLOSSARY-001, PRD-001]
 | GOV-004 | `docs/05-governance/labels.md` | 标签体系 | approved | @Dust191 | 2026-11-03 | S4 |
 | GOV-005 | `docs/05-governance/third-party-licenses.md` | 第三方依赖许可证清单 | approved | @Dust191 | 2026-11-03 | S4 |
 | GOV-006 | `docs/05-governance/g4-check.md` | 阶段门 G4 验收记录 | approved | @Dust191 | 2026-11-03 | S4 |
+| GOV-007 | `docs/05-governance/model-deviations.md` | 模型偏离记录 | in_review | @Dust191 | 2026-11-12 | S5 |
 | ITER-20261031-01 | `docs/07-iteration/ITER-20261031-01.md` | 首轮迭代记录（立项前置决策） | approved | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-02 | `docs/07-iteration/ITER-20261031-02.md` | S0 文档体系建立 | approved | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-03 | `docs/07-iteration/ITER-20261031-03.md` | S1 项目骨架搭建 | approved | @Dust191 | 2026-10-31 | S1 |
@@ -97,6 +98,7 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261112-07 | `docs/07-iteration/ITER-20261112-07.md` | 备份脚本落地与首次恢复演练 | approved | @Dust191 | 2026-11-12 | S5 |
 | ITER-20261112-08 | `docs/07-iteration/ITER-20261112-08.md` | 关闭 Issue #55：模板、编排透传与 CI 守卫 | approved | @Dust191 | 2026-11-12 | S5 |
 | ITER-20261112-09 | `docs/07-iteration/ITER-20261112-09.md` | 文档与实现一致性核查，重写运行手册 | approved | @Dust191 | 2026-11-12 | S5 |
+| ITER-20261112-10 | `docs/07-iteration/ITER-20261112-10.md` | 建立模型偏离台账（`GOV-007`） | in_review | @Dust191 | 2026-11-12 | S5 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
@@ -114,9 +116,10 @@ related: [GLOSSARY-001, PRD-001]
 | DEV | 开发规范（文档编号） | 001 ~ 010 | 011 |
 | DVT | 偏离登记（条目编号） | 01 ~ 13 | 14 |
 | OPS / RUN | 运维与运行手册 | 001、001 ~ 002 | 002 / 003 |
-| GOV | 治理 | 000（指导文档）、001 ~ 006 | 007 |
+| GOV | 治理 | 000（指导文档）、001 ~ 007 | 008 |
 | RFC | 重大变更提案 | 0001 | 0002 |
-| ITER | 迭代记录 | 20261031-01 ~ 20261112-09（44 份） | — |
+| ITER | 迭代记录 | 20261031-01 ~ 20261112-10（45 份） | — |
+| MDV | 模型偏离（条目编号） | 01 ~ 04 | 05 |
 | MTG | 会议纪要 | — | — |
 
 ## 3. 强制文档齐备情况
