@@ -346,6 +346,8 @@ Signed-off-by: Dust <3941305663@qq.com>
 | 提交信息 | `bash scripts/check-commit-message.sh <range>` | CI `guards` 执行；豁免合并提交与机器人作者（口径与署名校验一致，`DVT-07` 已收回） |
 | 署名 | `bash scripts/check-signoff.sh <range>` | CI `guards` 执行；豁免机器人与合并提交（`DVT-05`） |
 | 提交规则配置 | `commitlint.config.cjs` | 与脚本规则同源；无本地钩子 |
+| 环境变量 | `bash scripts/check-env-example.sh` | 四组校验：开发模板对 `application.yml`、生产模板对 `compose.prod.yml`，另查含空格值是否加引号、文件是否带 CR |
+| 生产编排 | `docker compose --env-file infra/compose/.env.prod.example -f infra/compose/compose.prod.yml config -q` | CI `guards` 执行；模板缺项、插值写错在此拦下，不必等真机启动 |
 | 格式 | `make lint` | Spotless + Prettier + `check-docs` |
 
 机器人提交按作者豁免（与署名校验同口径），其 `deps-dev` scope 与超长 subject 不再构成接入障碍；人类提交的格式在 CI 强制。
