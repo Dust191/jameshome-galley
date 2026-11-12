@@ -78,7 +78,7 @@ web（Controller/DTO） → application（Service/事务边界） → domain（�
 | 可选尾注 | `Assisted-by: <模型名-版本>`，无法确认标识时留空 |
 | 长度 | subject ≤50 字符，正文每行 ≤72 字符 |
 
-提交信息由 `scripts/check-commit-message.sh` 校验，署名由 `scripts/check-signoff.sh` 校验。署名在 CI 的 `guards` 中执行；提交信息目前只在合并前手动执行，尚未接入 CI（`DVT-07`：机器人提交的 `deps-dev` scope 与超长 subject 会误伤）。
+提交信息由 `scripts/check-commit-message.sh` 校验，署名由 `scripts/check-signoff.sh` 校验，两者都在 CI 的 `guards` 中执行（`DVT-07` 已收回）。脚本豁免合并提交与机器人作者，人类提交一条不松。
 
 ## 5. 本地模拟 PR（已失效）
 
@@ -104,3 +104,4 @@ S4 建仓前，团队规模为 1 且无远端仓库时，以本地流程替代�
 |---|---|---|
 | 2026-11-01 | 初版建立 | ITER-20261101-09 |
 | 2026-11-10 | 更正提交校验的现状（署名在 CI、提交信息仍手动，`DVT-07`）；scope 白名单与 `commitlint.config.cjs` 对齐；§5 本地模拟 PR 标注为建仓后失效；指向 `DEV-008` 的提交与署名细则 | ITER-20261110-01 |
+| 2026-11-12 | 更正：提交信息校验已接入 CI（`DVT-07` 收回），不再“仅手动执行” | ITER-20261112-05 |
