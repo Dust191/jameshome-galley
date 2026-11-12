@@ -19,7 +19,7 @@ related: [ADR-0001, ADR-0005, DEV-009, RUN-001, RUN-002]
 
 ## 1. 拓扑
 
-单机 Docker 部署，ECS 在阿里云杭州。对外入口不走入站端口，而是由服务器主动连出的 Cloudflare Tunnel 承载。
+单机 Docker 部署，ECS 在阿里云杭州。对外入口不走入站端口，而是由服务器主动连出的 **Cloudflare Quick Tunnel** 承载（临时方案，`*.trycloudflare.com`，无需域名与备案）。
 
 ```mermaid
 flowchart LR
@@ -34,8 +34,8 @@ flowchart LR
 
 | 组件 | 形态 | 说明 |
 |---|---|---|
-| Cloudflare | 外部服务 | 终结 TLS、承载域名；Tunnel 由服务器侧发起 |
-| cloudflared | 容器 | 出站连接 Cloudflare，把请求转给本机 Caddy；token 由环境注入 |
+| Cloudflare | 外部服务 | 终结 TLS、分配临时域名；Tunnel 由服务器侧发起 |
+| cloudflared | 容器 | `tunnel --url http://caddy:80`；**无需 token，也无需账号**，临时域名在日志里打印 |
 | Caddy | 容器，内网 `:80` | 安全响应头、路径分流；**不再持有证书，ACME 配置不再使用** |
 | api | 容器，`expose 8080` | 单实例；健康检查 `/actuator/health/readiness` |
 | web | 容器，`expose 80` | nginx 托管前端构建产物 |
@@ -44,13 +44,21 @@ flowchart LR
 
 **端口面**：安全组入站只放行 22（限固定源 IP）；80 / 443 保持关闭。出站需允许 cloudflared 访问 Cloudflare 边缘的 443。
 
+**已知风险 R-01：入口地址不稳定。** Quick Tunnel 的域名每次启动重新生成，`docker compose restart cloudflared` 或整机重启后旧地址立即失效；没有 SLA，Cloudflare 可随时限速或断开。取当前地址：
+
+```bash
+docker compose -f infra/compose/compose.prod.yml logs cloudflared | grep -o 'https://[a-z0-9-]*\.trycloudflare\.com' | tail -1
+```
+
+拿到地址的人都能访问，访问控制只能依赖应用自身的登录。域名与备案就绪后切 Named Tunnel，`DVT-13` 才可收回。
+
 ## 2. 环境
 
 | 环境 | 用途 | 数据 | 访问 |
 |---|---|---|---|
 | local | 开发 | Docker 容器，可随意重建 | localhost |
-| staging | 发布前验证 | 脱敏样例数据 | 同一 Tunnel 的另一主机名，或临时 Tunnel |
-| prod | 线上 | 真实数据 | 公网 HTTPS（Cloudflare） |
+| staging | 发布前验证 | 脱敏样例数据 | 另起一个 Quick Tunnel（端口不同即可） |
+| prod | 线上 | 真实数据 | 公网 HTTPS（临时域名，重启会变） |
 
 **staging 与 prod 不共用数据库，不共用 OSS bucket。** 任何"临时在 prod 上试一下"都按红线处理。
 
@@ -72,12 +80,11 @@ flowchart LR
 | `GALLEY_IMAGE_API` / `GALLEY_IMAGE_WEB` | ✓ | 固定 tag，禁止 `latest`；tag 与 `pom.xml` 版本对齐 |
 | `GALLEY_IMAGE_CADDY` | ✓ | ACR 中的 caddy 地址（由 Hub 转存，`T5-04`） |
 | `GALLEY_IMAGE_TUNNEL` | ✓ | cloudflared 的固定 tag，不设默认值，缺失时编排直接报错 |
-| `CLOUDFLARE_TUNNEL_TOKEN` | ✓ | Tunnel 凭据，只进 `.env.prod` |
 | `GALLEY_LOG_LEVEL` | — | prod 固定 `info`；排障临时 `debug` 后 2 小时内改回 |
 | `GALLEY_RECONCILE_CRON` | — | 默认每日 02:30 |
 | `GALLEY_BOOTSTRAP_ADMIN_USERNAME` | — | 默认 `admin`；空库首次启动生成随机口令并打印一次 |
 
-`ACME_EMAIL` 随 Cloudflare Tunnel 方案不再需要，`Caddyfile` 中的 `{$ACME_EMAIL}` 与 `:443` 一并移除。
+`ACME_EMAIL` 与 `CLOUDFLARE_TUNNEL_TOKEN` 都不再需要：Quick Tunnel 不签发自定义证书，也不需要账号凭据。
 
 ## 4. 发布步骤
 
@@ -93,6 +100,8 @@ flowchart LR
 | 8 | 观察与记录 | 盯 30 分钟；写 `CHANGELOG` 与 ITER | 无 5xx 抬升 | 执行 §5 |
 
 第 6 步当前是**原地替换**，有秒级中断；规范要求的蓝绿（双 api 服务 + 切 Caddy upstream）尚未实现，属 S5 未完成项。
+
+**第 6 步之后必须重新取入口地址**：只要 `cloudflared` 容器被重建或重启，旧地址即失效，按 §1 的 R-01 命令取新地址并通知使用者。
 
 ## 5. 回滚
 
@@ -114,3 +123,4 @@ GALLEY_IMAGE_WEB=<上一 tag> docker compose -f infra/compose/compose.prod.yml u
 |---|---|---|
 | 2026-11-01 | 初版建立；拓扑与步骤定稿，实例规格待 S5 | ITER-20261101-09 |
 | 2026-11-12 | 按开发者决定重写：Cloudflare Tunnel 承接 TLS、数据库改自建容器、OSS 走内网 endpoint；修正代理路径、回滚命令与冒烟路径三处与实现不符的写法 | ITER-20261112-01 |
+| 2026-11-12 | 入口改为 Cloudflare Quick Tunnel：去掉 token，临时域名由日志给出；新增 R-01（重启换址）并写入取址命令 | ITER-20261112-03 |
