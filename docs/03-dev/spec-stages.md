@@ -5,9 +5,9 @@ status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-10
-updated: 2026-11-10
-next_review: 2027-02-10
-iter: ITER-20261110-05
+updated: 2026-11-12
+next_review: 2027-02-12
+iter: ITER-20261112-01
 related: [DEV-005, DEV-006, DEV-007, DEV-008, GOV-002, GOV-003, GOV-004, GOV-005, GOV-006, PRD-001, SCOPE-001, NFR-001, DES-001, DES-002, DES-003, DES-004, OPS-001, RUN-001, RUN-002]
 ---
 
@@ -498,14 +498,14 @@ G3 通过（MVP 可运行），否则开源只会招来"跑不起来"的 issue�
 
 ### 7.2 前置条件
 
-G3 通过、G4 通过、阿里云资源开通、域名与 ICP 备案就绪、`OPS-001` / `RUN-002` 定稿、发布演练完成。
+G3 通过、G4 通过、阿里云资源开通（ECS 与 OSS）、对外接入方案就绪（本项目用 Cloudflare Tunnel，不涉及 ICP 备案）、`OPS-001` / `RUN-002` 定稿、发布演练完成。
 
 ### 7.3 交付物
 
 | 编号 | 交付物 | 路径 | 当前状态 |
 |---|---|---|---|
 | D5-1 | 生产编排 | `infra/compose/compose.prod.yml` | 骨架（三服务、健康检查、固定 tag） |
-| D5-2 | 反向代理配置 | `infra/caddy/Caddyfile` | 骨架（TLS、安全头、`/api` 与 `/actuator` 转发） |
+| D5-2 | 反向代理配置 | `infra/caddy/Caddyfile` | 骨架（安全头、路径分流；TLS 改由 Cloudflare 终结，待改内网 `:80`） |
 | D5-3 | 部署文档 | `docs/04-ops/deploy.md` | 草案 `in_review`，S5 定稿 |
 | D5-4 | 运行手册 | `docs/04-ops/runbook.md` | 已建立，S5 增补故障处置 |
 | D5-5 | 备份方案 | `infra/backup/` + `RUN-002` | 目录占位；`RUN-002` 草案 |
@@ -515,16 +515,18 @@ G3 通过、G4 通过、阿里云资源开通、域名与 ICP 备案就绪、`OP
 
 ### 7.4 规范标准
 
-**拓扑**：用户 → HTTPS 443 → Caddy → `/api` 转后端 8080、`/` 转静态站点；后端连内网 PostgreSQL 与对象存储。数据库与对象存储不得暴露公网；SSH 限固定源 IP。
+**拓扑**：用户 → HTTPS 443 → Cloudflare 边缘（香港出口）→ Tunnel → 本机 `cloudflared` → Caddy（内网 `:80`）→ `/api` 转后端 8080、`/` 转前端容器；后端连本机 PostgreSQL 容器与 OSS 内网 endpoint。数据库与对象存储不得暴露公网；ECS 入站只留 22 且限固定源 IP，80 / 443 不开放（TLS 由 Cloudflare 终结）。
 
 | 项 | 规格 | 说明 |
 |---|---|---|
-| ECS | 2 vCPU / 4 GB / ESSD 60 GB，Ubuntu 24.04 | 应用与反向代理同机 |
-| 数据库 | RDS PostgreSQL 18.3 最小可用规格，单可用区；或 ECS 自建 | 托管省备份与高可用成本；自建须自管备份 |
-| 对象存储 | OSS 标准存储，Bucket 私有读 | 图片经后端签名 URL 下发 |
-| 网络 | 安全组入站仅 443（全网）、22（固定源 IP） | 数据库白名单仅 ECS 内网 |
-| 域名 | 大陆地域须 ICP 备案 | 未备案前用 IP 或香港地域 |
-| 成本量级 | 月 200 ~ 400 元 | 超预算先降数据库规格，不降备份策略 |
+| ECS | 2 vCPU / 4 GB / ESSD 60 GB，Ubuntu 24.04 | 应用与反向代理同机；**本项目实际 2 GB / 40 GB**，见下方实况 |
+| 数据库 | RDS PostgreSQL 18.3 最小可用规格，单可用区；或 ECS 自建 | **本项目选 ECS 内容器自建**：省掉托管费，代价是备份、升级、磁盘全部自管（`DVT-11`） |
+| 对象存储 | OSS 标准存储，Bucket 私有读 | **访问模型待定**：现有实现用 `publicUrl`，私有读会 403（`ITER-20261112-01` L-02）；服务器走内网 endpoint |
+| 网络 | 安全组入站仅 22（固定源 IP）；80 / 443 关闭 | 对外由 Cloudflare Tunnel 出站承载；数据库与 OSS 均不走公网 |
+| 域名 | 由 Cloudflare 托管，Tunnel 走香港出口 | 不做 ICP 备案；该方案不改变服务器所在地，合规性由开发者判断 |
+| 成本量级 | 月 150 ~ 300 元 | 省掉 RDS；超预算先降 ECS 规格，不降备份与告警 |
+
+**本项目资源实况（2026-11-12）**：ECS `ecs.e-c1m1.large`（2 vCPU / 1740 MB / 40 GB ESSD，杭州）、2 GB swap、Docker 29.9.3 + Compose v5.7.1；OSS 同地域已购、bucket 未建；RDS 不购。规格低于上表，按 `DVT-10` 登记。
 
 **三环境**：
 
@@ -596,13 +598,13 @@ staging 与 prod 必须同镜像、同编排、不同配置；允许差异只有
 
 | 项 | 状态 | 缺口 |
 |---|---|---|
-| 生产编排与代理 | 骨架 | 资源限制、域名、证书、蓝绿切换未定稿 |
+| 生产编排与代理 | 骨架 | 缺 `db` 与 `cloudflared` 服务、资源限制、蓝绿切换；Caddy 待改为内网 `:80` |
 | 部署与运行文档 | 草案 | `OPS-001` 定稿、`RUN-001` 增补 |
-| 备份 | 目录与草案 | 策略未定、未演练 |
+| 备份 | 目录与草案 | 自建库无托管备份，脚本与恢复演练均未做（`DVT-11`） |
 | 监控告警 | 未建 | 指标清单、阈值、通知渠道、七条告警 |
 | 上线检查单 | 未建 | 按 §7.6 落成文件并逐项签字 |
 | 发布流水线 | 未建 | tag 触发、镜像推送、staging 自动、prod 手动审批 |
-| 云资源与备案 | 未开通 | 开发者决定 |
+| 云资源与接入 | 部分就绪 | ECS 与 OSS 已购；bucket 未建；Tunnel 未建；规格低于规范（`DVT-10`） |
 
 ## 8. S6：版本迭代（未进入）
 

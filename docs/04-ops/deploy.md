@@ -5,87 +5,108 @@ status: in_review
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-01
-updated: 2026-11-01
-next_review: 2027-01-30
-iter: ITER-20261101-09
-related: [ADR-0001, RUN-001, RUN-002]
+updated: 2026-11-12
+next_review: 2027-02-12
+iter: ITER-20261112-01
+related: [ADR-0001, ADR-0005, DEV-009, RUN-001, RUN-002]
 ---
 
 # OPS-001 部署
 
 这份文档回答一个问题：**代码从 main 到线上，中间经过哪几步、每步看什么。**
 
+当前为 S5 准备期版本：拓扑与资源口径已按 2026-11-12 的决定重写（`ITER-20261112-01`），镜像构建与编排仍在补齐。
+
 ## 1. 拓扑
 
-MVP 为单机 Docker 部署，生产环境定在阿里云（S5 定稿）。当前形态：
+单机 Docker 部署，ECS 在阿里云杭州。对外入口不走入站端口，而是由服务器主动连出的 Cloudflare Tunnel 承载。
 
 ```mermaid
 flowchart LR
-    U[浏览器] -->|HTTPS 443| C[Caddy 反向代理]
-    C -->|/api| B[galley 后端 :8080]
-    C -->|/| S[前端静态文件]
-    B -->|JDBC 5432| D[(PostgreSQL 18.3)]
-    B -->|对象存储| O[OSS 图片桶]
+    U[浏览器] -->|HTTPS| CF[Cloudflare 边缘<br/>香港出口]
+    CF -->|Tunnel| T[cloudflared]
+    T --> C[Caddy :80]
+    C -->|/api| B[api :8080]
+    C -->|/| W[web :80]
+    B --> D[(PostgreSQL 18<br/>容器 + 数据卷)]
+    B -->|内网| O[(OSS<br/>internal endpoint)]
 ```
 
 | 组件 | 形态 | 说明 |
 |---|---|---|
-| Caddy | 容器 | 终结 TLS，按路径分流；配置见 `infra/proxy/Caddyfile` |
-| galley 后端 | 容器，JRE 25 | 单实例；健康检查 `/actuator/health/readiness` |
-| 前端 | 静态文件 | 由 Caddy 直接托管 `dist/` |
-| PostgreSQL | 容器 + 数据卷 | 每日备份，见 `RUN-002` |
-| OSS | 阿里云对象存储 | 物料图片；后端只存 key，不存公网 URL（开发环境用 MinIO，见 `ADR-0005`） |
+| Cloudflare | 外部服务 | 终结 TLS、承载域名；Tunnel 由服务器侧发起 |
+| cloudflared | 容器 | 出站连接 Cloudflare，把请求转给本机 Caddy；token 由环境注入 |
+| Caddy | 容器，内网 `:80` | 安全响应头、路径分流；**不再持有证书，ACME 配置不再使用** |
+| api | 容器，`expose 8080` | 单实例；健康检查 `/actuator/health/readiness` |
+| web | 容器，`expose 80` | nginx 托管前端构建产物 |
+| PostgreSQL | 容器 + 数据卷 | 自建，备份见 `RUN-002`；无托管高可用 |
+| OSS | 阿里云对象存储 | 物料图片；服务器经 `oss-cn-hangzhou-internal.aliyuncs.com` 内网访问 |
 
-**待确认项**（S5 定稿前不阻塞开发）：ECS 实例规格、域名与证书来源、OSS bucket 地域。
-
-> **本文档当前不作为 S2 交付物。** 开发者尚未采购服务器，部署拓扑留待 S5 定稿，本轮不参与审定。
+**端口面**：安全组入站只放行 22（限固定源 IP）；80 / 443 保持关闭。出站需允许 cloudflared 访问 Cloudflare 边缘的 443。
 
 ## 2. 环境
 
 | 环境 | 用途 | 数据 | 访问 |
 |---|---|---|---|
 | local | 开发 | Docker 容器，可随意重建 | localhost |
-| staging | 发布前验证 | 脱敏样例数据 | 内网 + 白名单 |
-| prod | 线上 | 真实数据 | 公网 HTTPS |
+| staging | 发布前验证 | 脱敏样例数据 | 同一 Tunnel 的另一主机名，或临时 Tunnel |
+| prod | 线上 | 真实数据 | 公网 HTTPS（Cloudflare） |
 
 **staging 与 prod 不共用数据库，不共用 OSS bucket。** 任何"临时在 prod 上试一下"都按红线处理。
 
 ## 3. 配置
 
-全部通过环境变量注入，清单见 `.env.example`，CI 校验两者一致。
+全部通过环境变量注入。真实值只存在服务器的 `.env.prod`，不入仓、不入镜像、不进日志。
 
 | 变量 | 必填 | 说明 |
 |---|---|---|
-| `GALLEY_ENV` | ✓ | `local` / `staging` / `prod` |
-| `GALLEY_DB_URL`、`GALLEY_DB_USERNAME`、`GALLEY_DB_PASSWORD` | ✓ | 口令不入库、不入仓，由部署环境注入 |
-| `GALLEY_SERVER_PORT` | — | 默认 8080；线上由 Caddy 固定转发，不覆盖 |
-| `GALLEY_LOG_LEVEL` | — | 默认 `INFO`；排障时可临时 `DEBUG`，事后改回 |
+| `GALLEY_ENV` | ✓ | 固定 `prod`；该值决定初始管理员是否允许重置口令 |
+| `GALLEY_DB_URL`、`GALLEY_DB_USERNAME`、`GALLEY_DB_PASSWORD` | ✓ | 指向本机 `db` 容器；应用账号只授 DML |
+| `GALLEY_S3_ENDPOINT` | ✓ | `https://oss-cn-hangzhou-internal.aliyuncs.com`（内网，不走公网） |
+| `GALLEY_S3_ACCESS_KEY` / `GALLEY_S3_SECRET_KEY` | ✓ | 建议用只授权该 bucket 的 RAM 子账号 |
+| `GALLEY_S3_BUCKET` | ✓ | 待创建，命名见 `ITER-20261112-01` L-01 |
+| `GALLEY_S3_PUBLIC_BASE` | ✓ | 与 bucket 的访问模型一致；私有读时该值不成立，见 L-02 |
+| `GALLEY_S3_MAX_IMAGE_BYTES` | — | 默认 5 MB |
+| `GALLEY_IMAGE_API` / `GALLEY_IMAGE_WEB` | ✓ | 固定 tag，禁止 `latest` |
+| `CLOUDFLARE_TUNNEL_TOKEN` | ✓ | Tunnel 凭据，只进 `.env.prod` |
+| `GALLEY_LOG_LEVEL` | — | prod 固定 `info`；排障临时 `debug` 后 2 小时内改回 |
+| `GALLEY_RECONCILE_CRON` | — | 默认每日 02:30 |
+| `GALLEY_BOOTSTRAP_ADMIN_USERNAME` | — | 默认 `admin`；空库首次启动生成随机口令并打印一次 |
+
+`ACME_EMAIL` 随 Cloudflare Tunnel 方案不再需要，`Caddyfile` 中的 `{$ACME_EMAIL}` 与 `:443` 一并移除。
 
 ## 4. 发布步骤
 
 | 序 | 动作 | 命令 / 位置 | 预期 | 失败则 |
 |---|---|---|---|---|
-| 1 | 确认门禁 | CI 全绿、ITER 已审定 | 三项齐全 | 停止 |
-| 2 | 打标签 | `git tag -a v<版本> -m "<摘要>"` | 标签指向 main 顶端 | 停止 |
-| 3 | 构建镜像 | CI 产出 `galley:<版本>` | 镜像可拉取 | 停止 |
-| 4 | 备份 | `RUN-002` §2 | 备份文件存在且校验通过 | 停止 |
+| 1 | 确认门禁 | CI 全绿、ITER 已审定、无 `p0/p1` 未决 | 三项齐全 | 停止 |
+| 2 | 定版本 | 更新 `CHANGELOG`，`git tag -a v<版本>` | 标签指向 main 顶端 | 停止 |
+| 3 | 构建并推送镜像 | `.github/workflows/release.yml` | `api` / `web` 两个 tag 可拉取 | 停止 |
+| 4 | 全量备份 | `RUN-002` §2，并在 OSS 校验对象存在 | 备份文件非空、`pg_restore -l` 通过 | 停止 |
 | 5 | 迁移 | 启动时由 Flyway 自动执行 | 日志出现 `Successfully applied` | 见 `RUN-001` §3 |
-| 6 | 滚动 | `docker compose -f compose.prod.yml up -d galley` | 容器 healthy | 回滚 |
-| 7 | 冒烟 | `/healthz`、`/actuator/health/readiness`、登录一次 | 三者正常 | 回滚 |
-| 8 | 记录 | `CHANGELOG.md` + ITER | 已记录 | — |
+| 6 | 替换容器 | `docker compose -f compose.prod.yml up -d api web` | 新容器 healthy | 执行 §5 |
+| 7 | 冒烟 | `/actuator/health/readiness`、登录、列表、登记一条流水、导出 | 五项正常 | 执行 §5 |
+| 8 | 观察与记录 | 盯 30 分钟；写 `CHANGELOG` 与 ITER | 无 5xx 抬升 | 执行 §5 |
+
+第 6 步当前是**原地替换**，有秒级中断；规范要求的蓝绿（双 api 服务 + 切 Caddy upstream）尚未实现，属 S5 未完成项。
 
 ## 5. 回滚
 
-镜像回滚（首选，秒级）：
+应用回滚（首选）：
 
 ```bash
-docker compose -f infra/compose/compose.prod.yml up -d galley@<上一个镜像摘要>
+# 把镜像变量指回上一个 tag，只重建该服务
+GALLEY_IMAGE_API=<上一 tag> docker compose -f infra/compose/compose.prod.yml up -d --no-deps api
+GALLEY_IMAGE_WEB=<上一 tag> docker compose -f infra/compose/compose.prod.yml up -d --no-deps web
 ```
 
-数据库**不自动回滚**。迁移脚本按 `DEV-002` §6 拆成"先加新、再删旧"，因此旧版本代码通常能与新库共存。若必须回退库结构，走 `RUN-002` §4 的恢复流程，并记录事故。
+配置回滚：`.env.prod` 每次变更前留一份带日期的副本，回滚即换回上一份并重建容器。
+
+数据库**只前滚，不回滚**。迁移按「先加新、再回填、下个版本删旧」拆开，旧代码能与新库共存；确实损坏时走 `RUN-002` §4 的恢复流程并记录事故。
 
 ## 6. 变更记录
 
 | 日期 | 变更 | 依据 |
 |---|---|---|
 | 2026-11-01 | 初版建立；拓扑与步骤定稿，实例规格待 S5 | ITER-20261101-09 |
+| 2026-11-12 | 按开发者决定重写：Cloudflare Tunnel 承接 TLS、数据库改自建容器、OSS 走内网 endpoint；修正代理路径、回滚命令与冒烟路径三处与实现不符的写法 | ITER-20261112-01 |
