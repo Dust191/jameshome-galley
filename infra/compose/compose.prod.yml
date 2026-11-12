@@ -5,7 +5,7 @@ name: galley
 
 services:
   api:
-    image: ${GALLEY_IMAGE_API:ghcr.io/jameshome/galley-api:0.1.0}
+    image: ${GALLEY_IMAGE_API:ghcr.io/dust191/galley-api:0.1.0}
     environment:
       GALLEY_ENV: prod
       GALLEY_SERVER_PORT: "8080"
@@ -27,7 +27,7 @@ services:
       db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:8080/actuator/health/readiness"]
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/actuator/health/readiness"]
       interval: 15s
       timeout: 5s
       retries: 3
@@ -41,7 +41,7 @@ services:
     networks: [backend]
 
   web:
-    image: ${GALLEY_IMAGE_WEB:ghcr.io/jameshome/galley-web:0.1.0}
+    image: ${GALLEY_IMAGE_WEB:ghcr.io/dust191/galley-web:0.1.0}
     expose:
       - "80"
     healthcheck:

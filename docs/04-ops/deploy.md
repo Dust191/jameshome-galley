@@ -92,12 +92,14 @@ docker compose -f infra/compose/compose.prod.yml logs cloudflared | grep -o 'htt
 |---|---|---|---|---|
 | 1 | 确认门禁 | CI 全绿、ITER 已审定、无 `p0/p1` 未决 | 三项齐全 | 停止 |
 | 2 | 定版本 | 更新 `CHANGELOG`，`git tag -a v<版本>` | 标签指向 main 顶端 | 停止 |
-| 3 | 构建并推送镜像 | `.github/workflows/release.yml` | `api` / `web` 两个 tag 可拉取 | 停止 |
+| 3 | 构建并推送镜像 | `.github/workflows/release.yml`（打 tag 触发） | GHCR 上出现 `galley-api` / `galley-web` 两个 tag | 停止 |
 | 4 | 全量备份 | `RUN-002` §2，并在 OSS 校验对象存在 | 备份文件非空、`pg_restore -l` 通过 | 停止 |
 | 5 | 迁移 | 启动时由 Flyway 自动执行 | 日志出现 `Successfully applied` | 见 `RUN-001` §3 |
 | 6 | 替换容器 | `docker compose -f compose.prod.yml up -d api web` | 新容器 healthy | 执行 §5 |
 | 7 | 冒烟 | `/actuator/health/readiness`、登录、列表、登记一条流水、导出 | 五项正常 | 执行 §5 |
 | 8 | 观察与记录 | 盯 30 分钟；写 `CHANGELOG` 与 ITER | 无 5xx 抬升 | 执行 §5 |
+
+**首次发布后要做一次**：把 GHCR 的两个包设为 public（或给服务器配只读凭据）；否则服务器拉取会 401。
 
 第 6 步当前是**原地替换**，有秒级中断；规范要求的蓝绿（双 api 服务 + 切 Caddy upstream）尚未实现，属 S5 未完成项。
 
@@ -124,3 +126,4 @@ GALLEY_IMAGE_WEB=<上一 tag> docker compose -f infra/compose/compose.prod.yml u
 | 2026-11-01 | 初版建立；拓扑与步骤定稿，实例规格待 S5 | ITER-20261101-09 |
 | 2026-11-12 | 按开发者决定重写：Cloudflare Tunnel 承接 TLS、数据库改自建容器、OSS 走内网 endpoint；修正代理路径、回滚命令与冒烟路径三处与实现不符的写法 | ITER-20261112-01 |
 | 2026-11-12 | 入口改为 Cloudflare Quick Tunnel：去掉 token，临时域名由日志给出；新增 R-01（重启换址）并写入取址命令 | ITER-20261112-03 |
+| 2026-11-12 | 补镜像构建产物与发布流水线说明；发布第 3 步改为 GHCR 包核对，并补首次发布后设可见性 | ITER-20261112-04 |

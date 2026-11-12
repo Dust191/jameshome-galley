@@ -511,7 +511,7 @@ G3 通过、G4 通过、阿里云资源开通（ECS 与 OSS）、对外接入方
 | D5-5 | 备份方案 | `infra/backup/` + `RUN-002` | 目录占位；`RUN-002` 草案 |
 | D5-6 | 监控告警 | `docs/04-ops/monitoring.md` | **未建立** |
 | D5-7 | 上线检查单 | `docs/04-ops/go-live-checklist.md` | **未建立**（§7.6 为文本版） |
-| D5-8 | 发布流水线 | `.github/workflows/release.yml` | **未建立** |
+| D5-8 | 发布流水线 | `.github/workflows/release.yml` | 已建立（构建 + 推 GHCR）；staging 与 prod 审批段待接 |
 
 ### 7.4 规范标准
 
@@ -612,9 +612,9 @@ S5 执行段尚未开启，下列事项按「能否在不接外部账号的前�
 
 | 编号 | 事项 | 具体内容 | 前置 | 状态 |
 |---|---|---|---|---|
-| T5-01 | 镜像构建 | `backend/Dockerfile`（JRE 25 运行层、非特权账号）、`frontend/Dockerfile`（nginx 托管 `dist`）、两份 `.dockerignore` | 无 | 未开始 |
-| T5-02 | 发布流水线 | `.github/workflows/release.yml`：tag → 构建 → 推 GHCR → staging → prod 手动审批；同时配置 Actions 权限与镜像写入 Token | GitHub Actions 与 Tokens | 未开始 |
-| T5-03 | 镜像坐标 | 固定 tag 与 `pom.xml` 版本对齐；确认 GHCR 包名与可见性 | T5-02 | 未开始 |
+| T5-01 | 镜像构建 | `backend/Dockerfile`（JRE 25 运行层、非特权账号）、`frontend/Dockerfile`（nginx + SPA 回退）、两份 `.dockerignore` | 无 | 已完成（本地） |
+| T5-02 | 发布流水线 | `release.yml` 已写：tag → 构建 api/web → 推 GHCR；staging 与 prod 审批段待接。仍需在仓库设置 Actions 读写权限 | GitHub Actions 权限 | 部分就绪 |
+| T5-03 | 镜像坐标 | 固定 tag 已与 `pom.xml` 对齐（0.1.0）；GHCR 包名 `galley-api` / `galley-web`，可见性待首次推送后确认 | 首个 tag | 部分就绪 |
 | T5-04 | caddy 转存 | 经隧道拉取 `caddy:2-alpine`，推送至 ACR，编排改用 ACR 地址 | 隧道在线 | 未开始 |
 | T5-05 | OSS 建桶 | 建 bucket（私有读）、过期与归档规则、只授权该桶的 RAM 子账号 | 账号权限 | 未开始 |
 | T5-06 | 正式入口 | 域名 + Named Tunnel + 备案；当前 Quick Tunnel 只作过渡，切换时同步收回 `DVT-13` | 域名与备案 | 未开始 |
