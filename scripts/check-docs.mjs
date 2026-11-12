@@ -27,6 +27,20 @@ const STATUS = new Set(['draft', 'in_review', 'accepted', 'rejected', 'approved'
 // 不在仓库内的文档，related 允许引用但不校验文件存在
 const EXTERNAL_IDS = new Set(['GOV-000', 'CONTRIBUTING', 'GOVERNANCE', 'SECURITY'])
 
+// ITER 结构校验（GOV-007 M-01）。轮次信息是第一节且字段固定，所有记录一律硬性；
+// 六节结构自 ITER-20261112-10 起硬性——更早的记录章节命名不一（改动/验证/遗留等），
+// 只作历史，不回头改，也不刷告警。
+const ITER_STRUCTURE_FROM = 'ITER-20261112-10'
+const ITER_SECTIONS = [
+  '轮次信息',
+  '变更清单',
+  '变更过程',
+  '影响面',
+  '开发者审定回顾',
+  '与上轮的差异摘要',
+]
+const ITER_META_FIELDS = ['编号', '日期', '触发来源', '涉及版本', '参与模型', '开发者']
+
 const errors = []
 const warns = []
 
@@ -119,6 +133,33 @@ for (const d of docs) {
       statSync(p)
     } catch {
       errors.push(`${d.rel}: iter 指向的迭代记录不存在 ${iter}`)
+    }
+  }
+
+  // ITER 结构（GOV-007 M-01）
+  if (d.rel.startsWith('07-iteration/') || d.rel.includes('/07-iteration/')) {
+    const heads = [...d.body.matchAll(/^## (.+)$/gm)].map((m) => m[1])
+    const titles = heads.map((h) => h.replace(/^[一二三四五六七八九十]+、/, '').trim())
+
+    if (titles[0] !== '轮次信息') {
+      errors.push(`${d.rel}: 第一节必须是「轮次信息」，实际为「${titles[0] || '空'}」`)
+    } else {
+      // 轮次信息区块：从该标题到下一个 ## 之间
+      const start = d.body.indexOf('## ' + heads[0])
+      const rest = d.body.slice(start + heads[0].length)
+      const nextHead = rest.search(/^## /m)
+      const metaBlock = nextHead < 0 ? rest : rest.slice(0, nextHead)
+      const absent = ITER_META_FIELDS.filter((f) => !new RegExp(`^\\| *${f} *\\|`, 'm').test(metaBlock))
+      if (absent.length) {
+        errors.push(`${d.rel}: 轮次信息缺字段 ${absent.join('、')}`)
+      }
+    }
+
+    if (id >= ITER_STRUCTURE_FROM) {
+      const missing = ITER_SECTIONS.filter((t) => !titles.includes(t))
+      if (missing.length) {
+        errors.push(`${d.rel}: 缺必填章节 ${missing.join('、')}（DEV-008 §2.7）`)
+      }
     }
   }
 

@@ -7,7 +7,7 @@ reviewers: ["@Dust191"]
 created: 2026-11-10
 updated: 2026-11-10
 next_review: 2027-02-10
-iter: ITER-20261110-05
+iter: ITER-20261112-11
 related: [DEV-002, DEV-003, DEV-004, DEV-006, DEV-007, GOV-002, GOV-005, GLOSSARY-001, INDEX-001, CONTRIBUTING]
 ---
 
@@ -151,6 +151,8 @@ related: [DEV-002, DEV-003, DEV-004, DEV-006, DEV-007, GOV-002, GOV-005, GLOSSAR
 | 与上轮的差异摘要 | 三行以内 |
 
 时限与不可变：完成后 24 小时内补记；只增不改，发现错误追加"补记"段；未审定的轮次产出不得进入下一轮。
+
+**模型偏离须入账**：本轮若出现「规范有明确要求、产出未满足、能指出具体条款与产出」，须在 `GOV-007` 登记 `MDV` 条目，与本记录同批提交。只修现象不加防复发机制，状态一律记「未闭环」。
 
 ### 2.8 模板
 
@@ -348,6 +350,7 @@ Signed-off-by: Dust <3941305663@qq.com>
 | 提交规则配置 | `commitlint.config.cjs` | 与脚本规则同源；无本地钩子 |
 | 环境变量 | `bash scripts/check-env-example.sh` | 四组校验：开发模板对 `application.yml`、生产模板对 `compose.prod.yml`，另查含空格值是否加引号、文件是否带 CR |
 | 生产编排 | `docker compose --env-file infra/compose/.env.prod.example -f infra/compose/compose.prod.yml config -q` | CI `guards` 执行；模板缺项、插值写错在此拦下，不必等真机启动 |
+| 迭代记录结构 | `node scripts/check-docs.mjs` | 第一节须为「轮次信息」且六字段齐全；自 `ITER-20261112-10` 起六节齐全。规则来源 `GOV-007` M-01，更早记录只作历史 |
 | 格式 | `make lint` | Spotless + Prettier + `check-docs` |
 
 机器人提交按作者豁免（与署名校验同口径），其 `deps-dev` scope 与超长 subject 不再构成接入障碍；人类提交的格式在 CI 强制。
@@ -422,3 +425,4 @@ GitHub 禁止作者自批，`main` 的分支保护因此设 `enforce_admins: fal
 | 日期 | 变更 | 依据 |
 |---|---|---|
 | 2026-11-10 | 初版：从 GOV-000 §0.4 / §3.4 / §4.4 / §5.5 / §6.4 / §8.4 收敛为跨阶段作业规范，按本仓实现逐条标注差距 | ITER-20261110-01 |
+| 2026-11-12 | §2.7 增补模型偏离入账要求；§4.5 增补迭代记录结构校验（`GOV-007` M-01 / M-03） | ITER-20261112-11 |
