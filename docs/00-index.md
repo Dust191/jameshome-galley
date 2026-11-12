@@ -5,9 +5,9 @@ status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-10-31
-updated: 2026-11-10
-next_review: 2027-02-10
-iter: ITER-20261110-01
+updated: 2026-11-12
+next_review: 2027-02-12
+iter: ITER-20261112-12
 related: [GLOSSARY-001, PRD-001]
 ---
 
@@ -20,8 +20,8 @@ related: [GLOSSARY-001, PRD-001]
 
 | doc_id | 路径 | 标题 | `status` | owner | 更新 | 阶段 |
 |---|---|---|---|---|---|---|
-| GLOSSARY-001 | `docs/00-glossary.md` | 总名词解释（48 条，全部 active） | approved | @Dust191 | 2026-11-01 | S0 |
-| INDEX-001 | `docs/00-index.md` | 文档索引 | approved | @Dust191 | 2026-10-31 | S0 |
+| GLOSSARY-001 | `docs/00-glossary.md` | 总名词解释（67 条，全部 active） | approved | @Dust191 | 2026-11-12 | S0 |
+| INDEX-001 | `docs/00-index.md` | 文档索引 | approved | @Dust191 | 2026-11-12 | S0 |
 | PRD-001 | `docs/01-product/PRD-001.md` | 产品需求文档 | approved | @Dust191 | 2026-10-31 | S0 |
 | SCOPE-001 | `docs/01-product/scope.md` | 范围冻结表 | approved | @Dust191 | 2026-10-31 | S0 |
 | NFR-001 | `docs/01-product/nfr.md` | 非功能需求基线 | approved | @Dust191 | 2026-10-31 | S0 |
@@ -33,7 +33,7 @@ related: [GLOSSARY-001, PRD-001]
 | DES-001 | `docs/02-design/domain-model.md` | 领域模型 | approved | @Dust191 | 2026-11-01 | S2 |
 | DES-004 | `docs/02-design/metrics.md` | 统计指标口径 | approved | @Dust191 | 2026-11-01 | S2 |
 | DES-002 | `docs/02-design/api.md` | 接口契约 | approved | @Dust191 | 2026-11-01 | S2 |
-| DES-003 | `docs/02-design/ui-spec.md` | 界面规范 | approved | @Dust191 | 2026-11-01 | S2 |
+| DES-003 | `docs/02-design/ui-spec.md` | 界面规范 | approved | @Dust191 | 2026-11-03 | S2 |
 | DEV-001 | `docs/03-dev/setup.md` | 本地搭建 | approved | @Dust191 | 2026-11-01 | S2 |
 | DEV-002 | `docs/03-dev/conventions.md` | 编码约定 | approved | @Dust191 | 2026-11-10 | S2 |
 | DEV-003 | `docs/03-dev/testing.md` | 测试策略 | approved | @Dust191 | 2026-11-01 | S2 |
@@ -45,7 +45,7 @@ related: [GLOSSARY-001, PRD-001]
 | DEV-009 | `docs/03-dev/spec-stages.md` | 阶段实施规范 | approved | @Dust191 | 2026-11-12 | S4 |
 | DEV-010 | `docs/03-dev/spec-team.md` | 团体开发规范（搁置至 G5） | in_review | @Dust191 | 2026-11-10 | S4 |
 | OPS-001 | `docs/04-ops/deploy.md` | 部署（S5 准备期版本） | in_review | @Dust191 | 2026-11-12 | S5 |
-| RUN-001 | `docs/04-ops/runbook.md` | 运行手册 | approved | @Dust191 | 2026-11-01 | S2 |
+| RUN-001 | `docs/04-ops/runbook.md` | 运行手册 | approved | @Dust191 | 2026-11-12 | S2 |
 | RUN-002 | `docs/04-ops/backup-restore.md` | 备份与恢复（S5 准备期版本） | in_review | @Dust191 | 2026-11-12 | S5 |
 | GOV-001 | `docs/05-governance/governance.md` | 治理模型 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-002 | `docs/05-governance/release.md` | 发布流程 | approved | @Dust191 | 2026-11-03 | S2 |
@@ -53,7 +53,7 @@ related: [GLOSSARY-001, PRD-001]
 | GOV-004 | `docs/05-governance/labels.md` | 标签体系 | approved | @Dust191 | 2026-11-03 | S4 |
 | GOV-005 | `docs/05-governance/third-party-licenses.md` | 第三方依赖许可证清单 | approved | @Dust191 | 2026-11-03 | S4 |
 | GOV-006 | `docs/05-governance/g4-check.md` | 阶段门 G4 验收记录 | approved | @Dust191 | 2026-11-03 | S4 |
-| GOV-007 | `docs/05-governance/model-deviations.md` | 模型偏离记录 | in_review | @Dust191 | 2026-11-12 | S5 |
+| GOV-007 | `docs/05-governance/model-deviations.md` | 模型偏离记录 | accepted | @Dust191 | 2026-11-12 | S5 |
 | ITER-20261031-01 | `docs/07-iteration/ITER-20261031-01.md` | 首轮迭代记录（立项前置决策） | approved | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-02 | `docs/07-iteration/ITER-20261031-02.md` | S0 文档体系建立 | approved | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-03 | `docs/07-iteration/ITER-20261031-03.md` | S1 项目骨架搭建 | approved | @Dust191 | 2026-10-31 | S1 |
@@ -99,8 +99,8 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261112-08 | `docs/07-iteration/ITER-20261112-08.md` | 关闭 Issue #55：模板、编排透传与 CI 守卫 | approved | @Dust191 | 2026-11-12 | S5 |
 | ITER-20261112-09 | `docs/07-iteration/ITER-20261112-09.md` | 文档与实现一致性核查，重写运行手册 | approved | @Dust191 | 2026-11-12 | S5 |
 | ITER-20261112-10 | `docs/07-iteration/ITER-20261112-10.md` | 建立模型偏离台账（`GOV-007`） | approved | @Dust191 | 2026-11-12 | S5 |
-| ITER-20261112-11 | `docs/07-iteration/ITER-20261112-11.md` | ITER 结构校验落地与台账闭环 | in_review | @Dust191 | 2026-11-12 | S5 |
-| ITER-20261112-12 | `docs/07-iteration/ITER-20261112-12.md` | 术语核查与 GLOSSARY 补录 | in_review | @Dust191 | 2026-11-12 | S5 |
+| ITER-20261112-11 | `docs/07-iteration/ITER-20261112-11.md` | ITER 结构校验落地与台账闭环 | approved | @Dust191 | 2026-11-12 | S5 |
+| ITER-20261112-12 | `docs/07-iteration/ITER-20261112-12.md` | 术语核查与 GLOSSARY 补录 | approved | @Dust191 | 2026-11-12 | S5 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
@@ -121,7 +121,7 @@ related: [GLOSSARY-001, PRD-001]
 | GOV | 治理 | 000（指导文档）、001 ~ 007 | 008 |
 | RFC | 重大变更提案 | 0001 | 0002 |
 | ITER | 迭代记录 | 20261031-01 ~ 20261112-12（47 份） | — |
-| MDV | 模型偏离（条目编号） | 01 ~ 04 | 05 |
+| MDV | 模型偏离（条目编号） | 01 ~ 06 | 07 |
 | MTG | 会议纪要 | — | — |
 
 ## 3. 强制文档齐备情况
@@ -143,6 +143,7 @@ S3 新增三份，不计入 S2 的 19 份强制清单：`DEV-005`（12 条 UAT �
 `GOV-003`（G3 通过记录与 0.1.0 冻结）、`GOV-005`（第三方依赖许可清单，S4 起草）。
 S4 新增 `GOV-004`（标签体系）、`GOV-006`（G4 验收记录）、`DEV-006`（工程规范·总纲）、`DEV-007`（偏离登记台账）。
 2026-11-10 重写落地版：`DEV-006` 由 145 行摘要改为总纲，新增 `DEV-008`（作业规范）、`DEV-009`（阶段实施规范）、`DEV-010`（团体开发规范），GOV-000 的每一章在 `DEV-006` §7 有唯一落点。同日审定：`DEV-006` ~ `DEV-009` 转 `approved`，`DEV-010` 搁置至 G5（`ITER-20261110-01/02`）。
+2026-11-12 新增 `GOV-007`（模型偏离记录）：与 `DEV-007`（工程偏离）、`DEV-004`（技术债）分账，只记「模型未按规范执行」这一类事实，条目号 `MDV`。
 
 模板集见 §6。`docs/idea.md` 为可选项，当前未建立，不参与阶段门。
 
