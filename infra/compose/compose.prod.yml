@@ -1,17 +1,31 @@
-# 生产编排骨架。S5 阶段定稿，当前仅锁定三服务结构与健康检查方式，不含最终资源配置。
+# 生产编排。S5 准备期版本：五服务（api / web / caddy / cloudflared / db）。
 # 约定：staging 与 prod 同镜像、同编排、不同配置；镜像使用固定 tag，禁止 latest。
+# 入站只留 22；对外由 cloudflared 主动连出 Cloudflare，80 / 443 不开放。
+name: galley
+
 services:
   api:
-    image: ${GALLEY_IMAGE_API:ghcr.io/jameshome/galley-api:0.0.1}
+    image: ${GALLEY_IMAGE_API:ghcr.io/jameshome/galley-api:0.1.0}
     environment:
       GALLEY_ENV: prod
       GALLEY_SERVER_PORT: "8080"
       GALLEY_DB_URL: ${GALLEY_DB_URL}
       GALLEY_DB_USERNAME: ${GALLEY_DB_USERNAME}
       GALLEY_DB_PASSWORD: ${GALLEY_DB_PASSWORD}
+      GALLEY_S3_ENDPOINT: ${GALLEY_S3_ENDPOINT}
+      GALLEY_S3_PUBLIC_ENDPOINT: ${GALLEY_S3_PUBLIC_ENDPOINT}
+      GALLEY_S3_REGION: ${GALLEY_S3_REGION}
+      GALLEY_S3_ACCESS_KEY: ${GALLEY_S3_ACCESS_KEY}
+      GALLEY_S3_SECRET_KEY: ${GALLEY_S3_SECRET_KEY}
+      GALLEY_S3_BUCKET: ${GALLEY_S3_BUCKET}
+      GALLEY_S3_SIGNED_URL_TTL_SECONDS: ${GALLEY_S3_SIGNED_URL_TTL_SECONDS:-3600}
       GALLEY_LOG_LEVEL: info
+      TZ: Asia/Shanghai
     expose:
       - "8080"
+    depends_on:
+      db:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8080/actuator/health/readiness"]
       interval: 15s
@@ -19,27 +33,83 @@ services:
       retries: 3
       start_period: 60s
     restart: unless-stopped
+    logging: &default-logging
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "5"
+    networks: [backend]
 
   web:
-    image: ${GALLEY_IMAGE_WEB:ghcr.io/jameshome/galley-web:0.0.1}
+    image: ${GALLEY_IMAGE_WEB:ghcr.io/jameshome/galley-web:0.1.0}
     expose:
       - "80"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost/"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     restart: unless-stopped
+    logging: *default-logging
+    networks: [backend]
 
   caddy:
-    image: caddy:2-alpine
-    ports:
-      - "443:443"
-      - "80:80"
+    image: ${GALLEY_IMAGE_CADDY:registry.cn-hangzhou.aliyuncs.com/galley/caddy:2-alpine}
+    expose:
+      - "80"
     volumes:
       - ../caddy/Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy-data:/data
       - caddy-config:/config
     depends_on:
-      - api
-      - web
+      api:
+        condition: service_healthy
+      web:
+        condition: service_healthy
     restart: unless-stopped
+    logging: *default-logging
+    networks: [backend]
+
+  cloudflared:
+    # 版本随 Cloudflare 发布走，必须在 .env.prod 里显式给出，避免 latest 漂移
+    image: ${GALLEY_IMAGE_TUNNEL:?GALLEY_IMAGE_TUNNEL 必须在 .env.prod 中指定固定 tag}
+    command: ["tunnel", "--no-autoupdate", "run"]
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}
+      TZ: Asia/Shanghai
+    depends_on:
+      caddy:
+        condition: service_started
+    restart: unless-stopped
+    logging: *default-logging
+    networks: [backend]
+
+  db:
+    # PostgreSQL 18 起官方镜像的数据目录改为 /var/lib/postgresql，挂 /data 会起不来
+    image: postgres:18.3-alpine
+    environment:
+      POSTGRES_DB: galley
+      POSTGRES_USER: ${GALLEY_DB_USERNAME}
+      POSTGRES_PASSWORD: ${GALLEY_DB_PASSWORD}
+      TZ: Asia/Shanghai
+    volumes:
+      - galley-db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${GALLEY_DB_USERNAME} -d galley"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+    logging: *default-logging
+    networks: [backend]
+
+networks:
+  backend:
+    driver: bridge
 
 volumes:
   caddy-data:
   caddy-config:
+  galley-db-data:

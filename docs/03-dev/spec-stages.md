@@ -504,8 +504,8 @@ G3 通过、G4 通过、阿里云资源开通（ECS 与 OSS）、对外接入方
 
 | 编号 | 交付物 | 路径 | 当前状态 |
 |---|---|---|---|
-| D5-1 | 生产编排 | `infra/compose/compose.prod.yml` | 骨架（三服务、健康检查、固定 tag） |
-| D5-2 | 反向代理配置 | `infra/caddy/Caddyfile` | 骨架（安全头、路径分流；TLS 改由 Cloudflare 终结，待改内网 `:80`） |
+| D5-1 | 生产编排 | `infra/compose/compose.prod.yml` | 五服务（api / web / caddy / cloudflared / db）、健康检查、固定 tag、日志轮转 |
+| D5-2 | 反向代理配置 | `infra/caddy/Caddyfile` | 内网 `:80`、CSP 与访问日志、`/actuator` 只放健康检查 |
 | D5-3 | 部署文档 | `docs/04-ops/deploy.md` | 草案 `in_review`，S5 定稿 |
 | D5-4 | 运行手册 | `docs/04-ops/runbook.md` | 已建立，S5 增补故障处置 |
 | D5-5 | 备份方案 | `infra/backup/` + `RUN-002` | 目录占位；`RUN-002` 草案 |
@@ -521,7 +521,7 @@ G3 通过、G4 通过、阿里云资源开通（ECS 与 OSS）、对外接入方
 |---|---|---|
 | ECS | 2 vCPU / 4 GB / ESSD 60 GB，Ubuntu 24.04 | 应用与反向代理同机；**本项目实际 2 GB / 40 GB**，见下方实况 |
 | 数据库 | RDS PostgreSQL 18.3 最小可用规格，单可用区；或 ECS 自建 | **本项目选 ECS 内容器自建**：省掉托管费，代价是备份、升级、磁盘全部自管（`DVT-11`） |
-| 对象存储 | OSS 标准存储，Bucket 私有读 | **访问模型待定**：现有实现用 `publicUrl`，私有读会 403（`ITER-20261112-01` L-02）；服务器走内网 endpoint |
+| 对象存储 | OSS 标准存储，Bucket 私有读 | 后端读走内网 endpoint，图片地址由后端用公网 endpoint 签发（默认 1 小时）；见 `DVT-12` 收回记录 |
 | 网络 | 安全组入站仅 22（固定源 IP）；80 / 443 关闭 | 对外由 Cloudflare Tunnel 出站承载；数据库与 OSS 均不走公网 |
 | 域名 | 由 Cloudflare 托管，Tunnel 走香港出口 | 不做 ICP 备案；该方案不改变服务器所在地，合规性由开发者判断 |
 | 成本量级 | 月 150 ~ 300 元 | 省掉 RDS；超预算先降 ECS 规格，不降备份与告警 |
@@ -598,13 +598,31 @@ staging 与 prod 必须同镜像、同编排、不同配置；允许差异只有
 
 | 项 | 状态 | 缺口 |
 |---|---|---|
-| 生产编排与代理 | 骨架 | 缺 `db` 与 `cloudflared` 服务、资源限制、蓝绿切换；Caddy 待改为内网 `:80` |
+| 生产编排与代理 | 骨架可用 | 五服务已就位；资源限制与蓝绿切换未定 |
 | 部署与运行文档 | 草案 | `OPS-001` 定稿、`RUN-001` 增补 |
 | 备份 | 目录与草案 | 自建库无托管备份，脚本与恢复演练均未做（`DVT-11`） |
 | 监控告警 | 未建 | 指标清单、阈值、通知渠道、七条告警 |
 | 上线检查单 | 未建 | 按 §7.6 落成文件并逐项签字 |
 | 发布流水线 | 未建 | tag 触发、镜像推送、staging 自动、prod 手动审批 |
 | 云资源与接入 | 部分就绪 | ECS 与 OSS 已购；bucket 未建；Tunnel 未建；规格低于规范（`DVT-10`） |
+
+### 7.8 阶段任务列表
+
+S5 执行段尚未开启，下列事项按「能否在不接外部账号的前提下推进」排序。T5-01 ~ T5-03 由开发者于 2026-11-12 明确留到 S5 执行段。
+
+| 编号 | 事项 | 具体内容 | 前置 | 状态 |
+|---|---|---|---|---|
+| T5-01 | 镜像构建 | `backend/Dockerfile`（JRE 25 运行层、非特权账号）、`frontend/Dockerfile`（nginx 托管 `dist`）、两份 `.dockerignore` | 无 | 未开始 |
+| T5-02 | 发布流水线 | `.github/workflows/release.yml`：tag → 构建 → 推 GHCR → staging → prod 手动审批；同时配置 Actions 权限与镜像写入 Token | GitHub Actions 与 Tokens | 未开始 |
+| T5-03 | 镜像坐标 | 固定 tag 与 `pom.xml` 版本对齐；确认 GHCR 包名与可见性 | T5-02 | 未开始 |
+| T5-04 | caddy 转存 | 经隧道拉取 `caddy:2-alpine`，推送至 ACR，编排改用 ACR 地址 | 隧道在线 | 未开始 |
+| T5-05 | OSS 建桶 | 建 bucket（私有读）、过期与归档规则、只授权该桶的 RAM 子账号 | 账号权限 | 未开始 |
+| T5-06 | 对外接入 | 建 Cloudflare Tunnel、绑定域名、把 token 写入 `.env.prod` | 域名在 Cloudflare | 未开始 |
+| T5-07 | 备份 | `infra/backup/` 落地脚本、上传内网 OSS、跑一次真实恢复 | T5-05 | 未开始 |
+| T5-08 | 监控告警 | `monitoring.md` 与七条告警，逐条测试触发 | T5-06 | 未开始 |
+| T5-09 | 上线检查单 | `go-live-checklist.md`，把 §7.6 的 30 项落成可勾选文件 | 无 | 未开始 |
+| T5-10 | staging | 同镜像同编排的第二套配置；可与 prod 同机不同项目名 | T5-02 | 未开始 |
+| T5-11 | 编排收尾 | 资源限制、蓝绿切换、镜像保留最近 10 个 tag | T5-02 | 未开始 |
 
 ## 8. S6：版本迭代（未进入）
 

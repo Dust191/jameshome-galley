@@ -66,10 +66,15 @@ galley:
     cron: ${GALLEY_RECONCILE_CRON:0 30 2 * * *}
   storage:
     endpoint: ${GALLEY_S3_ENDPOINT:http://127.0.0.1:9000}
+    # 浏览器可访问的地址，只用于签发图片地址；生产填公网 endpoint，开发与 endpoint 相同
+    public-endpoint: ${GALLEY_S3_PUBLIC_ENDPOINT:http://127.0.0.1:9000}
+    # 签名所需的区域；OSS 填 cn-hangzhou，MinIO 填 us-east-1
+    region: ${GALLEY_S3_REGION:us-east-1}
     access-key: ${GALLEY_S3_ACCESS_KEY:galley}
     secret-key: ${GALLEY_S3_SECRET_KEY:galley123}
     bucket: ${GALLEY_S3_BUCKET:galley-material}
-    public-base: ${GALLEY_S3_PUBLIC_BASE:http://127.0.0.1:9000/galley-material}
+    # 预签名地址有效期，单位秒；默认 1 小时，上限 7 天
+    signed-url-ttl-seconds: ${GALLEY_S3_SIGNED_URL_TTL_SECONDS:3600}
     max-image-bytes: ${GALLEY_S3_MAX_IMAGE_BYTES:5242880}
 
 logging:

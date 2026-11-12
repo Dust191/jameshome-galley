@@ -64,10 +64,14 @@ flowchart LR
 | `GALLEY_DB_URL`、`GALLEY_DB_USERNAME`、`GALLEY_DB_PASSWORD` | ✓ | 指向本机 `db` 容器；应用账号只授 DML |
 | `GALLEY_S3_ENDPOINT` | ✓ | `https://oss-cn-hangzhou-internal.aliyuncs.com`（内网，不走公网） |
 | `GALLEY_S3_ACCESS_KEY` / `GALLEY_S3_SECRET_KEY` | ✓ | 建议用只授权该 bucket 的 RAM 子账号 |
-| `GALLEY_S3_BUCKET` | ✓ | 待创建，命名见 `ITER-20261112-01` L-01 |
-| `GALLEY_S3_PUBLIC_BASE` | ✓ | 与 bucket 的访问模型一致；私有读时该值不成立，见 L-02 |
+| `GALLEY_S3_BUCKET` | ✓ | 待创建，命名见 `ITER-20261112-01` L-01；桶为私有读 |
+| `GALLEY_S3_PUBLIC_ENDPOINT` | ✓ | `https://oss-cn-hangzhou.aliyuncs.com`，只用于签发浏览器可访问的图片地址 |
+| `GALLEY_S3_REGION` | ✓ | `cn-hangzhou`；签名必须带区域，否则会先发 `GetBucketLocation` |
+| `GALLEY_S3_SIGNED_URL_TTL_SECONDS` | — | 图片地址有效期，默认 3600，上限 604800 |
 | `GALLEY_S3_MAX_IMAGE_BYTES` | — | 默认 5 MB |
-| `GALLEY_IMAGE_API` / `GALLEY_IMAGE_WEB` | ✓ | 固定 tag，禁止 `latest` |
+| `GALLEY_IMAGE_API` / `GALLEY_IMAGE_WEB` | ✓ | 固定 tag，禁止 `latest`；tag 与 `pom.xml` 版本对齐 |
+| `GALLEY_IMAGE_CADDY` | ✓ | ACR 中的 caddy 地址（由 Hub 转存，`T5-04`） |
+| `GALLEY_IMAGE_TUNNEL` | ✓ | cloudflared 的固定 tag，不设默认值，缺失时编排直接报错 |
 | `CLOUDFLARE_TUNNEL_TOKEN` | ✓ | Tunnel 凭据，只进 `.env.prod` |
 | `GALLEY_LOG_LEVEL` | — | prod 固定 `info`；排障临时 `debug` 后 2 小时内改回 |
 | `GALLEY_RECONCILE_CRON` | — | 默认每日 02:30 |

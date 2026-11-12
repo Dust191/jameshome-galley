@@ -277,7 +277,7 @@ public class MaterialService {
                 row.getSafetyStock(),
                 row.getShelfLifeDays(),
                 key,
-                key == null || key.isBlank() ? null : storage.publicUrl(key),
+                key == null || key.isBlank() ? null : storage.signedUrl(key),
                 row.getNote(),
                 row.getStatus(),
                 row.getVersion() == null ? 0 : row.getVersion(),

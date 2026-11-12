@@ -21,7 +21,7 @@ class FileEndpointTest extends IntegrationTestBase {
 
     @Test
     void upload_png返回key与url() {
-        when(storage.publicUrl(anyString()))
+        when(storage.signedUrl(anyString()))
                 .thenAnswer(invocation -> "http://storage.test/" + invocation.getArgument(0));
 
         ApiClient.Response response = asAdmin().upload("/api/v1/files", "a.png", PNG, "image/png");

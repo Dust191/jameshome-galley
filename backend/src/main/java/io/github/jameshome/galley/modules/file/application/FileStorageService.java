@@ -76,7 +76,7 @@ public class FileStorageService {
     }
 
     public String urlOf(String key) {
-        return key == null || key.isBlank() ? null : storage.publicUrl(key);
+        return key == null || key.isBlank() ? null : storage.signedUrl(key);
     }
 
     /** 按字节头判断真实类型；识别不出返回 null。 */

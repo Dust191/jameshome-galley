@@ -5,8 +5,8 @@ package io.github.jameshome.galley.common.storage;
  *
  * <p>业务代码只依赖本接口；开发环境用 MinIO，生产切 OSS 时新增实现并改装配，调用方零改动。
  *
- * <p>{@code key} 是对象在桶内的路径，数据库存 key 不存完整 URL——URL 由 {@link #publicUrl(String)} 在返回给前端时拼出，这样换域名、换
- * CDN 都不需要改数据。
+ * <p>{@code key} 是对象在桶内的路径，数据库存 key 不存完整 URL——URL 由 {@link #signedUrl(String)} 在返回给前端时按需签发，
+ * 桶保持私有读；换域名、换访问方式都不需要改数据。
  */
 public interface ObjectStorage {
 
@@ -19,8 +19,12 @@ public interface ObjectStorage {
     /** 删除对象；对象不存在视为成功（幂等）。 */
     void delete(String key);
 
-    /** 拼出可直接给浏览器访问的 URL。 */
-    String publicUrl(String key);
+    /**
+     * 签发一个带有效期、可直接给浏览器访问的地址。
+     *
+     * <p>桶为私有读，地址里的签名参数就是访问凭据；有效期由 {@code galley.storage.signed-url-ttl-seconds} 决定。
+     */
+    String signedUrl(String key);
 
     record StoredObject(byte[] content, String contentType) {}
 }
