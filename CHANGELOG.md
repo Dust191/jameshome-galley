@@ -6,6 +6,28 @@
 
 （无）
 
+## [0.2.0] - 2026-11-12
+
+**S5 基础设施：可构建、可发布、入口临时开放。**
+
+### 新增
+
+- 写操作审计：全部写路径同事务落 `audit_log`，账号快照脱敏（`DVT-08` 收回）
+- 注册端点按 IP 限流，429 携带 `Retry-After`（`DVT-09` 收回）
+- 图片改为签名 URL 下发：读写走内网 endpoint，签名走公网 endpoint，默认 1 小时（`DVT-12` 收回）
+- 后端与前端 Dockerfile、`nginx.conf`、`.github/workflows/release.yml`（tag 触发构建并推 GHCR）
+
+### 变更
+
+- 生产编排扩为五服务（`api` / `web` / `caddy` / `cloudflared` / `db`），统一日志轮转与健康依赖
+- 对外入口改为 Cloudflare Quick Tunnel，临时域名重启即变（`DVT-13`）
+- 提交信息校验接入 CI，豁免合并提交与机器人作者（`DVT-07` 收回）
+
+### 升级指引
+
+- 环境变量：移除 `GALLEY_S3_PUBLIC_BASE`；新增 `GALLEY_S3_PUBLIC_ENDPOINT`、`GALLEY_S3_REGION`、`GALLEY_S3_SIGNED_URL_TTL_SECONDS`
+- 数据库：无结构变更，Flyway 直接前滚
+
 ## [0.1.0] - 2026-11-03
 
 **S3 MVP 达成：库存可建档、可记账、可查看、可导出，并通过 G3 验收。**

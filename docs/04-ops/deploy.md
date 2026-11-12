@@ -78,8 +78,8 @@ docker compose -f infra/compose/compose.prod.yml logs cloudflared | grep -o 'htt
 | `GALLEY_S3_SIGNED_URL_TTL_SECONDS` | — | 图片地址有效期，默认 3600，上限 604800 |
 | `GALLEY_S3_MAX_IMAGE_BYTES` | — | 默认 5 MB |
 | `GALLEY_IMAGE_API` / `GALLEY_IMAGE_WEB` | ✓ | 固定 tag，禁止 `latest`；tag 与 `pom.xml` 版本对齐 |
-| `GALLEY_IMAGE_CADDY` | ✓ | ACR 中的 caddy 地址（由 Hub 转存，`T5-04`） |
-| `GALLEY_IMAGE_TUNNEL` | ✓ | cloudflared 的固定 tag，不设默认值，缺失时编排直接报错 |
+| `GALLEY_IMAGE_CADDY` | ✓ | `crpi-8wtwv1zju2g9kpgg.cn-hangzhou.personal.cr.aliyuncs.com/jameshome-galley/caddy:2-alpine` |
+| `GALLEY_IMAGE_TUNNEL` | ✓ | 同 ACR 前缀下的 `cloudflared:2026.10.7`，不设默认值，缺失时编排直接报错 |
 | `GALLEY_LOG_LEVEL` | — | prod 固定 `info`；排障临时 `debug` 后 2 小时内改回 |
 | `GALLEY_RECONCILE_CRON` | — | 默认每日 02:30 |
 | `GALLEY_BOOTSTRAP_ADMIN_USERNAME` | — | 默认 `admin`；空库首次启动生成随机口令并打印一次 |

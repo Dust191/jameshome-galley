@@ -615,8 +615,8 @@ S5 执行段尚未开启，下列事项按「能否在不接外部账号的前�
 | T5-01 | 镜像构建 | `backend/Dockerfile`（JRE 25 运行层、非特权账号）、`frontend/Dockerfile`（nginx + SPA 回退）、两份 `.dockerignore` | 无 | 已完成（本地） |
 | T5-02 | 发布流水线 | `release.yml` 已写：tag → 构建 api/web → 推 GHCR；staging 与 prod 审批段待接。仍需在仓库设置 Actions 读写权限 | GitHub Actions 权限 | 部分就绪 |
 | T5-03 | 镜像坐标 | 固定 tag 已与 `pom.xml` 对齐（0.1.0）；GHCR 包名 `galley-api` / `galley-web`，可见性待首次推送后确认 | 首个 tag | 部分就绪 |
-| T5-04 | caddy 转存 | 经隧道拉取 `caddy:2-alpine`，推送至 ACR，编排改用 ACR 地址 | 隧道在线 | 未开始 |
-| T5-05 | OSS 建桶 | 建 bucket（私有读）、过期与归档规则、只授权该桶的 RAM 子账号 | 账号权限 | 未开始 |
+| T5-04 | 镜像转存 | `caddy:2-alpine` 与 `cloudflared:2026.10.7` 经隧道拉取并推入 ACR，编排默认值改用 ACR 地址 | 隧道在线 | 已完成 |
+| T5-05 | OSS 建桶 | 桶 `jameshome-galley` 已建并验证私有；过期与归档规则、RAM 子账号范围待确认 | 账号权限 | 部分就绪 |
 | T5-06 | 正式入口 | 域名 + Named Tunnel + 备案；当前 Quick Tunnel 只作过渡，切换时同步收回 `DVT-13` | 域名与备案 | 未开始 |
 | T5-07 | 备份 | `infra/backup/` 落地脚本、上传内网 OSS、跑一次真实恢复 | T5-05 | 未开始 |
 | T5-08 | 监控告警 | `monitoring.md` 与七条告警，逐条测试触发 | T5-06 | 未开始 |

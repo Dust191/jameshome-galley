@@ -13,7 +13,7 @@
 
   <groupId>io.github.jameshome</groupId>
   <artifactId>galley</artifactId>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
   <name>jameshome-galley</name>
   <description>团体厨房库存远程查看系统</description>
 

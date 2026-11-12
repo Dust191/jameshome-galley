@@ -55,7 +55,7 @@ services:
     networks: [backend]
 
   caddy:
-    image: ${GALLEY_IMAGE_CADDY:registry.cn-hangzhou.aliyuncs.com/galley/caddy:2-alpine}
+    image: ${GALLEY_IMAGE_CADDY:crpi-8wtwv1zju2g9kpgg.cn-hangzhou.personal.cr.aliyuncs.com/jameshome-galley/caddy:2-alpine}
     expose:
       - "80"
     volumes:
