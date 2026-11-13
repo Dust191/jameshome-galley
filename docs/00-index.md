@@ -7,7 +7,7 @@ reviewers: ["@Dust191"]
 created: 2026-10-31
 updated: 2026-11-13
 next_review: 2027-02-13
-iter: ITER-20261113-02
+iter: ITER-20261113-03
 related: [GLOSSARY-001, PRD-001]
 ---
 
@@ -52,7 +52,7 @@ related: [GLOSSARY-001, PRD-001]
 | GOV-003 | `docs/05-governance/g3-freeze.md` | 阶段门 G3 通过记录与 0.1.0 冻结 | approved | @Dust191 | 2026-11-03 | S3 |
 | GOV-004 | `docs/05-governance/labels.md` | 标签体系 | approved | @Dust191 | 2026-11-03 | S4 |
 | GOV-005 | `docs/05-governance/third-party-licenses.md` | 第三方依赖许可证清单 | approved | @Dust191 | 2026-11-03 | S4 |
-| GOV-006 | `docs/05-governance/g4-check.md` | 阶段门 G4 验收记录 | approved | @Dust191 | 2026-11-03 | S4 |
+| GOV-006 | `docs/05-governance/g4-check.md` | 阶段门 G4 验收记录 | approved | @Dust191 | 2026-11-13 | S4 |
 | GOV-007 | `docs/05-governance/model-deviations.md` | 模型偏离记录 | accepted | @Dust191 | 2026-11-12 | S5 |
 | ITER-20261031-01 | `docs/07-iteration/ITER-20261031-01.md` | 首轮迭代记录（立项前置决策） | approved | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-02 | `docs/07-iteration/ITER-20261031-02.md` | S0 文档体系建立 | approved | @Dust191 | 2026-10-31 | S0 |
@@ -103,6 +103,7 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261112-12 | `docs/07-iteration/ITER-20261112-12.md` | 术语核查与 GLOSSARY 补录 | approved | @Dust191 | 2026-11-12 | S5 |
 | ITER-20261113-01 | `docs/07-iteration/ITER-20261113-01.md` | ITER 定位改执行记录，隧道改按需启动 | approved | @Dust191 | 2026-11-13 | S5 |
 | ITER-20261113-02 | `docs/07-iteration/ITER-20261113-02.md` | 同步 S5 口径、G5 范围与接口口径 | in_review | @Dust191 | 2026-11-13 | S5 |
+| ITER-20261113-03 | `docs/07-iteration/ITER-20261113-03.md` | 重写 README，校正部署形态与历史记录口径 | in_review | @Dust191 | 2026-11-13 | S5 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
@@ -122,7 +123,7 @@ related: [GLOSSARY-001, PRD-001]
 | OPS / RUN | 运维与运行手册 | 001、001 ~ 002 | 002 / 003 |
 | GOV | 治理 | 000（指导文档）、001 ~ 007 | 008 |
 | RFC | 重大变更提案 | 0001 | 0002 |
-| ITER | 迭代记录 | 20261031-01 ~ 20261113-02（49 份） | — |
+| ITER | 迭代记录 | 20261031-01 ~ 20261113-03（50 份） | — |
 | MDV | 模型偏离（条目编号） | 01 ~ 06 | 07 |
 | MTG | 会议纪要 | — | — |
 
