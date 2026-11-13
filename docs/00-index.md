@@ -5,9 +5,9 @@ status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-10-31
-updated: 2026-11-12
-next_review: 2027-02-12
-iter: ITER-20261112-12
+updated: 2026-11-13
+next_review: 2027-02-13
+iter: ITER-20261113-01
 related: [GLOSSARY-001, PRD-001]
 ---
 
@@ -21,7 +21,7 @@ related: [GLOSSARY-001, PRD-001]
 | doc_id | 路径 | 标题 | `status` | owner | 更新 | 阶段 |
 |---|---|---|---|---|---|---|
 | GLOSSARY-001 | `docs/00-glossary.md` | 总名词解释（67 条，全部 active） | approved | @Dust191 | 2026-11-12 | S0 |
-| INDEX-001 | `docs/00-index.md` | 文档索引 | approved | @Dust191 | 2026-11-12 | S0 |
+| INDEX-001 | `docs/00-index.md` | 文档索引 | approved | @Dust191 | 2026-11-13 | S0 |
 | PRD-001 | `docs/01-product/PRD-001.md` | 产品需求文档 | approved | @Dust191 | 2026-10-31 | S0 |
 | SCOPE-001 | `docs/01-product/scope.md` | 范围冻结表 | approved | @Dust191 | 2026-10-31 | S0 |
 | NFR-001 | `docs/01-product/nfr.md` | 非功能需求基线 | approved | @Dust191 | 2026-10-31 | S0 |
@@ -101,6 +101,7 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261112-10 | `docs/07-iteration/ITER-20261112-10.md` | 建立模型偏离台账（`GOV-007`） | approved | @Dust191 | 2026-11-12 | S5 |
 | ITER-20261112-11 | `docs/07-iteration/ITER-20261112-11.md` | ITER 结构校验落地与台账闭环 | approved | @Dust191 | 2026-11-12 | S5 |
 | ITER-20261112-12 | `docs/07-iteration/ITER-20261112-12.md` | 术语核查与 GLOSSARY 补录 | approved | @Dust191 | 2026-11-12 | S5 |
+| ITER-20261113-01 | `docs/07-iteration/ITER-20261113-01.md` | ITER 定位改执行记录，隧道改按需启动 | in_review | @Dust191 | 2026-11-13 | S5 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
@@ -120,7 +121,7 @@ related: [GLOSSARY-001, PRD-001]
 | OPS / RUN | 运维与运行手册 | 001、001 ~ 002 | 002 / 003 |
 | GOV | 治理 | 000（指导文档）、001 ~ 007 | 008 |
 | RFC | 重大变更提案 | 0001 | 0002 |
-| ITER | 迭代记录 | 20261031-01 ~ 20261112-12（47 份） | — |
+| ITER | 迭代记录 | 20261031-01 ~ 20261113-01（48 份） | — |
 | MDV | 模型偏离（条目编号） | 01 ~ 06 | 07 |
 | MTG | 会议纪要 | — | — |
 
