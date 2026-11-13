@@ -14,7 +14,7 @@
 
 - 写操作审计：全部写路径同事务落 `audit_log`，账号快照脱敏（`DVT-08` 收回）
 - 注册端点按 IP 限流，429 携带 `Retry-After`（`DVT-09` 收回）
-- 图片改为签名 URL 下发：读写走内网 endpoint，签名走公网 endpoint，默认 1 小时（`DVT-12` 收回）
+- 图片改为签名地址下发：读写走内网 endpoint，签名走公网 endpoint，默认 1 小时（`DVT-12` 收回）
 - 后端与前端 Dockerfile、`nginx.conf`、`.github/workflows/release.yml`（tag 触发构建并推 GHCR）
 
 ### 变更

@@ -7,7 +7,7 @@ reviewers: ["@Dust191"]
 created: 2026-10-31
 updated: 2026-11-13
 next_review: 2027-02-13
-iter: ITER-20261113-01
+iter: ITER-20261113-02
 related: [GLOSSARY-001, PRD-001]
 ---
 
@@ -32,17 +32,17 @@ related: [GLOSSARY-001, PRD-001]
 | ADR-0005 | `docs/02-design/adr/ADR-0005-object-storage.md` | 对象存储采用可替换实现 | approved | @Dust191 | 2026-11-02 | S3 |
 | DES-001 | `docs/02-design/domain-model.md` | 领域模型 | approved | @Dust191 | 2026-11-01 | S2 |
 | DES-004 | `docs/02-design/metrics.md` | 统计指标口径 | approved | @Dust191 | 2026-11-01 | S2 |
-| DES-002 | `docs/02-design/api.md` | 接口契约 | approved | @Dust191 | 2026-11-01 | S2 |
+| DES-002 | `docs/02-design/api.md` | 接口契约 | approved | @Dust191 | 2026-11-13 | S2 |
 | DES-003 | `docs/02-design/ui-spec.md` | 界面规范 | approved | @Dust191 | 2026-11-03 | S2 |
 | DEV-001 | `docs/03-dev/setup.md` | 本地搭建 | approved | @Dust191 | 2026-11-01 | S2 |
 | DEV-002 | `docs/03-dev/conventions.md` | 编码约定 | approved | @Dust191 | 2026-11-10 | S2 |
 | DEV-003 | `docs/03-dev/testing.md` | 测试策略 | approved | @Dust191 | 2026-11-01 | S2 |
 | DEV-004 | `docs/03-dev/tech-debt.md` | 技术债台账 | approved | @Dust191 | 2026-11-10 | S2 |
 | DEV-005 | `docs/03-dev/uat-v0.1.md` | 验收记录 v0.1 | approved | @Dust191 | 2026-11-03 | S3 |
-| DEV-006 | `docs/03-dev/spec.md` | 工程规范·总纲 | approved | @Dust191 | 2026-11-10 | S4 |
+| DEV-006 | `docs/03-dev/spec.md` | 工程规范·总纲 | approved | @Dust191 | 2026-11-13 | S4 |
 | DEV-007 | `docs/03-dev/deviations.md` | 偏离登记台账 | approved | @Dust191 | 2026-11-12 | S4 |
-| DEV-008 | `docs/03-dev/spec-work.md` | 作业规范 | approved | @Dust191 | 2026-11-10 | S4 |
-| DEV-009 | `docs/03-dev/spec-stages.md` | 阶段实施规范 | approved | @Dust191 | 2026-11-12 | S4 |
+| DEV-008 | `docs/03-dev/spec-work.md` | 作业规范 | approved | @Dust191 | 2026-11-13 | S4 |
+| DEV-009 | `docs/03-dev/spec-stages.md` | 阶段实施规范 | approved | @Dust191 | 2026-11-13 | S4 |
 | DEV-010 | `docs/03-dev/spec-team.md` | 团体开发规范（搁置至 G5） | in_review | @Dust191 | 2026-11-10 | S4 |
 | OPS-001 | `docs/04-ops/deploy.md` | 部署（S5 准备期版本） | in_review | @Dust191 | 2026-11-12 | S5 |
 | RUN-001 | `docs/04-ops/runbook.md` | 运行手册 | approved | @Dust191 | 2026-11-12 | S2 |
@@ -101,7 +101,8 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261112-10 | `docs/07-iteration/ITER-20261112-10.md` | 建立模型偏离台账（`GOV-007`） | approved | @Dust191 | 2026-11-12 | S5 |
 | ITER-20261112-11 | `docs/07-iteration/ITER-20261112-11.md` | ITER 结构校验落地与台账闭环 | approved | @Dust191 | 2026-11-12 | S5 |
 | ITER-20261112-12 | `docs/07-iteration/ITER-20261112-12.md` | 术语核查与 GLOSSARY 补录 | approved | @Dust191 | 2026-11-12 | S5 |
-| ITER-20261113-01 | `docs/07-iteration/ITER-20261113-01.md` | ITER 定位改执行记录，隧道改按需启动 | in_review | @Dust191 | 2026-11-13 | S5 |
+| ITER-20261113-01 | `docs/07-iteration/ITER-20261113-01.md` | ITER 定位改执行记录，隧道改按需启动 | approved | @Dust191 | 2026-11-13 | S5 |
+| ITER-20261113-02 | `docs/07-iteration/ITER-20261113-02.md` | 同步 S5 口径、G5 范围与接口口径 | in_review | @Dust191 | 2026-11-13 | S5 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
@@ -121,7 +122,7 @@ related: [GLOSSARY-001, PRD-001]
 | OPS / RUN | 运维与运行手册 | 001、001 ~ 002 | 002 / 003 |
 | GOV | 治理 | 000（指导文档）、001 ~ 007 | 008 |
 | RFC | 重大变更提案 | 0001 | 0002 |
-| ITER | 迭代记录 | 20261031-01 ~ 20261113-01（48 份） | — |
+| ITER | 迭代记录 | 20261031-01 ~ 20261113-02（49 份） | — |
 | MDV | 模型偏离（条目编号） | 01 ~ 06 | 07 |
 | MTG | 会议纪要 | — | — |
 
@@ -146,7 +147,7 @@ S4 新增 `GOV-004`（标签体系）、`GOV-006`（G4 验收记录）、`DEV-00
 2026-11-10 重写落地版：`DEV-006` 由 145 行摘要改为总纲，新增 `DEV-008`（作业规范）、`DEV-009`（阶段实施规范）、`DEV-010`（团体开发规范），GOV-000 的每一章在 `DEV-006` §7 有唯一落点。同日审定：`DEV-006` ~ `DEV-009` 转 `approved`，`DEV-010` 搁置至 G5（`ITER-20261110-01/02`）。
 2026-11-12 新增 `GOV-007`（模型偏离记录）：与 `DEV-007`（工程偏离）、`DEV-004`（技术债）分账，只记「模型未按规范执行」这一类事实，条目号 `MDV`。
 
-模板集见 §6。`docs/idea.md` 为可选项，当前未建立，不参与阶段门。
+模板集见 §6。`docs/idea.md` 为可选建立，不参与阶段门。
 
 ## 4. 已知位置问题
 

@@ -5,9 +5,9 @@ status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-01
-updated: 2026-11-01
-next_review: 2027-01-30
-iter: ITER-20261101-08
+updated: 2026-11-13
+next_review: 2027-02-11
+iter: ITER-20261113-02
 related: [DES-001, DES-004, PRD-001]
 ---
 
@@ -34,9 +34,9 @@ related: [DES-001, DES-004, PRD-001]
 | CSRF | `CookieCsrfTokenRepository`：服务端下发 `XSRF-TOKEN`，非 GET 请求须回传 `X-XSRF-TOKEN` 头；缺失返回 403 |
 | 时间 | 请求与响应均为 ISO-8601 带偏移，如 `2026-11-01T09:30:00+08:00`；服务端存 UTC |
 | 数量 | 字符串传输的小数（保留 3 位），避免 JS 浮点误差；如 `"12.500"` |
-| 分页 | `?page=1&pageSize=20`；`pageSize` 上限 100，超出按 100 处理并响应 `X-Page-Size-Capped: true` |
+| 分页 | `?page=1&pageSize=20`；`pageSize` 上限 100，超出按 100 截断，并在响应体置 `capped: true` |
 | 排序 | `?sort=-updatedAt`，`-` 表降序；多个字段逗号分隔，白名单外的字段忽略 |
-| 幂等 | `POST /movements` 支持 `Idempotency-Key`（UUID），24 小时内相同键返回首次结果并带 `Idempotent-Replay: true` |
+| 幂等 | `POST /movements` 请求体带 `idempotencyKey`（≤64 字符），同键重复提交返回首次结果；未传键不做幂等 |
 | 追踪 | 所有响应带 `X-Trace-Id`；错误体里的 `traceId` 与之一致 |
 
 ## 3. 错误体与错误码
@@ -193,3 +193,4 @@ related: [DES-001, DES-004, PRD-001]
 | 2026-11-02 | 删除 `INVITE_CODE_DISABLED`：与 D-18「三种无效码同一表现」冲突，统一用 `INVITE_CODE_INVALID` | ITER-20261102-03 |
 | 2026-11-02 | 补 `POST /files` 端点（UAT-1 要求「新建物料含图片」，原文缺上传入口）；错误码补 5 个：`UPLOAD_TOO_LARGE`、`UNSUPPORTED_MEDIA_TYPE`、`STORAGE_FAILED`、`MATERIAL_HAS_MOVEMENTS`、`INVALID_STATUS_TRANSITION` | ITER-20261102-04 |
 | 2026-11-02 | 注册显示名改为可省略；新增 `POST /invite-codes/validate` 供注册前校验（T6 返工） | ITER-20261102-09 |
+| 2026-11-13 | §2 分页与幂等两行按实现修订：页长截断以响应体 `capped` 表示，幂等键为请求体 `idempotencyKey`（≤64 字符），删去未实现的 `X-Page-Size-Capped`、`Idempotency-Key`、`Idempotent-Replay` | ITER-20261113-02 |

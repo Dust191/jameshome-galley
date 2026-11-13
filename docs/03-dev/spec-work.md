@@ -5,9 +5,9 @@ status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-10
-updated: 2026-11-10
-next_review: 2027-02-10
-iter: ITER-20261112-11
+updated: 2026-11-13
+next_review: 2027-02-11
+iter: ITER-20261113-02
 related: [DEV-002, DEV-003, DEV-004, DEV-006, DEV-007, GOV-002, GOV-005, GLOSSARY-001, INDEX-001, CONTRIBUTING]
 ---
 
@@ -263,9 +263,9 @@ modules/<domain>/
 | 方法 | GET 幂等；POST 创建；PATCH 局部更新；DELETE 软删；未实现的 PUT 不占位 |
 | 状态码 | 200/201/204 成功；400 参数；401 未认证；403 无权限；404 不存在；409 冲突；422 业务拒绝；429 限流；500 服务错 |
 | 错误体 | `{ code, message, field?, traceId }`；`code` 为大写下划线常量 |
-| 分页 | `?page=1&pageSize=20`，响应 `{ items, page, pageSize, total, capped }`；`pageSize` 超上限时按 100 截断并置 `capped`（`DES-002` 写的 `X-Page-Size-Capped` 响应头未实现） |
+| 分页 | `?page=1&pageSize=20`，响应 `{ items, page, pageSize, total, capped }`；`pageSize` 超上限时按 100 截断并置 `capped` |
 | 过滤排序 | `?categoryId=&stockState=low&sort=-updatedAt`；前缀 `-` 表降序 |
-| 幂等 | 流水登记请求体带 `idempotencyKey`（≤64 字符），同键重复提交返回首次结果，未传键不做幂等（`V3__movement_idempotency.sql` 唯一索引兜底；`DES-002` 写的 `Idempotency-Key` 请求头与 `Idempotent-Replay` 响应头未实现） |
+| 幂等 | 流水登记请求体带 `idempotencyKey`（≤64 字符），同键重复提交返回首次结果，未传键不做幂等（`V3__movement_idempotency.sql` 唯一索引兜底） |
 | 契约 | `contracts/openapi.yaml` 由 springdoc 生成后提交，`check-contract.sh` 与运行实例逐字比对 |
 
 ### 3.6 前端
@@ -420,7 +420,7 @@ GitHub 禁止作者自批，`main` 的分支保护因此设 `enforce_admins: fal
 
 **与规范的关系**：台账记的是现实；现实与本套冲突时以台账为准，并由台账反过来提出修订。
 
-在册九条：`DVT-01` JaCoCo 版本、`DVT-02` 格式化器版本、`DVT-03` ArchUnit 空集开关（已收回）、`DVT-04` 分支保护管理员通道、`DVT-05` 机器人签署豁免、`DVT-06` OWASP 未执行、`DVT-07` 提交信息未接入 CI、`DVT-08` 写操作未落审计、`DVT-09` 注册端点未限流。明细见 `DEV-007`。
+**在册条目**：生效 8 条——`DVT-01` JaCoCo 版本、`DVT-02` 格式化器版本、`DVT-04` 分支保护管理员通道、`DVT-05` 机器人签署豁免、`DVT-06` OWASP 未执行、`DVT-10` ECS 规格低于规范、`DVT-11` 自建库 RPO 24 小时、`DVT-13` Quick Tunnel 临时入口；已收回 5 条——`DVT-03`、`DVT-07`、`DVT-08`、`DVT-09`、`DVT-12`。编号已用到 `DVT-13`，下一号 14。明细见 `DEV-007`。
 
 ## 9. 变更记录
 
@@ -429,3 +429,4 @@ GitHub 禁止作者自批，`main` 的分支保护因此设 `enforce_admins: fal
 | 2026-11-10 | 初版：从 GOV-000 §0.4 / §3.4 / §4.4 / §5.5 / §6.4 / §8.4 收敛为跨阶段作业规范，按本仓实现逐条标注差距 | ITER-20261110-01 |
 | 2026-11-12 | §2.7 增补模型偏离入账要求；§4.5 增补迭代记录结构校验（`GOV-007` M-01 / M-03） | ITER-20261112-11 |
 | 2026-11-13 | §2.7 增补迭代记录定位：执行记录，开头不套用「回答什么问题」句式 | ITER-20261113-01 |
+| 2026-11-13 | §3.5 分页与幂等口径与实现对齐；§8 在册偏离条目按实况重列（生效 8 条、已收回 5 条、下一号 14） | ITER-20261113-02 |
