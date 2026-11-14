@@ -7,7 +7,7 @@ reviewers: ["@Dust191"]
 created: 2026-11-01
 updated: 2026-11-14
 next_review: 2027-02-12
-iter: ITER-20261114-06
+iter: ITER-20261114-12
 related: [ADR-0001, ADR-0005, DEV-009, RUN-001, RUN-002, RUN-003]
 ---
 
@@ -123,6 +123,23 @@ docker compose -p galley-staging --env-file .env.staging \
 
 这条路径只在需要验未发版代码时走，常规验收仍用发布镜像。
 
+### 2.3 镜像怎么进 ACR
+
+发布镜像是双源的：GHCR 存构建产物，**ACR 才是部署源**。ECS 只从 ACR 的 `-vpc` 域名拉取——同一个 426 MB 的 api 镜像，内网拉取实测 3.7 秒，走公网拉 GHCR 要 4~10 分钟且会中途断开。
+
+同步由流水线完成：打 tag 后 `images` job 构建推 GHCR，`acr-sync` job 把同一份镜像推进 ACR。补同步历史 tag：
+
+```bash
+gh workflow run release -f tag=v0.2.0   # 只同步，不重新构建
+```
+
+两个坑，都已在流水线里处理：
+
+- ACR 个人版拒收带 attestation 的 OCI 索引，提交 manifest 报 `403 unknown manifest class for application/vnd.oci.empty.v1+json`。故构建端关闭 `provenance` 与 `sbom`，同步端按 amd64 单平台清单的 digest 定向拉取。
+- 仓库所有者是 `Dust191`，而镜像名只接受小写，脚本内先做小写归一。
+
+仓库密钥 `ACR_USERNAME` / `ACR_PASSWORD` 已配置。凭据同时存在于 ECS 部署账号的 `~/.docker/config.json` 与虚拟机的同名文件；**公网域名与 `-vpc` 域名各需一条登录记录**，Docker 按主机名区分注册表，少一条就是 `pull access denied`。
+
 ## 3. 配置
 
 全部通过环境变量注入。真实值只存在服务器的 `.env.prod` 与 `.env.staging`，不入仓、不入镜像、不进日志。
@@ -154,7 +171,7 @@ docker compose -p galley-staging --env-file infra/compose/.env.staging \
 | `GALLEY_S3_REGION` | ✓ | `cn-hangzhou`；签名必须带区域，否则会先发 `GetBucketLocation` |
 | `GALLEY_S3_SIGNED_URL_TTL_SECONDS` | — | 图片地址有效期，默认 3600，上限 604800 |
 | `GALLEY_S3_MAX_IMAGE_BYTES` | — | 默认 5 MB |
-| `GALLEY_IMAGE_API` / `GALLEY_IMAGE_WEB` | ✓ | 固定 tag，禁止 `latest`；tag 与 `pom.xml` 版本对齐 |
+| `GALLEY_IMAGE_API` / `GALLEY_IMAGE_WEB` | ✓ | ACR 的 `-vpc` 域名加固定 tag，禁止 `latest`；tag 与 `pom.xml` 版本对齐 |
 | `GALLEY_IMAGE_CADDY` | ✓ | `crpi-8wtwv1zju2g9kpgg.cn-hangzhou.personal.cr.aliyuncs.com/jameshome-galley/caddy:2-alpine` |
 | `GALLEY_IMAGE_TUNNEL` | ✓ | 同 ACR 前缀下的 `cloudflared:2026.10.7`，不设默认值，缺失时编排直接报错 |
 | `GALLEY_LOG_LEVEL` | — | prod 固定 `info`；排障临时 `debug` 后 2 小时内改回 |
@@ -169,14 +186,14 @@ docker compose -p galley-staging --env-file infra/compose/.env.staging \
 |---|---|---|---|---|
 | 1 | 确认门禁 | CI 全绿、ITER 已审定、无 `p0/p1` 未决 | 三项齐全 | 停止 |
 | 2 | 定版本 | 更新 `CHANGELOG`，`git tag -a v<版本>` | 标签指向 main 顶端 | 停止 |
-| 3 | 构建并推送镜像 | `.github/workflows/release.yml`（打 tag 触发） | GHCR 上出现 `galley-api` / `galley-web` 两个 tag | 停止 |
+| 3 | 构建并推送镜像 | `.github/workflows/release.yml`（打 tag 触发） | GHCR 出现两个 tag，`acr-sync` job 成功 | 停止 |
 | 4 | 全量备份 | `/opt/galley/infra/backup/backup-db.sh`（脚本内含 OSS 回查） | 输出「备份成功」，远端 MD5 与本地一致 | 停止 |
 | 5 | 迁移 | 启动时由 Flyway 自动执行 | 日志出现 `Successfully applied` | 见 `RUN-001` §3 |
 | 6 | 替换容器 | `docker compose --env-file .env.prod -f infra/compose/compose.prod.yml up -d api web` | 新容器 healthy | 执行 §5 |
 | 7 | 冒烟 | 容器内 readiness、登录（先取 CSRF 令牌）、列表、登记一条流水、导出 | 五项正常 | 执行 §5 |
 | 8 | 观察与记录 | 盯 30 分钟；写 `CHANGELOG` 与 ITER | 无 5xx 抬升 | 执行 §5 |
 
-GHCR 两个包已于 2026-11-12 设为 public，云上匿名拉取验证通过；若将来改回私有，服务器需配只读凭据，否则拉取 401。
+GHCR 两个包已于 2026-11-12 设为 public。部署不再从 GHCR 拉取，公网可见性只影响备用路径；ACR 走内网，凭据见 §2.3。
 
 第 6 步当前是**原地替换**，有秒级中断；规范要求的蓝绿（双 api 服务 + 切 Caddy upstream）尚未实现，属 S5 未完成项。
 
@@ -187,9 +204,11 @@ GHCR 两个包已于 2026-11-12 设为 public，云上匿名拉取验证通过�
 应用回滚（首选）：
 
 ```bash
-# 把镜像变量指回上一个 tag，只重建该服务
-GALLEY_IMAGE_API=<上一 tag> docker compose -f infra/compose/compose.prod.yml up -d --no-deps api
-GALLEY_IMAGE_WEB=<上一 tag> docker compose -f infra/compose/compose.prod.yml up -d --no-deps web
+# 把镜像变量指回上一个 tag，只重建该服务；shell 变量优先于 --env-file
+GALLEY_IMAGE_API=<上一 tag> docker compose --env-file /opt/galley/.env.prod \
+  -f infra/compose/compose.prod.yml up -d --no-deps api
+GALLEY_IMAGE_WEB=<上一 tag> docker compose --env-file /opt/galley/.env.prod \
+  -f infra/compose/compose.prod.yml up -d --no-deps web
 ```
 
 配置回滚：`.env.prod` 每次变更前留一份带日期的副本，回滚即换回上一份并重建容器。
@@ -208,3 +227,4 @@ GALLEY_IMAGE_WEB=<上一 tag> docker compose -f infra/compose/compose.prod.yml u
 | 2026-11-14 | 新增 §2.1 staging 启停：同机独立项目名 `galley-staging`，回环端口 8081 / 8082，`cloudflared` 默认不起；补 `.env.staging.example` 与编排校验命令 | ITER-20261114-04 |
 | 2026-11-14 | §2.1 补首次启动的三步顺序与实测内存占用；`updated` 同步 | ITER-20261114-05 |
 | 2026-11-14 | 新增 §2.2：验证未发版代码时手动构建临时镜像，验证完改回发布 tag | ITER-20261114-06 |
+| 2026-11-14 | 新增 §2.3：镜像由流水线同步进 ACR，ECS 只从 `-vpc` 域名拉取；发布第 3 步预期加 `acr-sync`；回滚命令补 `--env-file` | ITER-20261114-12 |
