@@ -1,19 +1,30 @@
-# 发布流水线：打 tag 即构建两个镜像并推到 GHCR。
-# ACR 暂未接入；待 T5-04 转存 caddy / cloudflared 时再决定是否同步推送。
+# 发布流水线：打 tag 即构建两个镜像并推到 GHCR，随后把同一份镜像复制进 ACR。
+# ECS 一律从 ACR 内网域名拉取（`deploy.md` §2.3），不走公网拉 GHCR。
+# 手动触发用于补同步：只复制已存在的 tag，不重新构建。
 name: release
 
 on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 已存在的发布 tag（如 v0.2.2），仅同步到 ACR，不重新构建
+        required: true
 
 permissions:
   contents: read
   packages: write
 
+env:
+  ACR_REGISTRY: crpi-8wtwv1zju2g9kpgg.cn-hangzhou.personal.cr.aliyuncs.com
+  ACR_NAMESPACE: jameshome-galley
+
 jobs:
   images:
     name: 构建并推送 ${{ matrix.name }}
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -59,3 +70,44 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=${{ matrix.name }}
           cache-to: type=gha,mode=max,scope=${{ matrix.name }}
+
+  acr-sync:
+    name: 同步 ${{ matrix.name }} 到 ACR
+    # 打 tag 时跟随构建结果；手动触发时跳过构建，只补同步
+    if: always() && (github.event_name == 'workflow_dispatch' || needs.images.result == 'success')
+    needs: images
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: api
+            source: galley-api
+            target: api
+          - name: web
+            source: galley-web
+            target: web
+    steps:
+      - name: 解析版本号
+        id: ver
+        env:
+          TAG: ${{ inputs.tag || github.ref_name }}
+        run: echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+
+      - name: 登录 ACR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.ACR_REGISTRY }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: 复制镜像
+        env:
+          VERSION: ${{ steps.ver.outputs.version }}
+        run: |
+          set -euo pipefail
+          SRC="ghcr.io/${{ github.repository_owner }}/${{ matrix.source }}:${VERSION}"
+          DST="${ACR_REGISTRY}/${ACR_NAMESPACE}/${{ matrix.target }}:${VERSION}"
+          # 只复制 manifest 与层，不重新构建；源 tag 必须已在 GHCR
+          docker buildx imagetools create -t "$DST" "$SRC"
+          docker buildx imagetools inspect "$DST" | head -20
