@@ -106,7 +106,9 @@ jobs:
           VERSION: ${{ steps.ver.outputs.version }}
         run: |
           set -euo pipefail
-          SRC="ghcr.io/${{ github.repository_owner }}/${{ matrix.source }}:${VERSION}"
+          # 仓库所有者是 Dust191，而镜像名只接受小写
+          OWNER="${GITHUB_REPOSITORY_OWNER,,}"
+          SRC="ghcr.io/${OWNER}/${{ matrix.source }}:${VERSION}"
           DST="${ACR_REGISTRY}/${ACR_NAMESPACE}/${{ matrix.target }}:${VERSION}"
           # 只复制 manifest 与层，不重新构建；源 tag 必须已在 GHCR
           docker buildx imagetools create -t "$DST" "$SRC"
