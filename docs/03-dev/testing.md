@@ -5,9 +5,9 @@ status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-01
-updated: 2026-11-01
+updated: 2026-11-14
 next_review: 2027-01-30
-iter: ITER-20261101-09
+iter: ITER-20261114-07
 related: [DEV-002, DES-001, DES-004, NFR-001]
 ---
 
@@ -50,6 +50,81 @@ related: [DEV-002, DES-001, DES-004, NFR-001]
 - 种子数据固定且可重复生成：`src/test/resources/seed/` 下的 CSV 由同一个生成脚本产出，随机种子写死。
 - 每个集成测试自行准备数据并在事务内回滚；不依赖测试执行顺序。
 - Testcontainers 每次运行重建数据库，Flyway 从零迁移——这样迁移脚本本身也顺带被测。
+
+### 3.1 性能实测数据（只在 staging）
+
+目标量级是 5 万物料 / 200 万流水（`DEV-009` §7.6）。两个脚本分工：`scripts/gen-load.py` 造数，`scripts/loadtest.py` 压测。
+
+**造数**。期初结存是基准日（默认 2026-01-01）每个物料一条 `ADJUST` 流水，结存由全量流水求和推出，不直接写 `stock_balance`（红线 7）。产出 TSV，用 `\copy` 导入，不走接口：
+
+```bash
+# 宿主机上，先取一个操作员 id
+OP=$(docker exec galley-staging-db-1 psql -U galley -d galley -tAc \
+  "select id from app_user where username='admin'")
+
+python3 scripts/gen-load.py --operator "$OP" --out /tmp/load-data
+
+# 按外键顺序导入；每步用 -i 把文件喂给容器内的 psql
+docker exec -i galley-staging-db-1 psql -U galley -d galley -c \
+  "\copy material_category (id,name,sort_order,status,created_at,updated_at) from stdin" \
+  < /tmp/load-data/category.tsv
+docker exec -i galley-staging-db-1 psql -U galley -d galley -c \
+  "\copy unit (id,name,sort_order,status,created_at,updated_at) from stdin" \
+  < /tmp/load-data/unit.tsv
+docker exec -i galley-staging-db-1 psql -U galley -d galley -c \
+  "\copy material (id,code,name,category_id,unit_id,spec,safety_stock,status,version,created_at,updated_at,created_by) from stdin" \
+  < /tmp/load-data/material.tsv
+docker exec -i galley-staging-db-1 psql -U galley -d galley -c \
+  "\copy stock_movement (id,material_id,type,quantity,occurred_at,operator_id,note,reversed,created_at,created_by) from stdin" \
+  < /tmp/load-data/movement.tsv
+```
+
+最后把流水聚合成结存：
+
+```bash
+# 导入完必须 ANALYZE：没有统计信息时查询会走全表扫，压测数字会比真实值差一截
+docker exec galley-staging-db-1 psql -U galley -d galley -c \
+  "ANALYZE material; ANALYZE stock_movement; ANALYZE stock_balance;"
+
+docker exec -i galley-staging-db-1 psql -U galley -d galley -c "
+insert into stock_balance (material_id, quantity, last_movement_at, version, created_at, updated_at)
+select material_id, sum(quantity), max(occurred_at), 0, now(), now()
+from stock_movement group by material_id
+on conflict (material_id) do update
+set quantity = excluded.quantity, last_movement_at = excluded.last_movement_at,
+    version = stock_balance.version + 1, updated_at = now();"
+```
+
+导入完对一次账，确认聚合与流水一致：
+
+```bash
+curl -s -b /tmp/s.txt http://127.0.0.1:8081/api/v1/reconcile
+# 期望 mismatched = 0
+```
+
+**压测**。只发 GET，不写数据；每 2 秒采一次主机指标，任一达到「告警阈值 − 5」即停：
+
+```bash
+# 每次重启 api 都会重新生成管理员口令，压测前从日志取当次的值
+PW=$(docker logs galley-staging-api-1 2>&1 | grep -o '登录密码：[^（]*' | tail -1 | sed 's/登录密码：//')
+
+python3 scripts/loadtest.py \
+  --base-url http://127.0.0.1:8081 \
+  --username admin --password "$PW" \
+  --concurrency 8 --duration 120 \
+  --stop-threshold 85 --margin 5 \
+  --out /tmp/loadtest-$(date +%H%M).json
+```
+
+结果里的 `stopped_because` 会写明停在哪个指标、当时多少。若压测结束时 `requests` 明显偏少，先看这一项，而不是怀疑脚本。
+
+**两条纪律**：压测只在 staging 跑；停止点触发后未达目标量级时，如实记「未测到」，不把中间值外推（`DEV-009` §7.6）。
+
+**三个坑**（2026-11-14 实测踩到）：
+
+1. **压测前把 `GALLEY_LOG_LEVEL` 切成 `info`**。`debug` 会把每条 SQL 与参数写进 json-file，IO 开销直接进压测结果，测出的 P95 不是应用的。
+2. **应用刚重启时先预热**。JIT 编译集中在前几十次请求，不预热会看到首轮 CPU 打满、P99 抖到 600ms 以上。脚本默认预热 20 次。
+3. **会话 cookie 名是 `JSESSIONID`**，不是 `DES-002` 写的 `SESSION`；脚本按「登录后新增且非 XSRF 的那个 cookie」取，不写死名字。
 
 ## 4. 命名与组织
 
@@ -111,3 +186,4 @@ OWASP 全量扫描留给 CI 或带宽稳定的受控环境。两者覆盖范围�
 |---|---|---|
 | 2026-11-01 | 初版建立 | ITER-20261101-09 |
 | 2026-11-03 | 增依赖漏洞扫描章节（osv-scanner）与 0.1.0 的 OWASP 边界说明 | ITER-20261103-03 |
+| 2026-11-14 | 新增 §3.1 性能实测数据：造数与压测两个脚本的用法、导入后必须 ANALYZE、三个实测踩到的坑 | ITER-20261114-07 |
