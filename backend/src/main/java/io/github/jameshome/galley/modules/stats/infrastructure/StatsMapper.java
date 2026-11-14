@@ -18,28 +18,28 @@ public interface StatsMapper {
     long countActiveMaterials();
 
     /**
-     * M-2 低库存物料数。
+     * M-1 / M-2 / M-3 / M-7 / M-8 合并为一次查询。
      *
-     * <p>严格小于：踩线不算。无结存记录按 0 参与比较，否则刚建档的物料会从预警里消失。
+     * <p>五项指标同源于「在管物料」这一个集合，原先分五次查会把同一张表扫五遍； 5 万物料、200 万流水下这是总览的主要 CPU 开销（`ITER-20261114-10`）。每个
+     * {@code FILTER} 的条件与原先单条 SQL 的 WHERE 逐字对应，改口径时两处必须同步，`DES-004` §3 是唯一依据。
      */
     @Select(
             """
-            SELECT count(*) FROM material m
+            SELECT count(*) AS materials,
+                   count(*) FILTER (WHERE coalesce(b.quantity, 0) < m.safety_stock) AS low,
+                   count(*) FILTER (WHERE coalesce(b.quantity, 0) = 0) AS zero,
+                   count(*) FILTER (WHERE NOT EXISTS (
+                       SELECT 1 FROM stock_movement sm
+                       WHERE sm.material_id = m.id
+                         AND sm.type = 'OUT' AND sm.reversed = false
+                         AND sm.occurred_at > now() - interval '90 days')) AS stale,
+                   count(*) FILTER (
+                       WHERE m.spec IS NOT NULL AND m.spec <> '' AND m.safety_stock > 0) AS complete
+            FROM material m
             LEFT JOIN stock_balance b ON b.material_id = m.id
             WHERE m.status = 'active' AND m.deleted_at IS NULL
-              AND coalesce(b.quantity, 0) < m.safety_stock
             """)
-    long countLowStock();
-
-    /** M-3 零库存物料数；口径与 M-2 一致，无记录视为 0。 */
-    @Select(
-            """
-            SELECT count(*) FROM material m
-            LEFT JOIN stock_balance b ON b.material_id = m.id
-            WHERE m.status = 'active' AND m.deleted_at IS NULL
-              AND coalesce(b.quantity, 0) = 0
-            """)
-    long countZeroStock();
+    OverviewCountsRow overviewCounts();
 
     /** M-4 分类分布：停用分类若仍有物料，单列一行由调用方加后缀。 */
     @Select(
@@ -100,39 +100,4 @@ public interface StatsMapper {
             LIMIT #{limit}
             """)
     List<TopOutRow> topOut(@Param("limit") int limit);
-
-    /**
-     * M-7 呆滞物料数：结存 &gt; 0 且 90 天内没有过出库。
-     *
-     * <p>"从未出过库"也计入——只入不出的物料同样是呆滞。
-     */
-    @Select(
-            """
-            SELECT count(*) FROM stock_balance b
-            JOIN material m ON m.id = b.material_id
-            WHERE m.status = 'active' AND m.deleted_at IS NULL
-              AND b.quantity > 0
-              AND NOT EXISTS (
-                SELECT 1 FROM stock_movement sm
-                WHERE sm.material_id = b.material_id
-                  AND sm.type = 'OUT' AND sm.reversed = false
-                  AND sm.occurred_at > now() - interval '90 days'
-              )
-            """)
-    long countStale();
-
-    /**
-     * M-8 资料齐全的物料数。
-     *
-     * <p>判据是 {@code spec 非空 且 safety_stock > 0}：分类与单位在建表层面非空，永远成立， 拿它们做判据会让指标恒为 100%；而安全库存为 0
-     * 等于不设预警线，等同于没配。
-     */
-    @Select(
-            """
-            SELECT count(*) FROM material
-            WHERE status = 'active' AND deleted_at IS NULL
-              AND spec IS NOT NULL AND spec <> ''
-              AND safety_stock > 0
-            """)
-    long countComplete();
 }

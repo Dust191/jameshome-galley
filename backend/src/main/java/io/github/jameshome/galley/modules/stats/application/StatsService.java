@@ -7,6 +7,7 @@ import io.github.jameshome.galley.modules.stats.api.dto.StatsDtos.CategoryShare;
 import io.github.jameshome.galley.modules.stats.api.dto.StatsDtos.OverviewView;
 import io.github.jameshome.galley.modules.stats.api.dto.StatsDtos.TopOutItem;
 import io.github.jameshome.galley.modules.stats.api.dto.StatsDtos.TrendPoint;
+import io.github.jameshome.galley.modules.stats.infrastructure.OverviewCountsRow;
 import io.github.jameshome.galley.modules.stats.infrastructure.StatsMapper;
 import io.github.jameshome.galley.modules.stock.api.dto.StockDtos.BalanceView;
 import io.github.jameshome.galley.modules.stock.application.BalanceService;
@@ -33,13 +34,19 @@ public class StatsService {
     }
 
     public OverviewView overview() {
-        long materials = mapper.countActiveMaterials();
-        long low = mapper.countLowStock();
-        long zero = mapper.countZeroStock();
-        long stale = mapper.countStale();
-        long complete = mapper.countComplete();
+        // 五项计数一次查出：分五次查会把物料表扫五遍，2 并发就把 2 vCPU 打满
+        OverviewCountsRow counts = mapper.overviewCounts();
+        long materials = nz(counts.getMaterials());
+        return new OverviewView(
+                materials,
+                nz(counts.getLow()),
+                nz(counts.getZero()),
+                nz(counts.getStale()),
+                rate(nz(counts.getComplete()), materials));
+    }
 
-        return new OverviewView(materials, low, zero, stale, rate(complete, materials));
+    private static long nz(Long value) {
+        return value == null ? 0L : value;
     }
 
     public List<CategoryShare> categoryDistribution() {
