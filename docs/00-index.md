@@ -37,12 +37,12 @@ related: [GLOSSARY-001, PRD-001]
 | DEV-001 | `docs/03-dev/setup.md` | 本地搭建 | approved | @Dust191 | 2026-11-01 | S2 |
 | DEV-002 | `docs/03-dev/conventions.md` | 编码约定 | approved | @Dust191 | 2026-11-10 | S2 |
 | DEV-003 | `docs/03-dev/testing.md` | 测试策略 | approved | @Dust191 | 2026-11-01 | S2 |
-| DEV-004 | `docs/03-dev/tech-debt.md` | 技术债台账 | approved | @Dust191 | 2026-11-10 | S2 |
+| DEV-004 | `docs/03-dev/tech-debt.md` | 技术债台账 | approved | @Dust191 | 2026-11-14 | S2 |
 | DEV-005 | `docs/03-dev/uat-v0.1.md` | 验收记录 v0.1 | approved | @Dust191 | 2026-11-03 | S3 |
 | DEV-006 | `docs/03-dev/spec.md` | 工程规范·总纲 | approved | @Dust191 | 2026-11-13 | S4 |
-| DEV-007 | `docs/03-dev/deviations.md` | 偏离登记台账 | approved | @Dust191 | 2026-11-12 | S4 |
-| DEV-008 | `docs/03-dev/spec-work.md` | 作业规范 | approved | @Dust191 | 2026-11-13 | S4 |
-| DEV-009 | `docs/03-dev/spec-stages.md` | 阶段实施规范 | approved | @Dust191 | 2026-11-13 | S4 |
+| DEV-007 | `docs/03-dev/deviations.md` | 偏离登记台账 | approved | @Dust191 | 2026-11-14 | S4 |
+| DEV-008 | `docs/03-dev/spec-work.md` | 作业规范 | approved | @Dust191 | 2026-11-14 | S4 |
+| DEV-009 | `docs/03-dev/spec-stages.md` | 阶段实施规范 | approved | @Dust191 | 2026-11-14 | S4 |
 | DEV-010 | `docs/03-dev/spec-team.md` | 团体开发规范（搁置至 G5） | in_review | @Dust191 | 2026-11-10 | S4 |
 | OPS-001 | `docs/04-ops/deploy.md` | 部署（S5 准备期版本） | in_review | @Dust191 | 2026-11-12 | S5 |
 | RUN-001 | `docs/04-ops/runbook.md` | 运行手册 | approved | @Dust191 | 2026-11-14 | S2 |
@@ -106,6 +106,7 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261113-02 | `docs/07-iteration/ITER-20261113-02.md` | 同步 S5 口径、G5 范围与接口口径 | approved | @Dust191 | 2026-11-13 | S5 |
 | ITER-20261113-03 | `docs/07-iteration/ITER-20261113-03.md` | 重写 README，校正部署形态与历史记录口径 | approved | @Dust191 | 2026-11-13 | S5 |
 | ITER-20261114-01 | `docs/07-iteration/ITER-20261114-01.md` | 重裁告警为分层清单并建立监控文档 | in_review | @Dust191 | 2026-11-14 | S5 |
+| ITER-20261114-02 | `docs/07-iteration/ITER-20261114-02.md` | 落定 staging 落点与三项执行口径 | in_review | @Dust191 | 2026-11-14 | S5 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
@@ -125,7 +126,7 @@ related: [GLOSSARY-001, PRD-001]
 | OPS / RUN | 运维与运行手册 | 001、001 ~ 003 | 002 / 004 |
 | GOV | 治理 | 000（指导文档）、001 ~ 007 | 008 |
 | RFC | 重大变更提案 | 0001 | 0002 |
-| ITER | 迭代记录 | 20261031-01 ~ 20261114-01（51 份） | — |
+| ITER | 迭代记录 | 20261031-01 ~ 20261114-02（52 份） | — |
 | MDV | 模型偏离（条目编号） | 01 ~ 06 | 07 |
 | MTG | 会议纪要 | — | — |
 

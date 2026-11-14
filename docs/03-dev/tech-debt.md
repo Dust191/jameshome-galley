@@ -5,9 +5,9 @@ status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-01
-updated: 2026-11-10
-next_review: 2027-02-10
-iter: ITER-20261110-05
+updated: 2026-11-14
+next_review: 2027-02-14
+iter: ITER-20261114-02
 related: [DEV-002, DEV-003]
 ---
 
@@ -23,7 +23,7 @@ related: [DEV-002, DEV-003]
 |---|---|---|---|---|
 | TD-02 | `toolchains.xml` 未建立 | 本机 JDK 补丁号实际由 `JAVA_HOME` 决定，未由 Toolchains 锁定；ADR-0004 的"好的一面"未兑现 | S3 环境准备期（已过期未偿，随 S4 环境整理处理） | 待偿 |
 | TD-06 | 前端无组件测试 | 交互规则靠 3 条 E2E 与人工走查兜底；单个组件的行为回归定位慢 | S4 引入组件测试框架时 | 待偿 |
-| TD-09 | OWASP dependency-check 全量未执行 | 开发机未能完成 NVD 数据下载；osv-scanner 在线查询覆盖面小于 OWASP，供应链风险结论不完整 | CI 或带宽稳定的受控环境（S4） | 待偿 |
+| TD-09 | OWASP dependency-check 全量未执行 | 开发机未能完成 NVD 数据下载；osv-scanner 在线查询覆盖面小于 OWASP，供应链风险结论不完整 | S5 阶段内，带宽稳定的环境（开发者 2026-11-14 定） | 待偿 |
 | TD-10 | 5 条 Moderate 依赖漏洞未修 | minimatch ×2、react-router ×2、vite ×1；多为开发期依赖或需特定用法，仍可能被扫描工具报出 | 上游修复版本可用时；S4 开源前复核 | 待偿 |
 | TD-11 | E2E 需人工传入管理员密码 | 开发环境每次启动重新生成密码，`pnpm e2e` 必须带 `E2E_ADMIN_PASSWORD`，无法无人值守跑在 CI | staging 使用固定凭据后 | 待偿 |
 | TD-12 | 前端 antd 全量引入 | antd 分包 354 KB gzip，业务代码 30 KB；弱网首屏偏慢，未做按需引入 | 首屏实测超过 3 秒或进入移动网络场景时 | 待偿 |
@@ -68,3 +68,4 @@ related: [DEV-002, DEV-003]
 | 2026-11-10 | 偿还 TD-16（Issue #45） | ITER-20261110-04 |
 | 2026-11-10 | 偿还 TD-15（Issue #46） | ITER-20261110-05 |
 | 2026-11-12 | 偿还 TD-05：真实 GitHub Runner 已跑通数十次，原「未经真实 runner 验证」不再成立 | ITER-20261112-09 |
+| 2026-11-14 | TD-09 的偿还时点由「S4」改为「S5 阶段内」：开发者裁定 OWASP 在 S5 过程中补做 | ITER-20261114-02 |
