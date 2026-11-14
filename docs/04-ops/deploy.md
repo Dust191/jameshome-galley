@@ -7,7 +7,7 @@ reviewers: ["@Dust191"]
 created: 2026-11-01
 updated: 2026-11-14
 next_review: 2027-02-12
-iter: ITER-20261114-12
+iter: ITER-20261114-13
 related: [ADR-0001, ADR-0005, DEV-009, RUN-001, RUN-002, RUN-003]
 ---
 
@@ -140,6 +140,8 @@ gh workflow run release -f tag=v0.2.0   # 只同步，不重新构建
 
 仓库密钥 `ACR_USERNAME` / `ACR_PASSWORD` 已配置。凭据同时存在于 ECS 部署账号的 `~/.docker/config.json` 与虚拟机的同名文件；**公网域名与 `-vpc` 域名各需一条登录记录**，Docker 按主机名区分注册表，少一条就是 `pull access denied`。
 
+2026-11-14 起，prod 与 staging 的 `.env` 都指向 `-vpc` 域名，两个环境均已按此重建；ECS 上不留 GHCR 的旧 tag，回滚改用 ACR 里的历史 tag。
+
 ## 3. 配置
 
 全部通过环境变量注入。真实值只存在服务器的 `.env.prod` 与 `.env.staging`，不入仓、不入镜像、不进日志。
@@ -228,3 +230,4 @@ GALLEY_IMAGE_WEB=<上一 tag> docker compose --env-file /opt/galley/.env.prod \
 | 2026-11-14 | §2.1 补首次启动的三步顺序与实测内存占用；`updated` 同步 | ITER-20261114-05 |
 | 2026-11-14 | 新增 §2.2：验证未发版代码时手动构建临时镜像，验证完改回发布 tag | ITER-20261114-06 |
 | 2026-11-14 | 新增 §2.3：镜像由流水线同步进 ACR，ECS 只从 `-vpc` 域名拉取；发布第 3 步预期加 `acr-sync`；回滚命令补 `--env-file` | ITER-20261114-12 |
+| 2026-11-14 | §2.3 补记：prod 与 staging 均已指向 ACR 并重建；ECS 上旧镜像已清，回滚改用 ACR 历史 tag | ITER-20261114-13 |
