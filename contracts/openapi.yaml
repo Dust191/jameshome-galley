@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   title: jameshome-galley API
   description: 团体厨房库存远程查看系统的接口契约，由实现生成。
-  version: 0.2.0
+  version: 0.2.1
 servers:
 - url: /
 paths:
