@@ -7,7 +7,7 @@ reviewers: ["@Dust191"]
 created: 2026-11-01
 updated: 2026-11-14
 next_review: 2027-02-12
-iter: ITER-20261114-05
+iter: ITER-20261114-06
 related: [ADR-0001, ADR-0005, DEV-009, RUN-001, RUN-002, RUN-003]
 ---
 
@@ -101,6 +101,28 @@ docker compose -p galley-staging down
 
 staging 首次启动同样会建管理员账号并打印随机口令，位置在 `docker compose -p galley-staging logs api`。
 
+### 2.2 用 staging 验证未发版的代码
+
+staging 默认用与 prod 相同的发布 tag。要验证还没发版的改动，构建一个临时镜像换上，**不要动 prod 的 `.env.prod`**：
+
+```bash
+# 1. 仓库根目录构建，tag 带日期与短哈希，避免与发布 tag 混淆
+docker build -t ghcr.io/dust191/galley-api:dev-20261114-e96f312 backend/
+
+# 2. 传到云主机并导入
+docker save ghcr.io/dust191/galley-api:dev-20261114-e96f312 | ssh cloud 'docker load'
+
+# 3. 只改 staging 的镜像变量，重启 api
+sed -i 's|^GALLEY_IMAGE_API=.*|GALLEY_IMAGE_API=ghcr.io/dust191/galley-api:dev-20261114-e96f312|' \
+  /opt/galley/infra/compose/.env.staging
+docker compose -p galley-staging --env-file .env.staging \
+  -f compose.prod.yml -f compose.staging.yml up -d api
+```
+
+验证完把 `GALLEY_IMAGE_API` 改回发布 tag，否则 staging 与 prod 的「同镜像」前提就不成立了。临时镜像用完删掉：`docker rmi <tag>`。
+
+这条路径只在需要验未发版代码时走，常规验收仍用发布镜像。
+
 ## 3. 配置
 
 全部通过环境变量注入。真实值只存在服务器的 `.env.prod` 与 `.env.staging`，不入仓、不入镜像、不进日志。
@@ -185,3 +207,4 @@ GALLEY_IMAGE_WEB=<上一 tag> docker compose -f infra/compose/compose.prod.yml u
 | 2026-11-12 | 发布步骤改为真实命令：备份走脚本、替换容器带 `--env-file`、冒烟含 CSRF 前置；GHCR 可见性记为已完成 | ITER-20261112-09 |
 | 2026-11-14 | 新增 §2.1 staging 启停：同机独立项目名 `galley-staging`，回环端口 8081 / 8082，`cloudflared` 默认不起；补 `.env.staging.example` 与编排校验命令 | ITER-20261114-04 |
 | 2026-11-14 | §2.1 补首次启动的三步顺序与实测内存占用；`updated` 同步 | ITER-20261114-05 |
+| 2026-11-14 | 新增 §2.2：验证未发版代码时手动构建临时镜像，验证完改回发布 tag | ITER-20261114-06 |

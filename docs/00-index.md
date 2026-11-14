@@ -7,7 +7,7 @@ reviewers: ["@Dust191"]
 created: 2026-10-31
 updated: 2026-11-14
 next_review: 2027-02-14
-iter: ITER-20261114-05
+iter: ITER-20261114-06
 related: [GLOSSARY-001, PRD-001]
 ---
 
@@ -110,6 +110,7 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261114-03 | `docs/07-iteration/ITER-20261114-03.md` | staging 改回同机并约束压测停止点 | in_review | @Dust191 | 2026-11-14 | S5 |
 | ITER-20261114-04 | `docs/07-iteration/ITER-20261114-04.md` | 建 staging 覆盖层并开启指标端点 | in_review | @Dust191 | 2026-11-14 | S5 |
 | ITER-20261114-05 | `docs/07-iteration/ITER-20261114-05.md` | 推送触发 CI 并首次启动 staging | in_review | @Dust191 | 2026-11-14 | S5 |
+| ITER-20261114-06 | `docs/07-iteration/ITER-20261114-06.md` | 定临时镜像路径并盘点 G5 就绪度 | in_review | @Dust191 | 2026-11-14 | S5 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
@@ -129,7 +130,7 @@ related: [GLOSSARY-001, PRD-001]
 | OPS / RUN | 运维与运行手册 | 001、001 ~ 003 | 002 / 004 |
 | GOV | 治理 | 000（指导文档）、001 ~ 007 | 008 |
 | RFC | 重大变更提案 | 0001 | 0002 |
-| ITER | 迭代记录 | 20261031-01 ~ 20261114-05（55 份） | — |
+| ITER | 迭代记录 | 20261031-01 ~ 20261114-06（56 份） | — |
 | MDV | 模型偏离（条目编号） | 01 ~ 06 | 07 |
 | MTG | 会议纪要 | — | — |
 
