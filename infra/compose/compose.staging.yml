@@ -1,0 +1,34 @@
+# staging 覆盖层：与 prod 同镜像、同编排、不同配置（DEV-009 §7.4）。
+#
+# 与 prod 同宿主，靠三样东西隔离：项目名、宿主端口、数据卷。三者任一重合都会串到生产。
+# cloudflared 默认不启动——staging 走内网，不占用隧道，也不产生对外地址。
+#
+# 用法（在云主机 /opt/galley 下）：
+#   docker compose -p galley-staging \
+#     --env-file infra/compose/.env.staging \
+#     -f infra/compose/compose.prod.yml \
+#     -f infra/compose/compose.staging.yml up -d
+#
+# 停止：把 up -d 换成 down。加 -v 会连数据卷一起删除，staging 数据可弃，但别在 prod 上误用。
+# 需要临时对外：追加 --profile tunnel，cloudflared 会起并打印一个临时地址。
+#
+# 校验：docker compose -p galley-staging --env-file infra/compose/.env.staging \
+#         -f infra/compose/compose.prod.yml -f infra/compose/compose.staging.yml config -q
+
+name: galley-staging
+
+services:
+  api:
+    environment:
+      GALLEY_ENV: staging
+      GALLEY_LOG_LEVEL: ${GALLEY_LOG_LEVEL:-debug}
+    ports:
+      # 只绑回环：压测与值班脚本在宿主机读指标，公网与容器网络外都到不了
+      - "127.0.0.1:8082:8080"
+
+  caddy:
+    ports:
+      - "127.0.0.1:8081:80"
+
+  cloudflared:
+    profiles: ["tunnel"]

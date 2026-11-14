@@ -11,6 +11,7 @@ Thumbs.db
 .env.*
 !.env.example
 !infra/compose/.env.prod.example
+!infra/compose/.env.staging.example
 *.pem
 *.key
 

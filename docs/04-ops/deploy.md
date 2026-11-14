@@ -5,10 +5,10 @@ status: in_review
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-01
-updated: 2026-11-12
+updated: 2026-11-14
 next_review: 2027-02-12
-iter: ITER-20261112-01
-related: [ADR-0001, ADR-0005, DEV-009, RUN-001, RUN-002]
+iter: ITER-20261114-04
+related: [ADR-0001, ADR-0005, DEV-009, RUN-001, RUN-002, RUN-003]
 ---
 
 # OPS-001 部署
@@ -55,16 +55,47 @@ docker compose -f infra/compose/compose.prod.yml logs cloudflared | grep -o 'htt
 | 环境 | 用途 | 数据 | 访问 |
 |---|---|---|---|
 | local | 开发 | Docker 容器，可随意重建 | localhost |
-| staging | 发布前验证 | 脱敏样例数据 | 另起一个 Quick Tunnel（端口不同即可） |
+| staging | 发布前验证、性能实测 | 脱敏样例数据或种子 | 与 prod 同机，`http://127.0.0.1:8081`（仅回环） |
 | prod | 线上 | 真实数据 | 公网 HTTPS（临时域名，重启会变） |
 
 **staging 与 prod 不共用数据库，不共用 OSS bucket。** 任何"临时在 prod 上试一下"都按红线处理。
 
+staging 以独立项目名 `galley-staging` 与 prod 跑在同一台 ECS 上，靠三样东西隔离：**项目名、宿主端口、数据卷**。三者任一与 prod 重合都会串到生产，部署前先核对。
+
+### 2.1 staging 的启停
+
+覆盖层是 `infra/compose/compose.staging.yml`，只做三件事：改项目名、把 `api` 与 `caddy` 绑到宿主回环端口（8082 / 8081）、给 `cloudflared` 加 `tunnel` 档位默认不启动。
+
+```bash
+cd /opt/galley
+# 起（第一次会拉镜像、跑 Flyway）
+docker compose -p galley-staging \
+  --env-file infra/compose/.env.staging \
+  -f infra/compose/compose.prod.yml \
+  -f infra/compose/compose.staging.yml up -d
+
+# 看状态与端口
+docker compose -p galley-staging ps
+curl -fsS http://127.0.0.1:8081/actuator/health   # 经 caddy
+curl -fsS http://127.0.0.1:8082/actuator/health   # 直连 api
+
+# 停（数据卷保留）
+docker compose -p galley-staging down
+```
+
+三点注意：
+
+1. **不要省略 `-p galley-staging`**。少了它，Compose 会按目录名推导项目名，可能覆盖 prod 的容器与卷。
+2. `cloudflared` 默认不启动。确需临时对外时追加 `--profile tunnel`，地址同样重启即变。
+3. staging 的 `GALLEY_RECONCILE_CRON` 定为 `0 30 3 * * *`，与 prod 的 02:30 错开，避免同机争资源。
+
+staging 首次启动同样会建管理员账号并打印随机口令，位置在 `docker compose -p galley-staging logs api`。
+
 ## 3. 配置
 
-全部通过环境变量注入。真实值只存在服务器的 `.env.prod`，不入仓、不入镜像、不进日志。
+全部通过环境变量注入。真实值只存在服务器的 `.env.prod` 与 `.env.staging`，不入仓、不入镜像、不进日志。
 
-**从模板复制，不要手写**：`infra/compose/.env.prod.example` 列出全部键与占位值，复制到 `/opt/galley/.env.prod` 后改值即可。三条约定：
+**从模板复制，不要手写**：`infra/compose/.env.prod.example` 与 `.env.staging.example` 列出全部键与占位值，分别复制为 `/opt/galley/.env.prod` 与 `/opt/galley/infra/compose/.env.staging` 后改值即可。三条约定：
 
 1. 含空格的值必须加引号（`GALLEY_RECONCILE_CRON="0 30 2 * * *"`）。不加引号时，任何脚本 `source` 本文件都会把值当命令执行，其后的变量全部变空。
 2. 文件必须 LF 行尾。从 Windows 直接传会带 CRLF，值尾多一个 `\r`；compose 能容忍，shell 与 `ossutil` 不能，表现为 `invalid oss path` 这类看不出根因的错。
@@ -73,17 +104,20 @@ docker compose -f infra/compose/compose.prod.yml logs cloudflared | grep -o 'htt
 ```bash
 docker compose --env-file /opt/galley/.env.prod \
   -f infra/compose/compose.prod.yml config -q
+
+docker compose -p galley-staging --env-file infra/compose/.env.staging \
+  -f infra/compose/compose.prod.yml -f infra/compose/compose.staging.yml config -q
 ```
 
 `GALLEY_ENV`、`GALLEY_LOG_LEVEL`、`GALLEY_RECONCILE_CRON` 由编排透传给容器；此前这三个是写死的，改 `.env.prod` 不生效（`ITER-20261112-08`）。
 
 | 变量 | 必填 | 说明 |
 |---|---|---|
-| `GALLEY_ENV` | ✓ | 固定 `prod`；该值决定初始管理员是否允许重置口令 |
+| `GALLEY_ENV` | ✓ | `prod` 或 `staging`；该值决定初始管理员是否允许重置口令 |
 | `GALLEY_DB_URL`、`GALLEY_DB_USERNAME`、`GALLEY_DB_PASSWORD` | ✓ | 指向本机 `db` 容器；应用账号只授 DML |
 | `GALLEY_S3_ENDPOINT` | ✓ | `https://oss-cn-hangzhou-internal.aliyuncs.com`（内网，不走公网） |
 | `GALLEY_S3_ACCESS_KEY` / `GALLEY_S3_SECRET_KEY` | ✓ | 建议用只授权该 bucket 的 RAM 子账号 |
-| `GALLEY_S3_BUCKET` | ✓ | 待创建，命名见 `ITER-20261112-01` L-01；桶为私有读 |
+| `GALLEY_S3_BUCKET` | ✓ | 生产为 `jameshome-galley`，staging 用 `jameshome-galley-staging`；两桶独立，均为私有读 |
 | `GALLEY_S3_PUBLIC_ENDPOINT` | ✓ | `https://oss-cn-hangzhou.aliyuncs.com`，只用于签发浏览器可访问的图片地址 |
 | `GALLEY_S3_REGION` | ✓ | `cn-hangzhou`；签名必须带区域，否则会先发 `GetBucketLocation` |
 | `GALLEY_S3_SIGNED_URL_TTL_SECONDS` | — | 图片地址有效期，默认 3600，上限 604800 |
@@ -139,3 +173,4 @@ GALLEY_IMAGE_WEB=<上一 tag> docker compose -f infra/compose/compose.prod.yml u
 | 2026-11-12 | 入口改为 Cloudflare Quick Tunnel：去掉 token，临时域名由日志给出；新增 R-01（重启换址）并写入取址命令 | ITER-20261112-03 |
 | 2026-11-12 | 补镜像构建产物与发布流水线说明；发布第 3 步改为 GHCR 包核对，并补首次发布后设可见性 | ITER-20261112-04 |
 | 2026-11-12 | 发布步骤改为真实命令：备份走脚本、替换容器带 `--env-file`、冒烟含 CSRF 前置；GHCR 可见性记为已完成 | ITER-20261112-09 |
+| 2026-11-14 | 新增 §2.1 staging 启停：同机独立项目名 `galley-staging`，回环端口 8081 / 8082，`cloudflared` 默认不起；补 `.env.staging.example` 与编排校验命令 | ITER-20261114-04 |

@@ -85,6 +85,10 @@ public class SecurityConfig {
                                                 "/healthz",
                                                 "/actuator/health/**",
                                                 "/actuator/info",
+                                                // 指标供值班脚本在宿主机回环上读取；
+                                                // 对外不可达：Caddy 只转发 /actuator/health*，api 不映射公网端口
+                                                "/actuator/metrics",
+                                                "/actuator/metrics/**",
                                                 "/v3/api-docs",
                                                 "/v3/api-docs.yaml",
                                                 "/v3/api-docs/**")

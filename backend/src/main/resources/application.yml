@@ -43,12 +43,18 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        # metrics 供 RUN-003 的时延告警读取；Caddy 只转发 /actuator/health*，公网取不到
+        include: health,info,metrics
   endpoint:
     health:
       show-details: never
       probes:
         enabled: true
+  metrics:
+    distribution:
+      # P95 由 RUN-003 §4 B-4 读取；缺这段时 http.server.requests 只有计数与总和
+      percentiles:
+        http.server.requests: 0.5,0.95,0.99
 
 galley:
   # 由 Maven 资源过滤注入，保证契约版本与 pom 一致

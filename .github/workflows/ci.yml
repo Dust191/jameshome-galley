@@ -67,6 +67,9 @@ jobs:
       # 生产编排从来没有被解析过，变量插值写错只能等真机启动才暴露；用模板跑一次 config 挡在合并前
       - name: 生产编排校验
         run: docker compose --env-file infra/compose/.env.prod.example -f infra/compose/compose.prod.yml config -q
+      # 覆盖层与基础编排合并后才算完整配置，单独解析基础文件发现不了端口与档位冲突
+      - name: staging 编排校验
+        run: docker compose -p galley-staging --env-file infra/compose/.env.staging.example -f infra/compose/compose.prod.yml -f infra/compose/compose.staging.yml config -q
       - name: 提交信息校验
         run: bash scripts/check-commit-message.sh "${{ github.event.pull_request.base.sha || 'HEAD~1' }}..HEAD"
       - name: 提交署名校验
