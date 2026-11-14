@@ -7,7 +7,7 @@ reviewers: ["@Dust191"]
 created: 2026-11-01
 updated: 2026-11-14
 next_review: 2027-02-12
-iter: ITER-20261114-04
+iter: ITER-20261114-05
 related: [ADR-0001, ADR-0005, DEV-009, RUN-001, RUN-002, RUN-003]
 ---
 
@@ -88,6 +88,16 @@ docker compose -p galley-staging down
 1. **不要省略 `-p galley-staging`**。少了它，Compose 会按目录名推导项目名，可能覆盖 prod 的容器与卷。
 2. `cloudflared` 默认不启动。确需临时对外时追加 `--profile tunnel`，地址同样重启即变。
 3. staging 的 `GALLEY_RECONCILE_CRON` 定为 `0 30 3 * * *`，与 prod 的 02:30 错开，避免同机争资源。
+
+首次启动建议按 `db` → `api` → `web` `caddy` 分三步，每步之间看一眼内存：
+
+```bash
+... up -d --wait db
+... up -d --wait api
+... up -d --wait web caddy
+```
+
+同机 1740 MB 内存下，两套服务静态占用约 730 MB（prod 约 350 MB、staging 约 380 MB），剩余给页缓存与压测。一次性全起会把启动峰值叠在一起，分步便于确认哪一步吃掉了内存。
 
 staging 首次启动同样会建管理员账号并打印随机口令，位置在 `docker compose -p galley-staging logs api`。
 
@@ -174,3 +184,4 @@ GALLEY_IMAGE_WEB=<上一 tag> docker compose -f infra/compose/compose.prod.yml u
 | 2026-11-12 | 补镜像构建产物与发布流水线说明；发布第 3 步改为 GHCR 包核对，并补首次发布后设可见性 | ITER-20261112-04 |
 | 2026-11-12 | 发布步骤改为真实命令：备份走脚本、替换容器带 `--env-file`、冒烟含 CSRF 前置；GHCR 可见性记为已完成 | ITER-20261112-09 |
 | 2026-11-14 | 新增 §2.1 staging 启停：同机独立项目名 `galley-staging`，回环端口 8081 / 8082，`cloudflared` 默认不起；补 `.env.staging.example` 与编排校验命令 | ITER-20261114-04 |
+| 2026-11-14 | §2.1 补首次启动的三步顺序与实测内存占用；`updated` 同步 | ITER-20261114-05 |
