@@ -20,23 +20,30 @@ public interface StatsMapper {
     /**
      * M-1 / M-2 / M-3 / M-7 / M-8 合并为一次查询。
      *
-     * <p>五项指标同源于「在管物料」这一个集合，原先分五次查会把同一张表扫五遍； 5 万物料、200 万流水下这是总览的主要 CPU 开销（`ITER-20261114-10`）。每个
-     * {@code FILTER} 的条件与原先单条 SQL 的 WHERE 逐字对应，改口径时两处必须同步，`DES-004` §3 是唯一依据。
+     * <p>五项指标同源于「在管物料」这一个集合，原先分五次查会把同一张表扫五遍；5 万物料、200 万流水下这是总览的主要 CPU 开销（`ITER-20261114-10`）。 M-7
+     * 先聚出「近 90 天有出库的物料」再反连接，避免对每个物料各跑一次 {@code NOT EXISTS}——5 万次索引查找比一次索引扫描加去重慢得多。
+     *
+     * <p>每个 {@code FILTER} 的条件与 `DES-004` §3 的口径逐条对应，改口径时两处必须同步。M-7 的 {@code coalesce(b.quantity,
+     * 0) > 0} 不能省：呆滞的定义是「有结存且没出过库」，零与负结存不算。
      */
     @Select(
             """
+            WITH recent_out AS MATERIALIZED (
+                SELECT DISTINCT sm.material_id
+                FROM stock_movement sm
+                WHERE sm.type = 'OUT' AND sm.reversed = false
+                  AND sm.occurred_at > now() - interval '90 days'
+            )
             SELECT count(*) AS materials,
                    count(*) FILTER (WHERE coalesce(b.quantity, 0) < m.safety_stock) AS low,
                    count(*) FILTER (WHERE coalesce(b.quantity, 0) = 0) AS zero,
-                   count(*) FILTER (WHERE NOT EXISTS (
-                       SELECT 1 FROM stock_movement sm
-                       WHERE sm.material_id = m.id
-                         AND sm.type = 'OUT' AND sm.reversed = false
-                         AND sm.occurred_at > now() - interval '90 days')) AS stale,
+                   count(*) FILTER (
+                       WHERE coalesce(b.quantity, 0) > 0 AND ro.material_id IS NULL) AS stale,
                    count(*) FILTER (
                        WHERE m.spec IS NOT NULL AND m.spec <> '' AND m.safety_stock > 0) AS complete
             FROM material m
             LEFT JOIN stock_balance b ON b.material_id = m.id
+            LEFT JOIN recent_out ro ON ro.material_id = m.id
             WHERE m.status = 'active' AND m.deleted_at IS NULL
             """)
     OverviewCountsRow overviewCounts();
