@@ -110,6 +110,10 @@ jobs:
           OWNER="${GITHUB_REPOSITORY_OWNER,,}"
           SRC="ghcr.io/${OWNER}/${{ matrix.source }}:${VERSION}"
           DST="${ACR_REGISTRY}/${ACR_NAMESPACE}/${{ matrix.target }}:${VERSION}"
-          # 只复制 manifest 与层，不重新构建；源 tag 必须已在 GHCR
-          docker buildx imagetools create -t "$DST" "$SRC"
-          docker buildx imagetools inspect "$DST" | head -20
+          # 不用 imagetools create：GHCR 上的索引带 buildx 的 attestation，
+          # ACR 个人版拒绝其中的 oci.empty 工件（403 unknown manifest class）。
+          # 拉取再推送会把索引压成单平台 manifest，ACR 只认这个形状。
+          docker pull "$SRC"
+          docker tag "$SRC" "$DST"
+          docker push "$DST"
+          docker image inspect --format '{{index .RepoDigests 0}}' "$DST"
