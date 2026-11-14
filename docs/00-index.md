@@ -7,7 +7,7 @@ reviewers: ["@Dust191"]
 created: 2026-10-31
 updated: 2026-11-14
 next_review: 2027-02-14
-iter: ITER-20261114-08
+iter: ITER-20261114-09
 related: [GLOSSARY-001, PRD-001]
 ---
 
@@ -30,7 +30,7 @@ related: [GLOSSARY-001, PRD-001]
 | ADR-0003 | `docs/02-design/adr/ADR-0003-code-style-tool.md` | 代码规范工具只上 Spotless | approved | @Dust191 | 2026-10-31 | S0 |
 | ADR-0004 | `docs/02-design/adr/ADR-0004-jdk-pin-granularity.md` | JDK 版本锁定粒度 | approved | @Dust191 | 2026-11-01 | S1 |
 | ADR-0005 | `docs/02-design/adr/ADR-0005-object-storage.md` | 对象存储采用可替换实现 | approved | @Dust191 | 2026-11-02 | S3 |
-| DES-001 | `docs/02-design/domain-model.md` | 领域模型 | approved | @Dust191 | 2026-11-01 | S2 |
+| DES-001 | `docs/02-design/domain-model.md` | 领域模型 | approved | @Dust191 | 2026-11-14 | S2 |
 | DES-004 | `docs/02-design/metrics.md` | 统计指标口径 | approved | @Dust191 | 2026-11-01 | S2 |
 | DES-002 | `docs/02-design/api.md` | 接口契约 | approved | @Dust191 | 2026-11-13 | S2 |
 | DES-003 | `docs/02-design/ui-spec.md` | 界面规范 | approved | @Dust191 | 2026-11-03 | S2 |
@@ -113,6 +113,7 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261114-06 | `docs/07-iteration/ITER-20261114-06.md` | 定临时镜像路径并盘点 G5 就绪度 | in_review | @Dust191 | 2026-11-14 | S5 |
 | ITER-20261114-07 | `docs/07-iteration/ITER-20261114-07.md` | 造数与压测脚本落地 | in_review | @Dust191 | 2026-11-14 | S5 |
 | ITER-20261114-08 | `docs/07-iteration/ITER-20261114-08.md` | 目标量级压测与总览瓶颈定位 | in_review | @Dust191 | 2026-11-14 | S5 |
+| ITER-20261114-09 | `docs/07-iteration/ITER-20261114-09.md` | 加部分索引并复测总览 | in_review | @Dust191 | 2026-11-14 | S5 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
@@ -132,7 +133,7 @@ related: [GLOSSARY-001, PRD-001]
 | OPS / RUN | 运维与运行手册 | 001、001 ~ 003 | 002 / 004 |
 | GOV | 治理 | 000（指导文档）、001 ~ 007 | 008 |
 | RFC | 重大变更提案 | 0001 | 0002 |
-| ITER | 迭代记录 | 20261031-01 ~ 20261114-08（58 份） | — |
+| ITER | 迭代记录 | 20261031-01 ~ 20261114-09（59 份） | — |
 | MDV | 模型偏离（条目编号） | 01 ~ 06 | 07 |
 | MTG | 会议纪要 | — | — |
 

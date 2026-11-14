@@ -5,9 +5,9 @@ status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-01
-updated: 2026-11-01
+updated: 2026-11-14
 next_review: 2027-01-30
-iter: ITER-20261101-05
+iter: ITER-20261114-09
 related: [PRD-001, SCOPE-001, ADR-0001]
 ---
 
@@ -221,6 +221,7 @@ stateDiagram-v2
 | `stock_movement` | `(material_id, occurred_at DESC)` | 物料详情时间线 |
 | `stock_movement` | `(occurred_at)` | 全量趋势与对账 |
 | `stock_movement` | UNIQUE `(reversal_of)` WHERE `reversal_of IS NOT NULL` | 一条原流水只能红冲一次 |
+| `stock_movement` | `(material_id, occurred_at DESC)` WHERE `type = 'OUT' AND reversed = false` 部分索引 | M-7 呆滞物料：按物料查近 90 天出库，避免扫全部流水 |
 | `stock_balance` | UNIQUE `(material_id)` | 一物料一行 |
 | `stock_balance` | `(quantity)` WHERE `quantity <= 0` 部分索引 | 零库存与负库存查询 |
 | `audit_log` | `(entity, entity_id, created_at DESC)` | 按对象追审计 |
@@ -252,3 +253,4 @@ stateDiagram-v2
 |---|---|---|
 | 2026-11-01 | 初版建立 | ITER-20261101-05 |
 | 2026-11-01 | 依 Q-1/Q-2/Q-3 裁定回写：确认八表、负结存允许、`shelf_life_days` 保留；§6 由「待审定项」改为「裁定记录」 | ITER-20261101-06 |
+| 2026-11-14 | §5 索引表补 `stock_movement` 的部分索引（`type = 'OUT' AND reversed = false`），支撑 M-7 呆滞物料查询；迁移 `V4` | ITER-20261114-09 |
