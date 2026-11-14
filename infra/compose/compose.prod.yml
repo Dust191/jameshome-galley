@@ -5,7 +5,7 @@ name: galley
 
 services:
   api:
-    image: ${GALLEY_IMAGE_API:-ghcr.io/dust191/galley-api:0.2.0}
+    image: ${GALLEY_IMAGE_API:?GALLEY_IMAGE_API 必须在 .env 中指定，指向 ACR 内网镜像}
     environment:
       GALLEY_ENV: ${GALLEY_ENV:-prod}
       GALLEY_SERVER_PORT: "8080"
@@ -43,7 +43,7 @@ services:
     networks: [backend]
 
   web:
-    image: ${GALLEY_IMAGE_WEB:-ghcr.io/dust191/galley-web:0.2.0}
+    image: ${GALLEY_IMAGE_WEB:?GALLEY_IMAGE_WEB 必须在 .env 中指定，指向 ACR 内网镜像}
     expose:
       - "80"
     healthcheck:

@@ -32,3 +32,5 @@ frontend/test-results/
 data/
 tmp/
 *.tmp
+__pycache__/
+*.pyc
