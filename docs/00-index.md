@@ -132,8 +132,8 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261121-07 | `docs/07-iteration/ITER-20261121-07.md` | 对账日志落盘与移动只读取证 | approved | @Dust191 | 2026-11-21 | S5 |
 | ITER-20261121-08 | `docs/07-iteration/ITER-20261121-08.md` | G5 关账 | approved | @Dust191 | 2026-11-21 | S5 |
 | ITER-20261121-09 | `docs/07-iteration/ITER-20261121-09.md` | 文档与实现一致性审计 | approved | @Dust191 | 2026-11-21 | S5 |
-| ITER-20261121-10 | `docs/07-iteration/ITER-20261121-10.md` | 1.0.0 发布与 S6 开启 | in_review | @Dust191 | 2026-11-21 | S5 |
-| ITER-20261121-11 | `docs/07-iteration/ITER-20261121-11.md` | S6 开发方向与执行说明落纸 | in_review | @Dust191 | 2026-11-21 | S6 |
+| ITER-20261121-10 | `docs/07-iteration/ITER-20261121-10.md` | 1.0.0 发布与 S6 开启 | approved | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261121-11 | `docs/07-iteration/ITER-20261121-11.md` | S6 开发方向与执行说明落纸 | approved | @Dust191 | 2026-11-21 | S6 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
