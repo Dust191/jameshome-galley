@@ -147,9 +147,12 @@ main() {
 
     # 上传后回查远端：大小必须一致；单段上传的 ETag 就是内容 MD5，能对上就更硬
     local stat_out remote_size remote_etag local_md5
-    stat_out=$(ossutil stat "oss://$bucket/$prefix/$(basename "$file")" "${oss_args[@]}" 2>/dev/null || true)
-    remote_size=$(printf '%s\n' "$stat_out" | sed -n 's/^Content-Length *: *\([0-9]*\).*/\1/p' | head -n 1)
-    remote_etag=$(printf '%s\n' "$stat_out" | sed -n 's/^Etag *: *"\([0-9A-Fa-f]\{32\}\)".*/\1/p' | head -n 1)
+    # 用 ls 而不是 stat：stat 会额外请求对象 ACL，需要 oss:GetObjectAcl；
+    # 收窄到桶级读写后不该为一次校验再要 ACL 读权限，ls 已能给大小与 ETag。
+    ls_out=$(ossutil ls "oss://$bucket/$prefix/$(basename "$file")" "${oss_args[@]}" 2>/dev/null || true)
+    # 列格式：日期 时间 时区 CST 大小 存储类型 ETAG 对象名
+    remote_size=$(printf '%s\n' "$ls_out" | awk -v k="$(basename "$file")" '$0 ~ k {print $5; exit}')
+    remote_etag=$(printf '%s\n' "$ls_out" | awk -v k="$(basename "$file")" '$0 ~ k {print $7; exit}')
 
     [ -n "$remote_size" ] || fail "取不到远端对象大小，视为上传未成功"
     [ "$remote_size" = "$size" ] || fail "远端大小 $remote_size 与本地 $size 不一致"
