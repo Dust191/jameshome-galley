@@ -22,6 +22,9 @@ services:
     environment:
       GALLEY_ENV: staging
       GALLEY_LOG_LEVEL: ${GALLEY_LOG_LEVEL:-debug}
+    volumes:
+      # 与 prod 分开落盘，避免两套服务的日志混在一个文件里
+      - /opt/galley/logs-staging:/var/log/galley
     ports:
       # 只绑回环：压测与值班脚本在宿主机读指标，公网与容器网络外都到不了
       - "127.0.0.1:8082:8080"

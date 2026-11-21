@@ -22,6 +22,9 @@ services:
       GALLEY_LOG_LEVEL: ${GALLEY_LOG_LEVEL:-info}
       # 六个字段的 cron；含空格与 *，YAML 里必须加引号
       GALLEY_RECONCILE_CRON: "${GALLEY_RECONCILE_CRON:-0 30 2 * * *}"
+      # 日志同时落盘：容器重建后 json-file 会随旧容器消失，对账这类每日一次的
+      # 执行记录必须留在宿主目录里，否则事后查不到
+      LOGGING_FILE_NAME: ${GALLEY_LOG_FILE:-/var/log/galley/api.log}
       TZ: Asia/Shanghai
     expose:
       - "8080"
@@ -34,6 +37,8 @@ services:
       timeout: 5s
       retries: 3
       start_period: 60s
+    volumes:
+      - ${GALLEY_LOG_DIR:-/opt/galley/logs}:/var/log/galley
     restart: unless-stopped
     logging: &default-logging
       driver: json-file
