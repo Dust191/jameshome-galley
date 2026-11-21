@@ -118,16 +118,24 @@ jobs:
           DST="${ACR_REGISTRY}/${ACR_NAMESPACE}/${{ matrix.target }}:${VERSION}"
 
           # ACR 个人版不接受带 attestation 的 OCI 索引：索引里那个 config 为
-          # application/vnd.oci.empty.v1+json 的工件会被判为未知 manifest class，
-          # 直接 push 整个索引会 403。故先取出 amd64 单平台清单的 digest，只拉它。
-          DIGEST=$(docker buildx imagetools inspect --raw "$SRC" \
+          # application/vnd.oci.empty.v1+json 的工件会被判为未知 manifest class。
+          # 构建端关掉 provenance 后，GHCR 上是单清单，直接按 tag 拉即可；
+          # 历史 tag 仍是索引，需按 amd64 单平台清单的 digest 定向拉。两种都要兼容。
+          RAW=$(docker buildx imagetools inspect --raw "$SRC")
+          DIGEST=$(printf '%s' "$RAW" \
             | jq -r '[.manifests[]? | select(.platform.os=="linux" and .platform.architecture=="amd64")][0].digest // empty')
-          if [ -z "$DIGEST" ]; then
-            echo "未能从 $SRC 的索引中取到 amd64 清单，发布镜像结构可能已变" >&2
+          if [ -n "$DIGEST" ]; then
+            # 带 attestation 的索引：只取 amd64 单平台清单
+            SRC_REF="ghcr.io/${OWNER}/${{ matrix.source }}@${DIGEST}"
+          elif printf '%s' "$RAW" | jq -e '.schemaVersion and (.manifests|not)' >/dev/null 2>&1; then
+            # 构建端已关 provenance，GHCR 上就是单清单，直接按 tag 拉
+            SRC_REF="$SRC"
+          else
+            echo "无法判断 $SRC 的清单结构" >&2
             exit 1
           fi
 
-          docker pull "ghcr.io/${OWNER}/${{ matrix.source }}@${DIGEST}"
-          docker tag "ghcr.io/${OWNER}/${{ matrix.source }}@${DIGEST}" "$DST"
+          docker pull "$SRC_REF"
+          docker tag "$SRC_REF" "$DST"
           docker push "$DST"
           docker image inspect --format '{{index .RepoDigests 0}}' "$DST"
