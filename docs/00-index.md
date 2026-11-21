@@ -133,6 +133,7 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261121-08 | `docs/07-iteration/ITER-20261121-08.md` | G5 关账 | approved | @Dust191 | 2026-11-21 | S5 |
 | ITER-20261121-09 | `docs/07-iteration/ITER-20261121-09.md` | 文档与实现一致性审计 | approved | @Dust191 | 2026-11-21 | S5 |
 | ITER-20261121-10 | `docs/07-iteration/ITER-20261121-10.md` | 1.0.0 发布与 S6 开启 | in_review | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261121-11 | `docs/07-iteration/ITER-20261121-11.md` | S6 开发方向与执行说明落纸 | in_review | @Dust191 | 2026-11-21 | S6 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
@@ -152,7 +153,7 @@ related: [GLOSSARY-001, PRD-001]
 | OPS / RUN | 运维与运行手册 | 001、001 ~ 004 | 002 / 005 |
 | GOV | 治理 | 000（指导文档）、001 ~ 009 | 010 |
 | RFC | 重大变更提案 | 0001 | 0002 |
-| ITER | 迭代记录 | 20261031-01 ~ 20261121-10（73 份） | — |
+| ITER | 迭代记录 | 20261031-01 ~ 20261121-11（74 份） | — |
 | MDV | 模型偏离（条目编号） | 01 ~ 07 | 08 |
 | MTG | 会议纪要 | — | — |
 
