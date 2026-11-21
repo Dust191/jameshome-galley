@@ -23,6 +23,7 @@ related: [GLOSSARY-001, PRD-001]
 | GLOSSARY-001 | `docs/00-glossary.md` | 总名词解释（67 条，全部 active） | approved | @Dust191 | 2026-11-12 | S0 |
 | INDEX-001 | `docs/00-index.md` | 文档索引 | approved | @Dust191 | 2026-11-13 | S0 |
 | PRD-001 | `docs/01-product/PRD-001.md` | 产品需求文档 | approved | @Dust191 | 2026-10-31 | S0 |
+| PRD-002 | `docs/01-product/privacy.md` | 隐私说明 | in_review | @Dust191 | 2026-11-21 | S5 |
 | SCOPE-001 | `docs/01-product/scope.md` | 范围冻结表 | approved | @Dust191 | 2026-10-31 | S0 |
 | NFR-001 | `docs/01-product/nfr.md` | 非功能需求基线 | approved | @Dust191 | 2026-10-31 | S0 |
 | ADR-0001 | `docs/02-design/adr/ADR-0001-tech-stack.md` | 技术栈选型 | approved | @Dust191 | 2026-10-31 | S0 |
@@ -123,6 +124,7 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261121-02 | `docs/07-iteration/ITER-20261121-02.md` | 落地告警规则、回滚脚本与 staging UAT | in_review | @Dust191 | 2026-11-21 | S5 |
 | ITER-20261121-03 | `docs/07-iteration/ITER-20261121-03.md` | 对账查询改集合式并改判据 | in_review | @Dust191 | 2026-11-21 | S5 |
 | ITER-20261121-04 | `docs/07-iteration/ITER-20261121-04.md` | 告警暂缓并整理收口路径 | in_review | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261121-05 | `docs/07-iteration/ITER-20261121-05.md` | 收口第一批七条中的五条 | in_review | @Dust191 | 2026-11-21 | S5 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
@@ -132,7 +134,7 @@ related: [GLOSSARY-001, PRD-001]
 |---|---|---|---|
 | INDEX | 索引 | 001 | 002 |
 | GLOSSARY | 总名词解释 | 001 | 002 |
-| PRD | 产品需求 | 001 | 002 |
+| PRD | 产品需求 | 001 ~ 002 | 003 |
 | SCOPE | 范围 | 001 | 002 |
 | NFR | 非功能 | 001 | 002 |
 | DES | 设计（模型/接口/UI/指标） | 001 ~ 004 | 005 |
@@ -142,7 +144,7 @@ related: [GLOSSARY-001, PRD-001]
 | OPS / RUN | 运维与运行手册 | 001、001 ~ 004 | 002 / 005 |
 | GOV | 治理 | 000（指导文档）、001 ~ 007 | 008 |
 | RFC | 重大变更提案 | 0001 | 0002 |
-| ITER | 迭代记录 | 20261031-01 ~ 20261121-04（67 份） | — |
+| ITER | 迭代记录 | 20261031-01 ~ 20261121-05（68 份） | — |
 | MDV | 模型偏离（条目编号） | 01 ~ 07 | 08 |
 | MTG | 会议纪要 | — | — |
 
