@@ -18,12 +18,14 @@ import hmac
 import json
 import os
 import re
+import smtplib
 import subprocess
 import time
 import urllib.parse
 import urllib.request
 import uuid
 from datetime import datetime, timezone
+from email.message import EmailMessage
 from pathlib import Path
 
 MAIL_ENDPOINT = "dm.aliyuncs.com"
@@ -223,7 +225,38 @@ def _sign(secret: str, akid: str, body: str, action: str = "SingleSendMail") -> 
     return out
 
 
+def send_smtp(env: dict[str, str], subject: str, text: str, args) -> bool:
+    """SMTP 发信。QQ 邮箱用授权码，不是登录密码。"""
+    host = env.get("GALLEY_SMTP_HOST", "smtp.qq.com")
+    port = int(env.get("GALLEY_SMTP_PORT", "465"))
+    user = env.get("GALLEY_SMTP_USER", "")
+    password = env.get("GALLEY_SMTP_PASS", "")
+    sender = env.get("GALLEY_SMTP_FROM", user)
+    to = args.mail_to or env.get("GALLEY_MAIL_TO", "")
+    if not (user and password and to):
+        log("MAIL 跳过：SMTP 缺少账号、授权码或收件人")
+        return False
+
+    msg = EmailMessage()
+    msg["Subject"] = subject
+    msg["From"] = sender
+    msg["To"] = to
+    msg.set_content(text)
+    try:
+        with smtplib.SMTP_SSL(host, port, timeout=20) as smtp:
+            smtp.login(user, password)
+            smtp.send_message(msg)
+        log(f"MAIL 成功（SMTP）：{subject} → {to}")
+        return True
+    except Exception as exc:  # noqa: BLE001
+        log(f"MAIL 失败（SMTP）：{type(exc).__name__}: {exc}")
+        return False
+
+
 def send_mail(env: dict[str, str], subject: str, text: str, args) -> bool:
+    if env.get("GALLEY_MAIL_TRANSPORT", "directmail").strip().lower() == "smtp":
+        return send_smtp(env, subject, text, args)
+
     akid = env.get("GALLEY_MAIL_ACCESS_KEY_ID", "")
     secret = env.get("GALLEY_MAIL_ACCESS_KEY_SECRET", "")
     account = env.get("GALLEY_MAIL_ACCOUNT", "ecs-alert@dust181.aliyun.com")
