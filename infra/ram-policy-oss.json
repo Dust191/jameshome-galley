@@ -1,0 +1,29 @@
+{
+  "Version": "1",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "oss:PutObject",
+        "oss:GetObject",
+        "oss:DeleteObject",
+        "oss:AbortMultipartUpload",
+        "oss:ListParts"
+      ],
+      "Resource": [
+        "acs:oss:*:*:jameshome-galley/*",
+        "acs:oss:*:*:jameshome-galley-staging/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "oss:ListObjects"
+      ],
+      "Resource": [
+        "acs:oss:*:*:jameshome-galley",
+        "acs:oss:*:*:jameshome-galley-staging"
+      ]
+    }
+  ]
+}

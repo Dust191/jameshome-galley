@@ -57,7 +57,7 @@ related: [GLOSSARY-001, PRD-001]
 | GOV-005 | `docs/05-governance/third-party-licenses.md` | 第三方依赖许可证清单 | approved | @Dust191 | 2026-11-03 | S4 |
 | GOV-006 | `docs/05-governance/g4-check.md` | 阶段门 G4 验收记录 | approved | @Dust191 | 2026-11-13 | S4 |
 | GOV-007 | `docs/05-governance/model-deviations.md` | 模型偏离记录 | accepted | @Dust191 | 2026-11-21 | S5 |
-| GOV-008 | `docs/05-governance/security-self-check.md` | 安全自查表 | in_review | @Dust191 | 2026-11-21 | S5 |
+| GOV-008 | `docs/05-governance/security-self-check.md` | 安全自查表 | approved | @Dust191 | 2026-11-21 | S5 |
 | ITER-20261031-01 | `docs/07-iteration/ITER-20261031-01.md` | 首轮迭代记录（立项前置决策） | approved | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-02 | `docs/07-iteration/ITER-20261031-02.md` | S0 文档体系建立 | approved | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-03 | `docs/07-iteration/ITER-20261031-03.md` | S1 项目骨架搭建 | approved | @Dust191 | 2026-10-31 | S1 |
