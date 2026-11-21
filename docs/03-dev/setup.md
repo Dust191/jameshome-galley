@@ -37,7 +37,7 @@ make dev       # 起后端 8080 + 前端 5173
 预期输出：
 
 - `make setup` 末尾打印 `PostgreSQL 18.3 ...` 与前端依赖安装完成。
-- `make dev` 后访问 `http://localhost:5173`，页面显示 `status=ok · version=0.2.3`。
+- `make dev` 后访问 `http://localhost:5173`，页面显示 `status=ok · version=1.0.0`。
 - 访问 `http://localhost:8080/actuator/health` 返回 `{"status":"UP"}`。
 
 ## 3. 无 Docker 的机器：双机模式

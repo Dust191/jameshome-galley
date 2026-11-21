@@ -1,7 +1,7 @@
 ---
 title: 上线检查单
 doc_id: RUN-004
-status: in_review
+status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-21

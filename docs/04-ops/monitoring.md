@@ -1,7 +1,7 @@
 ---
 title: 监控告警
 doc_id: RUN-003
-status: in_review
+status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-14

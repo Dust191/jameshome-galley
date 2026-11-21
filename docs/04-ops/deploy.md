@@ -1,11 +1,11 @@
 ---
 title: 部署
 doc_id: OPS-001
-status: in_review
+status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-01
-updated: 2026-11-14
+updated: 2026-11-21
 next_review: 2027-02-12
 iter: ITER-20261114-13
 related: [ADR-0001, ADR-0005, DEV-009, RUN-001, RUN-002, RUN-003]

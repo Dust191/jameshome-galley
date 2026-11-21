@@ -24,6 +24,7 @@ related: [GLOSSARY-001, PRD-001]
 | INDEX-001 | `docs/00-index.md` | 文档索引 | approved | @Dust191 | 2026-11-13 | S0 |
 | PRD-001 | `docs/01-product/PRD-001.md` | 产品需求文档 | approved | @Dust191 | 2026-10-31 | S0 |
 | PRD-002 | `docs/01-product/privacy.md` | 隐私说明 | approved | @Dust191 | 2026-11-21 | S5 |
+| PRD-003 | `docs/01-product/roadmap.md` | 未来展望与推进方向 | approved | @Dust191 | 2026-11-21 | S6 |
 | SCOPE-001 | `docs/01-product/scope.md` | 范围冻结表 | approved | @Dust191 | 2026-10-31 | S0 |
 | NFR-001 | `docs/01-product/nfr.md` | 非功能需求基线 | approved | @Dust191 | 2026-10-31 | S0 |
 | ADR-0001 | `docs/02-design/adr/ADR-0001-tech-stack.md` | 技术栈选型 | approved | @Dust191 | 2026-10-31 | S0 |
@@ -44,12 +45,12 @@ related: [GLOSSARY-001, PRD-001]
 | DEV-007 | `docs/03-dev/deviations.md` | 偏离登记台账 | approved | @Dust191 | 2026-11-14 | S4 |
 | DEV-008 | `docs/03-dev/spec-work.md` | 作业规范 | approved | @Dust191 | 2026-11-14 | S4 |
 | DEV-009 | `docs/03-dev/spec-stages.md` | 阶段实施规范 | approved | @Dust191 | 2026-11-14 | S4 |
-| DEV-010 | `docs/03-dev/spec-team.md` | 团体开发规范（2026-11-21 起继续搁置） | in_review | @Dust191 | 2026-11-10 | S4 |
-| OPS-001 | `docs/04-ops/deploy.md` | 部署（S5 准备期版本） | in_review | @Dust191 | 2026-11-14 | S5 |
+| DEV-010 | `docs/03-dev/spec-team.md` | 团体开发规范（2026-11-21 生效，单人期） | approved | @Dust191 | 2026-11-21 | S6 |
+| OPS-001 | `docs/04-ops/deploy.md` | 部署（S5 准备期版本） | approved | @Dust191 | 2026-11-14 | S5 |
 | RUN-001 | `docs/04-ops/runbook.md` | 运行手册 | approved | @Dust191 | 2026-11-14 | S2 |
-| RUN-002 | `docs/04-ops/backup-restore.md` | 备份与恢复（S5 准备期版本） | in_review | @Dust191 | 2026-11-12 | S5 |
-| RUN-003 | `docs/04-ops/monitoring.md` | 监控告警 | in_review | @Dust191 | 2026-11-14 | S5 |
-| RUN-004 | `docs/04-ops/go-live-checklist.md` | 上线检查单 | in_review | @Dust191 | 2026-11-21 | S5 |
+| RUN-002 | `docs/04-ops/backup-restore.md` | 备份与恢复（S5 准备期版本） | approved | @Dust191 | 2026-11-12 | S5 |
+| RUN-003 | `docs/04-ops/monitoring.md` | 监控告警 | approved | @Dust191 | 2026-11-14 | S5 |
+| RUN-004 | `docs/04-ops/go-live-checklist.md` | 上线检查单 | approved | @Dust191 | 2026-11-21 | S5 |
 | GOV-001 | `docs/05-governance/governance.md` | 治理模型 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-002 | `docs/05-governance/release.md` | 发布流程 | approved | @Dust191 | 2026-11-03 | S2 |
 | GOV-003 | `docs/05-governance/g3-freeze.md` | 阶段门 G3 通过记录与 0.1.0 冻结 | approved | @Dust191 | 2026-11-03 | S3 |
@@ -130,7 +131,8 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261121-06 | `docs/07-iteration/ITER-20261121-06.md` | 在虚拟机上实测 README 启动路径 | approved | @Dust191 | 2026-11-21 | S5 |
 | ITER-20261121-07 | `docs/07-iteration/ITER-20261121-07.md` | 对账日志落盘与移动只读取证 | approved | @Dust191 | 2026-11-21 | S5 |
 | ITER-20261121-08 | `docs/07-iteration/ITER-20261121-08.md` | G5 关账 | approved | @Dust191 | 2026-11-21 | S5 |
-| ITER-20261121-09 | `docs/07-iteration/ITER-20261121-09.md` | 文档与实现一致性审计 | in_review | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261121-09 | `docs/07-iteration/ITER-20261121-09.md` | 文档与实现一致性审计 | approved | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261121-10 | `docs/07-iteration/ITER-20261121-10.md` | 1.0.0 发布与 S6 开启 | in_review | @Dust191 | 2026-11-21 | S5 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
@@ -140,7 +142,7 @@ related: [GLOSSARY-001, PRD-001]
 |---|---|---|---|
 | INDEX | 索引 | 001 | 002 |
 | GLOSSARY | 总名词解释 | 001 | 002 |
-| PRD | 产品需求 | 001 ~ 002 | 003 |
+| PRD | 产品需求 | 001 ~ 003 | 004 |
 | SCOPE | 范围 | 001 | 002 |
 | NFR | 非功能 | 001 | 002 |
 | DES | 设计（模型/接口/UI/指标） | 001 ~ 004 | 005 |
@@ -150,7 +152,7 @@ related: [GLOSSARY-001, PRD-001]
 | OPS / RUN | 运维与运行手册 | 001、001 ~ 004 | 002 / 005 |
 | GOV | 治理 | 000（指导文档）、001 ~ 009 | 010 |
 | RFC | 重大变更提案 | 0001 | 0002 |
-| ITER | 迭代记录 | 20261031-01 ~ 20261121-09（72 份） | — |
+| ITER | 迭代记录 | 20261031-01 ~ 20261121-10（73 份） | — |
 | MDV | 模型偏离（条目编号） | 01 ~ 07 | 08 |
 | MTG | 会议纪要 | — | — |
 

@@ -1,11 +1,11 @@
 ---
 title: 备份与恢复
 doc_id: RUN-002
-status: in_review
+status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-01
-updated: 2026-11-12
+updated: 2026-11-21
 next_review: 2027-02-12
 iter: ITER-20261112-07
 related: [RUN-001, OPS-001, NFR-001]
