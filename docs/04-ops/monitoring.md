@@ -5,9 +5,9 @@ status: in_review
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-14
-updated: 2026-11-14
+updated: 2026-11-21
 next_review: 2027-02-12
-iter: ITER-20261114-05
+iter: ITER-20261121-02
 related: [RUN-001, RUN-002, OPS-001, DEV-009]
 ---
 
@@ -83,11 +83,30 @@ B-2 之所以归业务层：Quick Tunnel 换址只有应用侧知道，云监控
 
 | 依赖 | 说明 | 现状 |
 |---|---|---|
-| 云监控插件 | P-2 的数据来源 | 待确认主机监控是否有数据 |
-| 应用指标 | 当前 `management.endpoints.web.exposure.include` 只有 `health,info`；B-4 需开启 `metrics` 或改用访问日志统计 | 代码已加（2026-11-14，含 `http.server.requests` 的 0.5 / 0.95 / 0.99）；**发布镜像 0.2.0 未含**，下一版生效 |
-| RAM 角色 | 业务层发信鉴权 | 待建 |
-| 脚本落点 | 与备份脚本同目录，由 cron 调度；运行态文件不进仓库 | 未建 |
+| 云监控插件 | P-2 的数据来源 | 已在跑（开发者 2026-11-14 确认，控制台可见曲线） |
+| 应用指标 | B-4 的 P95 改由 Caddy 访问日志的 `duration` 计算，不依赖 `/actuator/metrics` 的分位（该端点只输出 COUNT / TOTAL_TIME / MAX） | 已定：0.2.2 实测无分位，改用日志 |
+| RAM 凭据 | 业务层发信鉴权 | 已配（2026-11-21，AccessKey 只写 `.env.prod` 600 权限）；发信地址状态报 `InvalidMailAddressStatus.Malformed`，待控制台核对 |
+| 脚本落点 | `infra/alert/alert-agent.py`（仓库内），运行态在 `/var/lib/galley-alert/state.json`，cron 每分钟 | 已就位，待发信可用后挂 cron |
 | 日志保留 | 访问日志保留 14 天，供 B-3 / B-4 回溯 | 已按 §7.4 配置 |
+
+### 6.1 代理与运行
+
+`infra/alert/alert-agent.py` 是业务层六条规则的执行体，只用标准库，不需要装 SDK：
+
+```bash
+# 手动跑一次（不改变状态、不发信）
+python3 /opt/galley/infra/alert/alert-agent.py --dry-run
+
+# 只验证发信通道
+python3 /opt/galley/infra/alert/alert-agent.py --test-mail
+
+# 正式挂 cron：每分钟一次，只在状态变化时发信，持续故障每 6 小时提醒
+* * * * * /usr/bin/python3 /opt/galley/infra/alert/alert-agent.py >> /opt/galley/alert/agent.log 2>&1
+```
+
+- 状态存 `/var/lib/galley-alert/state.json`，记录每条规则是否处于告警中与上次发信时间。
+- 数据不足（样本 < 20）时不判定，记 `SKIP`，避免刚发版就把人叫醒。
+- 每条规则的输入都可用参数替换（`--health-url`、`--caddy-logs-file` 等），用于逐条验证，见 §7。
 
 ## 7. 逐条触发测试
 
@@ -117,3 +136,4 @@ B-2 之所以归业务层：Quick Tunnel 换址只有应用侧知道，云监控
 |---|---|---|
 | 2026-11-14 | 初版：按「平台层 / 业务层」重裁原七条告警；去掉证书到期一条（TLS 由 Cloudflare 终结），磁盘等主机阈值移交云监控，新增入口失效一条；确定 DirectMail 发信参数与逐条触发方法 | ITER-20261114-01 |
 | 2026-11-14 | §6「应用指标」按实况更正：指标配置已进代码，但发布镜像 0.2.0 未含，待下一版生效 | ITER-20261114-05 |
+| 2026-11-21 | 业务层六条规则落成 `infra/alert/alert-agent.py`；B-4 改用访问日志 `duration`；§6 依赖表按实况更新 | ITER-20261121-02 |

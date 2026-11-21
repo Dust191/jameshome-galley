@@ -106,20 +106,21 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261113-01 | `docs/07-iteration/ITER-20261113-01.md` | ITER 定位改执行记录，隧道改按需启动 | approved | @Dust191 | 2026-11-13 | S5 |
 | ITER-20261113-02 | `docs/07-iteration/ITER-20261113-02.md` | 同步 S5 口径、G5 范围与接口口径 | approved | @Dust191 | 2026-11-13 | S5 |
 | ITER-20261113-03 | `docs/07-iteration/ITER-20261113-03.md` | 重写 README，校正部署形态与历史记录口径 | approved | @Dust191 | 2026-11-13 | S5 |
-| ITER-20261114-01 | `docs/07-iteration/ITER-20261114-01.md` | 重裁告警为分层清单并建立监控文档 | in_review | @Dust191 | 2026-11-14 | S5 |
-| ITER-20261114-02 | `docs/07-iteration/ITER-20261114-02.md` | 落定 staging 落点与三项执行口径 | in_review | @Dust191 | 2026-11-14 | S5 |
-| ITER-20261114-03 | `docs/07-iteration/ITER-20261114-03.md` | staging 改回同机并约束压测停止点 | in_review | @Dust191 | 2026-11-14 | S5 |
-| ITER-20261114-04 | `docs/07-iteration/ITER-20261114-04.md` | 建 staging 覆盖层并开启指标端点 | in_review | @Dust191 | 2026-11-14 | S5 |
-| ITER-20261114-05 | `docs/07-iteration/ITER-20261114-05.md` | 推送触发 CI 并首次启动 staging | in_review | @Dust191 | 2026-11-14 | S5 |
-| ITER-20261114-06 | `docs/07-iteration/ITER-20261114-06.md` | 定临时镜像路径并盘点 G5 就绪度 | in_review | @Dust191 | 2026-11-14 | S5 |
-| ITER-20261114-07 | `docs/07-iteration/ITER-20261114-07.md` | 造数与压测脚本落地 | in_review | @Dust191 | 2026-11-14 | S5 |
-| ITER-20261114-08 | `docs/07-iteration/ITER-20261114-08.md` | 目标量级压测与总览瓶颈定位 | in_review | @Dust191 | 2026-11-14 | S5 |
-| ITER-20261114-09 | `docs/07-iteration/ITER-20261114-09.md` | 加部分索引并复测总览 | in_review | @Dust191 | 2026-11-14 | S5 |
-| ITER-20261114-10 | `docs/07-iteration/ITER-20261114-10.md` | 定性能验收口径并实测两并发 | in_review | @Dust191 | 2026-11-14 | S5 |
-| ITER-20261114-11 | `docs/07-iteration/ITER-20261114-11.md` | 发布 0.2.1 与 0.2.2 并复测总览 | in_review | @Dust191 | 2026-11-14 | S5 |
-| ITER-20261114-12 | `docs/07-iteration/ITER-20261114-12.md` | 镜像改从 ACR 内网拉取并复测两并发 | in_review | @Dust191 | 2026-11-14 | S5 |
-| ITER-20261114-13 | `docs/07-iteration/ITER-20261114-13.md` | 生产重建到 0.2.2 并测首屏 | in_review | @Dust191 | 2026-11-14 | S5 |
+| ITER-20261114-01 | `docs/07-iteration/ITER-20261114-01.md` | 重裁告警为分层清单并建立监控文档 | approved | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261114-02 | `docs/07-iteration/ITER-20261114-02.md` | 落定 staging 落点与三项执行口径 | approved | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261114-03 | `docs/07-iteration/ITER-20261114-03.md` | staging 改回同机并约束压测停止点 | approved | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261114-04 | `docs/07-iteration/ITER-20261114-04.md` | 建 staging 覆盖层并开启指标端点 | approved | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261114-05 | `docs/07-iteration/ITER-20261114-05.md` | 推送触发 CI 并首次启动 staging | approved | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261114-06 | `docs/07-iteration/ITER-20261114-06.md` | 定临时镜像路径并盘点 G5 就绪度 | approved | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261114-07 | `docs/07-iteration/ITER-20261114-07.md` | 造数与压测脚本落地 | approved | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261114-08 | `docs/07-iteration/ITER-20261114-08.md` | 目标量级压测与总览瓶颈定位 | approved | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261114-09 | `docs/07-iteration/ITER-20261114-09.md` | 加部分索引并复测总览 | approved | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261114-10 | `docs/07-iteration/ITER-20261114-10.md` | 定性能验收口径并实测两并发 | approved | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261114-11 | `docs/07-iteration/ITER-20261114-11.md` | 发布 0.2.1 与 0.2.2 并复测总览 | approved | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261114-12 | `docs/07-iteration/ITER-20261114-12.md` | 镜像改从 ACR 内网拉取并复测两并发 | approved | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261114-13 | `docs/07-iteration/ITER-20261114-13.md` | 生产重建到 0.2.2 并测首屏 | approved | @Dust191 | 2026-11-21 | S5 |
 | ITER-20261121-01 | `docs/07-iteration/ITER-20261121-01.md` | 建上线检查单并更正项目数 | in_review | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261121-02 | `docs/07-iteration/ITER-20261121-02.md` | 落地告警规则、回滚脚本与 staging UAT | in_review | @Dust191 | 2026-11-21 | S5 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
@@ -139,7 +140,7 @@ related: [GLOSSARY-001, PRD-001]
 | OPS / RUN | 运维与运行手册 | 001、001 ~ 004 | 002 / 005 |
 | GOV | 治理 | 000（指导文档）、001 ~ 007 | 008 |
 | RFC | 重大变更提案 | 0001 | 0002 |
-| ITER | 迭代记录 | 20261031-01 ~ 20261121-01（64 份） | — |
+| ITER | 迭代记录 | 20261031-01 ~ 20261121-02（65 份） | — |
 | MDV | 模型偏离（条目编号） | 01 ~ 07 | 08 |
 | MTG | 会议纪要 | — | — |
 

@@ -203,7 +203,20 @@ GHCR 两个包已于 2026-11-12 设为 public。部署不再从 GHCR 拉取，�
 
 ## 5. 回滚
 
-应用回滚（首选）：
+应用回滚（首选 `infra/rollback.sh`，2026-11-21 实测 47 秒）：
+
+```bash
+cd /opt/galley/infra
+./rollback.sh --to 0.2.1 --dry-run   # 先看它要改什么
+./rollback.sh --to 0.2.1             # 拉取 → 改 .env → 重建 → 等健康 → 冒烟，超 5 分钟报错
+```
+
+脚本失败会自动把 `.env` 退回原 tag 并重建，退出码 2；耗时写 `/opt/galley/backup/rollback.log`。
+**跨迁移回滚要当心**：0.2.0 镜像里没有 V4 迁移，Flyway 会因「已应用但本地缺失」拒绝启动；
+脚本只保证同 schema 的版本互切（如 0.2.2 ↔ 0.2.1），跨迁移回滚需先给应用加
+`SPRING_FLYWAY_IGNORE_MIGRATION_PATTERNS=*:missing`，未做前按数据库只前滚处理。
+
+手工命令（无脚本时）：
 
 ```bash
 # 把镜像变量指回上一个 tag，只重建该服务；shell 变量优先于 --env-file
@@ -231,3 +244,4 @@ GALLEY_IMAGE_WEB=<上一 tag> docker compose --env-file /opt/galley/.env.prod \
 | 2026-11-14 | 新增 §2.2：验证未发版代码时手动构建临时镜像，验证完改回发布 tag | ITER-20261114-06 |
 | 2026-11-14 | 新增 §2.3：镜像由流水线同步进 ACR，ECS 只从 `-vpc` 域名拉取；发布第 3 步预期加 `acr-sync`；回滚命令补 `--env-file` | ITER-20261114-12 |
 | 2026-11-14 | §2.3 补记：prod 与 staging 均已指向 ACR 并重建；ECS 上旧镜像已清，回滚改用 ACR 历史 tag | ITER-20261114-13 |
+| 2026-11-21 | §5 增 `rollback.sh` 用法与实测 47 秒，写明跨迁移回滚的前置未做 | ITER-20261121-02 |
