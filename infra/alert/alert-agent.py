@@ -194,13 +194,13 @@ CHECKS = [
 # ---------- 发信 ----------
 
 
-def _sign(secret: str, akid: str, body: str) -> dict[str, str]:
+def _sign(secret: str, akid: str, body: str, action: str = "SingleSendMail") -> dict[str, str]:
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     nonce = str(uuid.uuid4())
     payload_hash = hashlib.sha256(body.encode()).hexdigest()
     headers = {
         "host": MAIL_ENDPOINT,
-        "x-acs-action": "SingleSendMail",
+        "x-acs-action": action,
         "x-acs-version": MAIL_VERSION,
         "x-acs-date": now,
         "x-acs-signature-nonce": nonce,
@@ -213,7 +213,7 @@ def _sign(secret: str, akid: str, body: str) -> dict[str, str]:
     signature = hmac.new(secret.encode(), string_to_sign.encode(), hashlib.sha256).hexdigest()
     out = {
         "Authorization": f"ACS3-HMAC-SHA256 Credential={akid},SignedHeaders={signed},Signature={signature}",
-        "x-acs-action": "SingleSendMail",
+        "x-acs-action": action,
         "x-acs-version": MAIL_VERSION,
         "x-acs-date": now,
         "x-acs-signature-nonce": nonce,

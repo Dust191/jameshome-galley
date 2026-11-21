@@ -85,7 +85,7 @@ B-2 之所以归业务层：Quick Tunnel 换址只有应用侧知道，云监控
 |---|---|---|
 | 云监控插件 | P-2 的数据来源 | 已在跑（开发者 2026-11-14 确认，控制台可见曲线） |
 | 应用指标 | B-4 的 P95 改由 Caddy 访问日志的 `duration` 计算，不依赖 `/actuator/metrics` 的分位（该端点只输出 COUNT / TOTAL_TIME / MAX） | 已定：0.2.2 实测无分位，改用日志 |
-| RAM 凭据 | 业务层发信鉴权 | 已配（2026-11-21，AccessKey 只写 `.env.prod` 600 权限）；发信地址状态报 `InvalidMailAddressStatus.Malformed`，待控制台核对 |
+| RAM 凭据 | 业务层发信鉴权 | 已配（2026-11-21，AccessKey 只写 `.env.prod` 600 权限）。**发信地址被冻结**：`QueryMailAddressByParam` 显示 `AccountStatus=1`（冻结），新建的第二个地址同样为 1，属账号级状态；`AddressType=EXTERNAL` 的自定义地址本身可用，真正发信地址是 `*@*.notice.directmailcustomer.com`。待控制台解冻或改通道 |
 | 脚本落点 | `infra/alert/alert-agent.py`（仓库内），运行态在 `/var/lib/galley-alert/state.json`，cron 每分钟 | 已就位，待发信可用后挂 cron |
 | 日志保留 | 访问日志保留 14 天，供 B-3 / B-4 回溯 | 已按 §7.4 配置 |
 
