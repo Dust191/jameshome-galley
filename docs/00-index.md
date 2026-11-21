@@ -44,7 +44,7 @@ related: [GLOSSARY-001, PRD-001]
 | DEV-007 | `docs/03-dev/deviations.md` | 偏离登记台账 | approved | @Dust191 | 2026-11-14 | S4 |
 | DEV-008 | `docs/03-dev/spec-work.md` | 作业规范 | approved | @Dust191 | 2026-11-14 | S4 |
 | DEV-009 | `docs/03-dev/spec-stages.md` | 阶段实施规范 | approved | @Dust191 | 2026-11-14 | S4 |
-| DEV-010 | `docs/03-dev/spec-team.md` | 团体开发规范（搁置至 G5） | in_review | @Dust191 | 2026-11-10 | S4 |
+| DEV-010 | `docs/03-dev/spec-team.md` | 团体开发规范（2026-11-21 起继续搁置） | in_review | @Dust191 | 2026-11-10 | S4 |
 | OPS-001 | `docs/04-ops/deploy.md` | 部署（S5 准备期版本） | in_review | @Dust191 | 2026-11-14 | S5 |
 | RUN-001 | `docs/04-ops/runbook.md` | 运行手册 | approved | @Dust191 | 2026-11-14 | S2 |
 | RUN-002 | `docs/04-ops/backup-restore.md` | 备份与恢复（S5 准备期版本） | in_review | @Dust191 | 2026-11-12 | S5 |
