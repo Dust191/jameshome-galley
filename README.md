@@ -112,7 +112,15 @@ scripts/     校验脚本（环境变量、契约、提交信息、署名、文�
 
 ## 本地运行
 
-前置：JDK 25、Docker 24+、Node 22 与 pnpm 9。Maven 由 Wrapper 提供，无需预装。
+前置：JDK 25、Docker 24+、Node 22、pnpm 9 与 `make`。Maven 由 Wrapper 提供，无需预装。
+
+两个容易踩的点：
+
+- **`make` 要单独装**：Ubuntu / WSL 上 `apt install make`；macOS 自带。README 的命令全部走 make，缺它第一步就断。
+- **Docker Hub 可能拉不动**：`make setup` 最后一步会 `compose pull`，国内网络直连 `docker.io` 常常超时。
+  开发模式实际只需要 `postgres:18.3`，本机已有该镜像时可跳过这步；缺镜像时先配镜像源或代理。
+
+首次运行还要下载 Maven 与 npm 依赖。2026-11-21 在一台 2 vCPU / 8 GB 的虚拟机上实测：`make setup` 等价步骤 88 秒，首次后端启动（含依赖下载与编译）约 7.8 分钟，合计约 **9 分半**；依赖就绪后再次启动 **18 秒**。所谓「5 分钟跑起」指的是**依赖已就绪**之后。
 
 ```bash
 git clone git@github.com:Dust191/jameshome-galley.git && cd jameshome-galley
