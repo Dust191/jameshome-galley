@@ -48,7 +48,7 @@ related: [RUN-001, OPS-001, NFR-001]
 | 1 | 导出 | `compose exec -T db pg_dump -Fc` 写本地，文件非空且头 5 字节为 `PGDMP` |
 | 2 | 校验 | 生成 `.sha256`；`head -c 5` 与大小双重判定 |
 | 3 | 上传 | 内网 endpoint `oss-cn-hangzhou-internal.aliyuncs.com`，路径 `backup/db/YYYY/MM/` |
-| 4 | 回查 | `ossutil stat` 比对远端 `Content-Length` 与本地大小；单段上传的 ETag 即内容 MD5，一并比对 |
+| 4 | 回查 | `ossutil ls` 取远端大小与 ETag（`stat` 会额外请求对象 ACL，收窄权限后不再使用）；单段上传的 ETag 即内容 MD5，一并比对 |
 | 5 | 留存 | 本地按日 7 / 周 4 / 月 12 取并集，其余连同 `.sha256` 删除 |
 | 6 | 记账 | 追加 `/opt/galley/backup/backup.log`，含时间、大小、耗时、sha256 前 16 位 |
 

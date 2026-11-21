@@ -1,7 +1,7 @@
 ---
 title: 隐私说明
 doc_id: PRD-002
-status: in_review
+status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-21

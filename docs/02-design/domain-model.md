@@ -39,7 +39,9 @@ erDiagram
     app_user ||--o{ audit_log : "操作"
 ```
 
-八张表。相对 GOV-000 §1.3 的六表，新增 `unit`（D-06）与 `invite_code`（Q-1 采纳 A）。表数口径由"七表"更新为"八表"，已在 §6 记录裁定。
+八张表。相对 GOV-000 §1.3 的六表，新增 `unit`（D-06）与 `invite_code`（Q-1 采纳 A）。
+
+> 2026-11-21 补记：此后另有两张 Spring Session 表（`spring_session`、`spring_session_attributes`）随 V2 迁移加入；库内现共十张业务/会话表，「八张业务表」的口径不变。表数口径由"七表"更新为"八表"，已在 §6 记录裁定。
 
 ## 3. 表定义
 

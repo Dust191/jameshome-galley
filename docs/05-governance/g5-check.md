@@ -1,7 +1,7 @@
 ---
 title: 阶段门 G5 验收记录
 doc_id: GOV-009
-status: in_review
+status: approved
 owner: "@Dust191"
 reviewers: ["@Dust191"]
 created: 2026-11-21

@@ -23,7 +23,7 @@ related: [GLOSSARY-001, PRD-001]
 | GLOSSARY-001 | `docs/00-glossary.md` | 总名词解释（67 条，全部 active） | approved | @Dust191 | 2026-11-12 | S0 |
 | INDEX-001 | `docs/00-index.md` | 文档索引 | approved | @Dust191 | 2026-11-13 | S0 |
 | PRD-001 | `docs/01-product/PRD-001.md` | 产品需求文档 | approved | @Dust191 | 2026-10-31 | S0 |
-| PRD-002 | `docs/01-product/privacy.md` | 隐私说明 | in_review | @Dust191 | 2026-11-21 | S5 |
+| PRD-002 | `docs/01-product/privacy.md` | 隐私说明 | approved | @Dust191 | 2026-11-21 | S5 |
 | SCOPE-001 | `docs/01-product/scope.md` | 范围冻结表 | approved | @Dust191 | 2026-10-31 | S0 |
 | NFR-001 | `docs/01-product/nfr.md` | 非功能需求基线 | approved | @Dust191 | 2026-10-31 | S0 |
 | ADR-0001 | `docs/02-design/adr/ADR-0001-tech-stack.md` | 技术栈选型 | approved | @Dust191 | 2026-10-31 | S0 |
@@ -58,7 +58,7 @@ related: [GLOSSARY-001, PRD-001]
 | GOV-006 | `docs/05-governance/g4-check.md` | 阶段门 G4 验收记录 | approved | @Dust191 | 2026-11-13 | S4 |
 | GOV-007 | `docs/05-governance/model-deviations.md` | 模型偏离记录 | accepted | @Dust191 | 2026-11-21 | S5 |
 | GOV-008 | `docs/05-governance/security-self-check.md` | 安全自查表 | approved | @Dust191 | 2026-11-21 | S5 |
-| GOV-009 | `docs/05-governance/g5-check.md` | 阶段门 G5 验收记录 | in_review | @Dust191 | 2026-11-21 | S5 |
+| GOV-009 | `docs/05-governance/g5-check.md` | 阶段门 G5 验收记录 | approved | @Dust191 | 2026-11-21 | S5 |
 | ITER-20261031-01 | `docs/07-iteration/ITER-20261031-01.md` | 首轮迭代记录（立项前置决策） | approved | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-02 | `docs/07-iteration/ITER-20261031-02.md` | S0 文档体系建立 | approved | @Dust191 | 2026-10-31 | S0 |
 | ITER-20261031-03 | `docs/07-iteration/ITER-20261031-03.md` | S1 项目骨架搭建 | approved | @Dust191 | 2026-10-31 | S1 |
@@ -122,14 +122,15 @@ related: [GLOSSARY-001, PRD-001]
 | ITER-20261114-11 | `docs/07-iteration/ITER-20261114-11.md` | 发布 0.2.1 与 0.2.2 并复测总览 | approved | @Dust191 | 2026-11-21 | S5 |
 | ITER-20261114-12 | `docs/07-iteration/ITER-20261114-12.md` | 镜像改从 ACR 内网拉取并复测两并发 | approved | @Dust191 | 2026-11-21 | S5 |
 | ITER-20261114-13 | `docs/07-iteration/ITER-20261114-13.md` | 生产重建到 0.2.2 并测首屏 | approved | @Dust191 | 2026-11-21 | S5 |
-| ITER-20261121-01 | `docs/07-iteration/ITER-20261121-01.md` | 建上线检查单并更正项目数 | in_review | @Dust191 | 2026-11-21 | S5 |
-| ITER-20261121-02 | `docs/07-iteration/ITER-20261121-02.md` | 落地告警规则、回滚脚本与 staging UAT | in_review | @Dust191 | 2026-11-21 | S5 |
-| ITER-20261121-03 | `docs/07-iteration/ITER-20261121-03.md` | 对账查询改集合式并改判据 | in_review | @Dust191 | 2026-11-21 | S5 |
-| ITER-20261121-04 | `docs/07-iteration/ITER-20261121-04.md` | 告警暂缓并整理收口路径 | in_review | @Dust191 | 2026-11-21 | S5 |
-| ITER-20261121-05 | `docs/07-iteration/ITER-20261121-05.md` | 收口第一批七条中的五条 | in_review | @Dust191 | 2026-11-21 | S5 |
-| ITER-20261121-06 | `docs/07-iteration/ITER-20261121-06.md` | 在虚拟机上实测 README 启动路径 | in_review | @Dust191 | 2026-11-21 | S5 |
-| ITER-20261121-07 | `docs/07-iteration/ITER-20261121-07.md` | 对账日志落盘与移动只读取证 | in_review | @Dust191 | 2026-11-21 | S5 |
-| ITER-20261121-08 | `docs/07-iteration/ITER-20261121-08.md` | G5 关账 | in_review | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261121-01 | `docs/07-iteration/ITER-20261121-01.md` | 建上线检查单并更正项目数 | approved | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261121-02 | `docs/07-iteration/ITER-20261121-02.md` | 落地告警规则、回滚脚本与 staging UAT | approved | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261121-03 | `docs/07-iteration/ITER-20261121-03.md` | 对账查询改集合式并改判据 | approved | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261121-04 | `docs/07-iteration/ITER-20261121-04.md` | 告警暂缓并整理收口路径 | approved | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261121-05 | `docs/07-iteration/ITER-20261121-05.md` | 收口第一批七条中的五条 | approved | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261121-06 | `docs/07-iteration/ITER-20261121-06.md` | 在虚拟机上实测 README 启动路径 | approved | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261121-07 | `docs/07-iteration/ITER-20261121-07.md` | 对账日志落盘与移动只读取证 | approved | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261121-08 | `docs/07-iteration/ITER-20261121-08.md` | G5 关账 | approved | @Dust191 | 2026-11-21 | S5 |
+| ITER-20261121-09 | `docs/07-iteration/ITER-20261121-09.md` | 文档与实现一致性审计 | in_review | @Dust191 | 2026-11-21 | S5 |
 | RFC-0001 | `docs/06-meeting/rfc/RFC-0001.md` | 收窄禁用写法并拆分易混提示 | approved | @Dust191 | 2026-11-01 | S2 |
 | GOV-000 | `.workbuddy/jameshome-galley-GOV-000-工程规范.md` | 工程规范 | approved（v1.12） | @Dust191 | 2026-11-01 | 全局 |
 
@@ -149,7 +150,7 @@ related: [GLOSSARY-001, PRD-001]
 | OPS / RUN | 运维与运行手册 | 001、001 ~ 004 | 002 / 005 |
 | GOV | 治理 | 000（指导文档）、001 ~ 009 | 010 |
 | RFC | 重大变更提案 | 0001 | 0002 |
-| ITER | 迭代记录 | 20261031-01 ~ 20261121-08（71 份） | — |
+| ITER | 迭代记录 | 20261031-01 ~ 20261121-09（72 份） | — |
 | MDV | 模型偏离（条目编号） | 01 ~ 07 | 08 |
 | MTG | 会议纪要 | — | — |
 
