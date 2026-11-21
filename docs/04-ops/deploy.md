@@ -177,6 +177,7 @@ docker compose -p galley-staging --env-file infra/compose/.env.staging \
 | `GALLEY_IMAGE_CADDY` | ✓ | `crpi-8wtwv1zju2g9kpgg.cn-hangzhou.personal.cr.aliyuncs.com/jameshome-galley/caddy:2-alpine` |
 | `GALLEY_IMAGE_TUNNEL` | ✓ | 同 ACR 前缀下的 `cloudflared:2026.10.7`，不设默认值，缺失时编排直接报错 |
 | `GALLEY_LOG_LEVEL` | — | prod 固定 `info`；排障临时 `debug` 后 2 小时内改回 |
+| `GALLEY_LOG_DIR` / `GALLEY_LOG_FILE` | — | api 日志落盘，容器重建不丢；目录预建 `777`；staging 覆盖为独立目录 |
 | `GALLEY_RECONCILE_CRON` | — | 默认每日 02:30 |
 | `GALLEY_BOOTSTRAP_ADMIN_USERNAME` | — | 默认 `admin`；空库首次启动生成随机口令并打印一次 |
 
