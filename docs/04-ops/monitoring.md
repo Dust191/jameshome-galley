@@ -137,3 +137,4 @@ python3 /opt/galley/infra/alert/alert-agent.py --test-mail
 | 2026-11-14 | 初版：按「平台层 / 业务层」重裁原七条告警；去掉证书到期一条（TLS 由 Cloudflare 终结），磁盘等主机阈值移交云监控，新增入口失效一条；确定 DirectMail 发信参数与逐条触发方法 | ITER-20261114-01 |
 | 2026-11-14 | §6「应用指标」按实况更正：指标配置已进代码，但发布镜像 0.2.0 未含，待下一版生效 | ITER-20261114-05 |
 | 2026-11-21 | 业务层六条规则落成 `infra/alert/alert-agent.py`；B-4 改用访问日志 `duration`；§6 依赖表按实况更新 | ITER-20261121-02 |
+| 2026-11-21 | 开发者决定暂缓发信：DirectMail 需发信地址可收信，当前域名条件不满足；`alert-agent.py` 已备 SMTP 分支，等评估结果再切 | ITER-20261121-03 |
